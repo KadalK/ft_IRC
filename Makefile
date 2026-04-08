@@ -15,7 +15,7 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-SRCS		:=	main.cpp Channel.cpp  Client.cpp  Serveur.cpp
+SRCS		:=	main.cpp Channel.cpp  Client.cpp  Serveur.cpp ManageClients.cpp ManageChannel.cpp
 
 #*------------------------------------------------------------------------------*
 
@@ -30,7 +30,7 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	include/.hpp \ include/Channel.hpp  include/Client.hpp    include/Serveur.hpp
+HEAD		:=	include/.hpp \ include/Channel.hpp  include/Client.hpp    include/Serveur.hpp include/ManageClients.hpp include/ManageChannel.hpp
 
 HEAD_D		:=	.
 

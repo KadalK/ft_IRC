@@ -1,17 +1,14 @@
 #include "Client.hpp"
 
-Client::Client() : name("No_name"), _fd(-1), _authentificated(false){}
-Client::Client(std::string name) : name(name), _fd(-1), _authentificated(false){
-	if (name.length() > 9)
-		std::length_error;
-}
-Client::Client(const Client& copy) : name(copy.name), _fd(copy._fd), _authentificated(copy._authentificated) {}
+Client::Client() : _name("No__name"), _fd(-1), _authenticated(false){}
+
+Client::Client(const Client& copy) : _name(copy._name), _fd(copy._fd), _authenticated(copy._authenticated) {}
 Client& Client::operator=(const Client& other){
 	if (this != &other)
 	{
-		this->name = other.name;
+		this->_name = other._name;
 		this->_fd = other._fd;
-		this->_authentificated = other._authentificated;
+		this->_authenticated = other._authenticated;
 	}
 	return (*this);
 }
@@ -20,8 +17,16 @@ int		Client::getFd() const{
 	return(this->_fd);
 }
 
+std::string		Client::getName() const{
+	return(this->_name);
+}
+
 bool	Client::getAuth() const{
-	return(this->_authentificated);
+	return(this->_authenticated);
+}
+
+void	Client::setName(std::string name){
+	this->_name = name;
 }
 
 void	Client::setFd(int fd){
@@ -29,11 +34,11 @@ void	Client::setFd(int fd){
 }
 
 void	Client::setAuth(bool auth){
-	this->_authentificated = auth;
-
+	this->_authenticated = auth;
 }
 
 void Client::send(const std::string& msg){
+	(void)msg;
 	std::cout << "fonction send() of Client\n";
 }
 
