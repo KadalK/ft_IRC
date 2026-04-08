@@ -5,13 +5,17 @@
 #include <iostream>
 #include "Client.hpp"
 
-class Channel{
+class Channel
+{
+
+private :
+	std::string name;
+	std::vector<Client *> clients;
 public:
 	Channel();
-	Channel(const Channel& copy);
-	Channel& operator=(const Channel& other);
-	std::string name;
-	std::vector <Client*> clients;
+	Channel(const Channel &copy);
+	Channel &operator=(const Channel &other);
+
 	~Channel();
 };
 

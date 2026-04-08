@@ -4,25 +4,32 @@
 #include <iostream>
 #include <stdexcept>
 
-
-class Client{
+class Client
+{
 private:
 	int _fd;
+	std::string _buffer;
 	bool _authentificated;
+
 public:
-	Client();
-	Client(const Client& copy);
-	Client& operator=(const Client& other);
-	Client(std::string name);
+	// Client();
+	// Client(const Client &copy);
+	// Client &operator=(const Client &other);
+	// Client(std::string name);
 
-	std::string name;
+	// std::string name;
 
-	int		getFd() const;
-	bool	getAuth() const;
-	void	setFd(int);
-	void	setAuth(bool);
+	int getFd() const;
+	bool getAuth() const;
+	std::string getBuffer() const;
 
-	void send(const std::string& msg);
+	void setFd(int);
+	void setBuffer(std::string buffer);
+	void setAuth(bool);
+	void appendBuffer(std::string const &temp);
+
+
+	void send(const std::string &msg);
 	~Client();
 };
 
