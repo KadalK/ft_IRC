@@ -5,13 +5,16 @@
 #include <stdexcept>
 #include <string>
 #include "Channel.hpp"
+#include <map>
 
 class ManageChannel{
+private:
+	std::map<std::string , Channel* > _channel;
 public:
 	ManageChannel();
 
-	void deleteChannel(const Channel& client);
-	void createChannel(const Channel& client);
+	void deleteChannel(const std::string& name);
+	Channel* createChannel(const std::string& name);
 	~ManageChannel();
 };
 
