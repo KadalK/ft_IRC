@@ -2,10 +2,6 @@
 
 ManageChannel::ManageChannel(){}
 
-// bool ManageChannel::isEmpty(){
-// 	this->_channel;
-// }
-//
 const char *ManageChannel::NoChannelFound::what() const throw() {
 	return ("Channel not found");
 }
