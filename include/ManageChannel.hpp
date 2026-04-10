@@ -13,7 +13,17 @@ private:
 public:
 	ManageChannel();
 
-	void deleteChannel(const std::string& name);
+	class NoChannelFound : public std::exception{
+		virtual const char* what() const throw();
+	};
+
+	class ChannelsEmpty : public std::exception{
+		virtual const char* what() const throw();
+	};
+
+	Channel* getChannel(const std::string& name);
+	std::map<std::string , Channel* > getAllChannels();
+	void	deleteChannel(const std::string& name);
 	Channel* createChannel(const std::string& name);
 	~ManageChannel();
 };

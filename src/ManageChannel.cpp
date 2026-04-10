@@ -2,6 +2,31 @@
 
 ManageChannel::ManageChannel(){}
 
+// bool ManageChannel::isEmpty(){
+// 	this->_channel;
+// }
+//
+const char *ManageChannel::NoChannelFound::what() const throw() {
+	return ("Channel not found");
+}
+
+const char* ManageChannel::ChannelsEmpty::what() const throw(){
+	return ("Channels Empty");
+}
+
+Channel* ManageChannel::getChannel(const std::string& name){
+	std::map<std::string, Channel*>::iterator it = this->_channel.find(name);
+		if (it == this->_channel.end())
+			throw NoChannelFound();
+	return(it->second);
+}
+
+std::map<std::string , Channel* > ManageChannel::getAllChannels(){
+	if (this->_channel.empty())
+		throw NoChannelFound();
+	return (this->_channel);
+}
+
 void ManageChannel::deleteChannel(const std::string& name){
 	std::map<std::string, Channel*>::iterator it = this->_channel.find(name);
 	if (it != this->_channel.end())
