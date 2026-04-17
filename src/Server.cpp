@@ -23,9 +23,9 @@ void Server::createNewClient()
 {
 	int clientSocketFd = accept(this->_serverSocketFd, NULL, NULL);
 	epoll_event clientEvent;
-	Client nClient;
-	nClient.setFd(clientSocketFd);
-	this->_registry[clientSocketFd] = nClient;
+	Client Client;
+	Client.setFd(clientSocketFd);
+	this->_registry[clientSocketFd] = Client;
 	clientEvent.events = EPOLLIN;
 	clientEvent.data.fd = clientSocketFd;
 	fcntl(clientSocketFd, F_SETFL, O_NONBLOCK);
@@ -57,7 +57,7 @@ void Server::handleClientData(int fd)
 			std::string command = this->_registry[fd].getBuffer().substr(0, pos);
 			this->_registry[fd].setBuffer(this->_registry[fd].getBuffer().erase(0, pos + 2));
 			// envoie au parseur.
-			std::cout << "commande recu :" << command << " fd :" << fd << std::endl;
+			std::cout << "commande recu :" << command << " fd :" << fd  << "lenght : "<< command.length() << std::endl;
 		}
 	}
 }
