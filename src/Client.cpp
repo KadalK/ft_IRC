@@ -23,18 +23,9 @@ std::string		Client::getBuffer() const{
 	return(this->_buffer);
 }
 
-std::string		Client::getName() const{
-	return(this->_name);
-}
-
 bool	Client::getAuth() const{
-	return(this->_authenticated);
+	return(this->_authentificated);
 }
-
-void	Client::setName(std::string name){
-	this->_name = name;
-}
-
 
 void	Client::setFd(int fd){
 	this->_fd = fd;
@@ -44,7 +35,7 @@ void	Client::setBuffer(std::string buffer){
 }
 
 void	Client::setAuth(bool auth){
-	this->_authenticated = auth;
+	this->_authentificated = auth;
 }
 
 void Client::appendBuffer(std::string const &temp) {

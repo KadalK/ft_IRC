@@ -64,19 +64,19 @@ void Channel::broadcast(const std::string& msg, Client* sender)
 	}
 }
 
-bool	Channel::hasClient(Client* client) const{
-	for (size_t i = 0; i < _clients.size(); i++)
-	{
-		if (this->_clients[i] == client)
-		{
-			std::cout << "[DEBUG] : client "  << client->getName() << " is here\n";
-			return (true);
-		}
-	}
+// bool	Channel::hasClient(Client* client) const{
+// 	for (size_t i = 0; i < _clients.size(); i++)
+// 	{
+// 		if (this->_clients[i] == client)
+// 		{
+// 			std::cout << "[DEBUG] : client "  << client->getName() << " is here\n";
+// 			return (true);
+// 		}
+// 	}
 
-	std::cout << "[DEBUG] : client "  << client->getName()<< " is not here\n";
-	return(false);
-}
+// 	std::cout << "[DEBUG] : client "  << client->getName()<< " is not here\n";
+// 	return(false);
+// }
 
 
 Channel::~Channel(){}

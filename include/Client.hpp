@@ -17,9 +17,6 @@ public:
 	// Client();
 	// Client(const Client &copy);
 	// Client &operator=(const Client &other);
-	// Client(std::string name);
-
-	// std::string name;
 
 	int getFd() const;
 	bool getAuth() const;
