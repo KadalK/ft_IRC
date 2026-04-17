@@ -11,7 +11,6 @@ const std::string& Channel::getName() const{
 	return(this->_name);
 }
 
-
 const std::string&	Channel::getTopic() const{
 	return(this->_topic);
 }

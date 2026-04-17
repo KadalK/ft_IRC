@@ -2,6 +2,14 @@
 
 ManageChannel::ManageChannel(){}
 
+ManageChannel::ManageChannel(const ManageChannel& copy) : _channel(copy._channel) {}
+
+ManageChannel& ManageChannel::operator=(const ManageChannel& other){
+	if (this != &other)
+		this->_channel = other._channel;
+	return(*this);
+}
+
 const char *ManageChannel::NoChannelFound::what() const throw() {
 	return ("Channel not found");
 }
@@ -17,9 +25,9 @@ Channel* ManageChannel::getChannel(const std::string& name){
 	return(it->second);
 }
 
-std::map<std::string , Channel* > ManageChannel::getAllChannels(){
+std::map<std::string , Channel* >& ManageChannel::getAllChannels(){
 	if (this->_channel.empty())
-		throw NoChannelFound();
+		throw ChannelsEmpty();
 	return (this->_channel);
 }
 
@@ -49,4 +57,7 @@ Channel* ManageChannel::createChannel(const std::string& name){
 	}
 }
 
-ManageChannel::~ManageChannel(){}
+ManageChannel::~ManageChannel(){
+	for (std::map<std::string, Channel*>::iterator it = _channel.begin(); it != _channel.end(); ++it)
+		delete it->second;
+}

@@ -10,7 +10,6 @@ private:
 	std::string _name;
 	std::string _topic;
 	std::vector <Client*> _clients;
-
 public:
 	Channel(const std::string& name);
 
