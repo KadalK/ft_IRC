@@ -24,10 +24,10 @@ void	Channel::addClient(Client* client){
 		std::cout << " [DEBUG] addClient  client is NULL\n";
 		return;
 	}
-	if (hasClient(client)){
-		std::cout << "[DEBUG] addClient client is already in\n";
-		return;
-	}
+	// if (hasClient(client)){
+	// 	std::cout << "[DEBUG] addClient client is already in\n";
+	// 	return;
+	// }
 
 	this->_clients.push_back(client);
 }
@@ -52,17 +52,17 @@ void Channel::removeClient(Client* client)
 			std::cout << "[DEBUG] removeClient client not found\n";
 }
 
-void Channel::broadcast(const std::string& msg, Client* sender)
-{
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		if (*it != sender)
-		{
-			std::cout << "[DEBUG] sending \n";
-			(*it)->send(msg);
-		}
-	}
-}
+// void Channel::broadcast(const std::string& msg, Client* sender)
+// {
+// 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+// 	{
+// 		if (*it != sender)
+// 		{
+// 			std::cout << "[DEBUG] sending \n";
+// 			(*it)->send(msg);
+// 		}
+// 	}
+// }
 
 // bool	Channel::hasClient(Client* client) const{
 // 	for (size_t i = 0; i < _clients.size(); i++)

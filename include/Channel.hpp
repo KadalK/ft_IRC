@@ -21,8 +21,8 @@ public:
 	void	addClient(Client* client);
 	void	removeClient(Client* client);
 
-	void	broadcast(const std::string& msg, Client* sender);
-	bool	hasClient(Client* client) const;
+	// void	broadcast(const std::string& msg, Client* sender);
+	// bool	hasClient(Client* client) const;
 
 	~Channel();
 };

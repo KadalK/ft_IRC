@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/17 14:44:14 by tsaby            ###   ########.fr        #
+#    Updated: 2026/04/17 15:15:40 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,11 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-SRCS		:=	main.cpp Channel.cpp  Client.cpp  Server.cpp ManageClients.cpp ManageChannel.cpp
+SRCS		:=	main.cpp \
+				Channel.cpp \
+				Client.cpp \
+				Server.cpp \
+				ManageChannel.cpp
 
 #*------------------------------------------------------------------------------*
 
@@ -30,7 +34,10 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	include/.hpp \ include/Channel.hpp  include/Client.hpp    include/Server.hpp include/ManageClients.hpp include/ManageChannel.hpp
+HEAD		:=	include/Channel.hpp \
+				include/Client.hpp \
+				include/Server.hpp \
+				include/ManageChannel.hpp
 
 HEAD_D		:=	.
 
@@ -42,7 +49,7 @@ CXXFLAGS	:=	-Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP
 
 #*------------------------------------------------------------------------------*
 
-NAME		:= Conversion
+NAME		:=	IRC
 
 #*------------------------------------------------------------------------------*
 
