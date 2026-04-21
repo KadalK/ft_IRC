@@ -1,5 +1,16 @@
 #include "Server.hpp"
 
+
+bool g_isRunning = true;
+
+void signal_handler(int signum)
+{
+    (void)signum;
+	g_isRunning = false;
+	std::cout << "\nThe server is closing..." << std::endl;
+}
+
+
 Server::Server(int port,std::string password) : _port(port) , _password(password)
 {}
 
@@ -8,12 +19,10 @@ void Server::init()
 	int optval = 1;
 	this->_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
 	setsockopt(this->_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
-
 	sockaddr_in serverAddress;
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(this->_port);
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
-
 	bind(this->_serverSocketFd, (struct sockaddr *)&serverAddress, sizeof(serverAddress));
 	fcntl(this->_serverSocketFd, F_SETFL, O_NONBLOCK);
 	listen(this->_serverSocketFd, 5);
@@ -62,6 +71,50 @@ void Server::handleClientData(int fd)
 	}
 }
 
+void Server::sendToClient(int fd)
+{
+	if ( this->_registry.find(fd) == this->_registry.end())
+		return;
+	Client &client = this->_registry[fd];
+	std::string message = client.getBufferOut();
+	if (message.empty())
+		return;
+	int bytesSent = send(fd,message.c_str(),message.length(),MSG_NOSIGNAL);
+	if (!bytesSent)
+	{
+		this->removeClient(fd);
+		return;
+	}
+	client.setBufferOut(message.erase(0,bytesSent));
+	if(client.getBufferOut().empty())
+	{
+		epoll_event event;
+		event.events = EPOLLIN;
+		event.data.fd = fd;
+		epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, fd,&event);
+	}
+}
+
+Client* Server::getClientByNickname(std::string nickname)
+{
+	std::map<int,Client>::iterator it = this->_registry.begin();
+	while(it != this->_registry.end())
+	{
+		if (it->second.getNickname() == nickname)
+			return &(it->second);
+		it++;
+	}
+	return NULL;
+}
+
+void Server::clientWrite(int fd)
+{
+	epoll_event event;
+	event.events = EPOLLIN | EPOLLOUT;
+	event.data.fd = fd;
+	epoll_ctl(this->_epollFd,EPOLL_CTL_MOD,fd,&event);
+}
+
 void Server::run()
 {
 	this->_epollFd = epoll_create1(0);
@@ -71,24 +124,26 @@ void Server::run()
 	this->_events.resize(64);
 	epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventsServer.data.fd, &eventsServer);
 
-	while (true)
+	while (g_isRunning)
 	{
 		int eventCount = epoll_wait(this->_epollFd, this->_events.data(), 64, -1);
 		for (int i = 0; i < eventCount; i++)
 		{
 			int clientSocketFd = this->_events[i].data.fd;
+			u_int32_t flags = this->_events[i].events;
 			if (clientSocketFd == this->_serverSocketFd)
 				this->createNewClient();
 			else
-				this->handleClientData(clientSocketFd);
+			{
+				if (flags & EPOLLIN)
+					this->handleClientData(clientSocketFd);
+				if (flags & EPOLLOUT)
+					this->sendToClient(clientSocketFd);
+			}
 		}
 	}
 }
 
-// void Server::broadcast(const std::string &msg)
-// {
-// 	(void)msg;
-// 	std::cout << "fontion broadcast Serveur";
-// }
-
-Server::~Server() {}
+Server::~Server() {
+	//NEED GERER DELETE
+	}

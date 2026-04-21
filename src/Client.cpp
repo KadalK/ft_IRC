@@ -1,49 +1,85 @@
 #include "Client.hpp"
 
-// Client::Client() : name("No_name"), _fd(-1), _authentificated(false){}
-// Client::Client(std::string name) : name(name), _fd(-1), _authentificated(false){
-// 	if (name.length() > 9)
-// 		std::length_error;
-// }
-// Client::Client(const Client& copy) : name(copy.name), _fd(copy._fd), _authentificated(copy._authentificated) {}
-// Client& Client::operator=(const Client& other){
-// 	if (this != &other)
-// 	{
-// 		this->name = other.name;
-// 		this->_fd = other._fd;
-// 		this->_authentificated = other._authentificated;
-// 	}
-// 	return (*this);
-// }
+Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn("NULL"),_bufferOut("NULL"),_isAuthentificated(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
 
 int		Client::getFd() const{
 	return(this->_fd);
 }
 std::string		Client::getBuffer() const{
-	return(this->_buffer);
+	return(this->_bufferIn);
+}
+std::string		Client::getBufferOut() const{
+	return(this->_bufferOut);
 }
 
-bool	Client::getAuth() const{
-	return(this->_authentificated);
+bool	Client::getAuth() const
+{
+	return(this->_isAuthentificated);
+}
+
+bool	Client::getUserBool() const
+{
+	return(this->_hasUsername);
+}
+
+bool	Client::getNickBool() const
+{
+	return(this->_hasNickname);
+}
+
+bool	Client::getPassBool() const
+{
+	return(this->_hasPassword);
+}
+
+std::string Client::getNickname() const
+{
+	return(this->_nickname);
+}
+
+std::string Client::getUsername() const
+{
+	return(this->_username);
+}
+
+void	Client::setAuth(bool state)
+{
+	this->_isAuthentificated = state;
+}
+void	Client::setNickBool(bool state)
+{
+	this->_hasNickname = state;
+}
+void	Client::setPassBool(bool state)
+{
+	this->_hasPassword = state;
+}
+void	Client::setUserBool(bool state)
+{
+	this->_hasUsername = state;
+}
+
+void Client::setNickname(std::string nickname)
+{
+	this->_nickname = nickname;
+}
+void Client::setUsername(std::string username)
+{
+	this->_username = username;
 }
 
 void	Client::setFd(int fd){
 	this->_fd = fd;
 }
 void	Client::setBuffer(std::string buffer){
-	this->_buffer = buffer;
+	this->_bufferIn = buffer;
 }
-
-void	Client::setAuth(bool auth){
-	this->_authentificated = auth;
+void	Client::setBufferOut(std::string buffer){
+	this->_bufferOut = buffer;
 }
 
 void Client::appendBuffer(std::string const &temp) {
-    this->_buffer += temp;
+    this->_bufferIn += temp;
 }
-
-// void Client::send(const std::string& msg){
-// 	std::cout << "fonction send() of Client\n";
-// }
 
 Client::~Client(){}
