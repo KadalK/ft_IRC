@@ -52,6 +52,7 @@ void Channel::removeClient(Client* client)
 			std::cout << "[DEBUG] removeClient client not found\n";
 }
 
+// <<<<<<< Updated upstream
 // void Channel::broadcast(const std::string& msg, Client* sender)
 // {
 // 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
@@ -77,6 +78,33 @@ void Channel::removeClient(Client* client)
 // 	std::cout << "[DEBUG] : client "  << client->getName()<< " is not here\n";
 // 	return(false);
 // }
+// =======
+// void Channel::broadcast(const std::string& msg, Client* send)
+// {
+// 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+// 	{
+// 		if (*it != send)
+// 		{
+// 			std::cout << "[DEBUG] sending \n";
+// 			(*it)->send(msg);
+// 		}
+// 	}
+// }
+//
+// bool	Channel::hasClient(Client* client) const{
+// 	for (size_t i = 0; i < _clients.size(); i++)
+// 	{
+// 		if (this->_clients[i] == client)
+// 		{
+// 			std::cout << "[DEBUG] : client is here\n";
+// 			return (true);
+// 		}
+// 	}
+//
+// 	std::cout << "[DEBUG] : client is not here\n";
+// 	return(false);
+// }
+// >>>>>>> Stashed changes
 
 
 Channel::~Channel(){}

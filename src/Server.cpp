@@ -1,7 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(int port,std::string password) : _port(port) , _password(password)
-{}
+Server::Server(int port,std::string password) : _port(port) , _password(password){}
 
 void Server::init()
 {
@@ -18,6 +17,11 @@ void Server::init()
 	fcntl(this->_serverSocketFd, F_SETFL, O_NONBLOCK);
 	listen(this->_serverSocketFd, 5);
 }
+
+std::string Server::getPass(){
+	return(this->_password);
+}
+
 
 void Server::createNewClient()
 {
@@ -54,7 +58,7 @@ void Server::handleClientData(int fd)
 		size_t pos;
 		while ((pos = this->_registry[fd].getBuffer().find("\r\n")) != std::string::npos)
 		{
-			std::string command = this->_registry[fd].getBuffer().substr(0, pos);
+			std::string command = this->_registry[fd].getBuffer().substr(0, pos); //jaurai kiffer mettre le GetBuffer en ref const pour ne pas faire de copie et que ca soit plus secure
 			this->_registry[fd].setBuffer(this->_registry[fd].getBuffer().erase(0, pos + 2));
 			// envoie au parseur.
 			std::cout << "commande recu :" << command << " fd :" << fd  << "lenght : "<< command.length() << std::endl;
@@ -62,8 +66,7 @@ void Server::handleClientData(int fd)
 	}
 }
 
-void Server::run()
-{
+void Server::run(){
 	this->_epollFd = epoll_create1(0);
 	epoll_event eventsServer;
 	eventsServer.events = EPOLLIN;
@@ -84,6 +87,7 @@ void Server::run()
 		}
 	}
 }
+
 
 // void Server::broadcast(const std::string &msg)
 // {

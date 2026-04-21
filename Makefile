@@ -15,11 +15,15 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
+<<<<<<< Updated upstream
 SRCS		:=	main.cpp \
 				Channel.cpp \
 				Client.cpp \
 				Server.cpp \
 				ManageChannel.cpp
+=======
+SRCS		:=	main.cpp Channel.cpp  Client.cpp  Server.cpp  ManageChannel.cpp
+>>>>>>> Stashed changes
 
 #*------------------------------------------------------------------------------*
 
@@ -34,10 +38,14 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
+<<<<<<< Updated upstream
 HEAD		:=	include/Channel.hpp \
 				include/Client.hpp \
 				include/Server.hpp \
 				include/ManageChannel.hpp
+=======
+HEAD		:=	include/.hpp \ include/Channel.hpp  include/Client.hpp    include/Server.hpp include/ManageChannel.hpp
+>>>>>>> Stashed changes
 
 HEAD_D		:=	.
 

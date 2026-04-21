@@ -2,11 +2,10 @@
 
 #include "Commands.hpp"
 
-struct parameters
-{
-  //
-  std::string textMessage;
-};
+  struct param
+  {
+    std::string textMsg;
+  };
 
 class PrivMsg : public Commands
 {
@@ -18,7 +17,7 @@ public:
 
   PrivMsg &operator=(PrivMsg const &rhs);
 
-  size_t parsingMessage(parameters &p, std::string rawText);
-  size_t execute(void);
+  void parsingMessage(param &p, std::string rawText);
+  void execute(void);
   void errorMessage(size_t errorValue);
 };
