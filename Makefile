@@ -19,7 +19,10 @@ SRCS		:=	main.cpp \
 				Channel.cpp \
 				Client.cpp \
 				Server.cpp \
-				ManageChannel.cpp
+				ManageChannel.cpp \
+				Commands.cpp \
+				Pass.cpp \
+				PrivMsg.cpp
 
 #*------------------------------------------------------------------------------*
 
@@ -38,7 +41,10 @@ HEAD		:=	include/Channel.hpp \
 				include/Client.hpp \
 				include/Server.hpp \
 				include/ManageChannel.hpp \
-				include/SystemException.hpp
+				include/SystemException.hpp \
+				include/Commands.hpp \
+				include/Pass.hpp \
+				include/PrivMsg.hpp \
 
 HEAD_D		:=	.
 
