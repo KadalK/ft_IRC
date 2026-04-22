@@ -32,6 +32,29 @@ std::vector<std::string> ft_tokenizer(std::string rawCommand)
     tokens.push_back(rawCommand.substr(start, i - start));
   return (tokens);
 }
+//
+// void parser(std::string rawMessage)
+// {
+//   PrivMsg p;
+//   std::vector<std::string> v;
+//   std::map<std::string, *Commands> commands = {{"PRIVMSG", p}}; //add toutes les commandes
+//
+//   size_t pos;
+//   std::map<std::string, *Commands>::iterator i;
+//
+//   pos = rawMessage.find(' ');
+//   if (pos == std::string::npos)
+//     return; // Manque arguments - throw exception
+//   std::cout << "Commande : " << rawMessage.substr(0, pos) << std::endl;
+//   i = commands.find(rawMessage.substr(0, pos));
+//   if (i == commands.end())
+//     return; //Commande existe pas - Throw exception
+//   while (rawMessage[pos] == ' ')
+//     pos++;
+//   v = ft_tokenizer(rawMessage.substr(pos));
+//   i->second->execute(v);
+//   return;
+// }
 
 void parser(std::string rawMessage)
 {
@@ -52,16 +75,21 @@ void parser(std::string rawMessage)
     pos++;
   v = ft_tokenizer(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = v.begin(); it != v.end(); it++)
-    std::cout << "[" << *it << "]" << std::endl;
+    std::cout << "(" << *it << ")" << std::endl;
   std::cout << i->second << std::endl;
   return;
 }
 
+#include "../include/CommandsHandler.hpp"
+
 int main()
 {
-  std::string str = "PRIVMSG salut,ca,va :coucou bon";
+  std::string str = "PRIVMSG              Hello                 COUCOU,ca,va :trailing bon";
+  CommandsHandler cmdH;
+  cmdH.processCommand(str);
   parser(str);
   str = "PRIVMSG salut,ca,va coucou bon";
+  cmdH.processCommand(str);
   parser(str);
   return 0;
 }

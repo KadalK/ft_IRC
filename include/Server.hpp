@@ -12,6 +12,7 @@
 #include <csignal>
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "CommandsHandler.hpp"
 
 extern bool g_isRunning;
 
@@ -31,6 +32,7 @@ class Server{
 		std::map <int,Client*> _registry;
 		ManageChannel &_ManageChannel;
 		ManageClient &_ManageClient;
+    CommandsHandler &_CommandsHandler;
 		// Parser _parser;
 
 	public:
