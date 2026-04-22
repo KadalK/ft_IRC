@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/17 15:15:40 by tsaby            ###   ########.fr        #
+#    Updated: 2026/04/22 11:22:53 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,7 +39,8 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 HEAD		:=	include/Channel.hpp \
 				include/Client.hpp \
 				include/Server.hpp \
-				include/ManageChannel.hpp
+				include/ManageChannel.hpp \
+				include/SystemException.hpp
 
 HEAD_D		:=	.
 
@@ -51,7 +52,7 @@ CXXFLAGS	:=	-Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP
 
 #*------------------------------------------------------------------------------*
 
-NAME		:=	IRC
+NAME		:=	ircserv
 
 #*------------------------------------------------------------------------------*
 

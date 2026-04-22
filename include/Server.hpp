@@ -1,5 +1,5 @@
-#ifndef SERVEUR_HPP
-#define SERVEUR_HPP
+#ifndef SERVER_HPP
+#define SERVER_HPP
 
 #include <vector>
 #include <map>
@@ -9,18 +9,24 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/epoll.h>
+#include <csignal>
 #include "Client.hpp"
 #include "Channel.hpp"
 
+extern bool g_isRunning;
+
 class Server{
+
 	private:
 		int _port;
-		std::string _password;
 		int _serverSocketFd;
 		int _epollFd;
 		std::vector<epoll_event> _events;
-		std::map <int,Client> _registry;
-		std::map <std::string,Channel> _channels;
+		std::map <int,Client*> _registry;
+		std::string _serverName;
+		std::string _creationDate;
+		std::string _password;
+
 	public:
 		Server(int port, std::string password);
 		// Server(const Server& copy);
@@ -31,8 +37,10 @@ class Server{
 		void createNewClient();
 		void removeClient(int fd);
 		void handleClientData(int fd);
+		void clientWrite(int fd);
+		void sendToClient(int fd);
+		Client* getClientByNickname(std::string);
 
-		// void broadcast(const std::string& msg);
 	~Server();
 };
 
