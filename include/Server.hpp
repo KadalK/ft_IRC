@@ -18,14 +18,20 @@ extern bool g_isRunning;
 class Server{
 
 	private:
+
 		int _port;
 		int _serverSocketFd;
 		int _epollFd;
+
 		std::vector<epoll_event> _events;
-		std::map <int,Client*> _registry;
 		std::string _serverName;
 		std::string _creationDate;
 		std::string _password;
+		// mange client
+		std::map <int,Client*> _registry;
+		ManageChannel &_ManageChannel;
+		ManageClient &_ManageClient;
+		// Parser _parser;
 
 	public:
 		Server(int port, std::string password);
@@ -36,9 +42,13 @@ class Server{
 		void run();
 		void createNewClient();
 		void removeClient(int fd);
-		void handleClientData(int fd);
+
+		void eventToServer(int fd);
+
+		//mange client
 		void clientWrite(int fd);
-		void sendToClient(int fd);
+
+		void eventToClient(int fd);
 		Client* getClientByNickname(std::string);
 
 	~Server();
