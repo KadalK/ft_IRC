@@ -7,10 +7,10 @@ class Pass : public Commands {
 private:
 	Pass& operator=(const Pass& other);
 	Pass(const Pass& copy);
-public:
 	Pass();
+public:
 	// Pass(const Server& server);
 
-	void execute(Client* client, std::vector<std::vector<std::string> >);
+	void execute(Client* client, std::vector<std::string>);
 	~Pass();
 };

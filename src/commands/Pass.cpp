@@ -10,7 +10,9 @@
 
 //changer std::vector<std::vector<std::string> > pass std::vector<std::vector> pass
 //faire un preparsing des element a utiliser dans la fonction
-void Pass::execute(Client* client, std::vector<std::vector<std::string> > pass){
+
+
+void Pass::execute(Client* client, std::vector<std::string>  pass){
 	//securite longueur etout si RFC
 	if (!client)
 	{
@@ -19,26 +21,28 @@ void Pass::execute(Client* client, std::vector<std::vector<std::string> > pass){
 		// client->setBufferOut("CLIENT is NULL !");
 		return;
 	}
-	if (pass.empty() || pass[0].size() < 2)
+	if (pass.empty() || pass.size() < 2)
 	{
 		std::cout << "[DEBUG]: password empty" << std::endl;
 		//send un msg au client
 		return;
 	}
 
-	std::string passWord = pass[0][1];
+	std::string passWord = pass[0];
 
 	if (client->isRegistered())
 	{
-		std::cout << "[DEBUG]: Already registed" << std::endl;
+		std::cout << "[DEBUG]: Already register" << std::endl;
 		//send un msg au client
 		return;
 	}
 	if (passWord != this->_server.getPass())
 	{
-		std::cout << "[DEBUG]: password incorect" << std::endl;
+		std::cout << "[DEBUG]: password incorrect" << std::endl;
 		//send un msg au client
 		return;
 	}
 	client->setAuth(true);
 }
+
+	Pass::~Pass(){}
