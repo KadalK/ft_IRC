@@ -19,7 +19,9 @@ SRCS		:=	main.cpp \
 				Channel.cpp \
 				Client.cpp \
 				Server.cpp \
-				ManageChannel.cpp
+				ManageChannel.cpp \
+				Preparser.cpp
+
 
 #*------------------------------------------------------------------------------*
 
