@@ -4,12 +4,21 @@
 #include "Channel.hpp"
 
 
+bool g_isRunning = true;
+
+void signal_handler(int signum)
+{
+    (void)signum;
+	g_isRunning = false;
+	std::cout << "\nThe server is closing..." << std::endl;
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 3)
         return (1);
-    // signal(SIGINT,signal_handler);
-    // signal(SIGQUIT,signal_handler);
+    signal(SIGINT,signal_handler);
+    signal(SIGQUIT,signal_handler);
     // faire une verif sur le password et le port (au niveau du format)
     std::stringstream ss(argv[1]);
     int port;
