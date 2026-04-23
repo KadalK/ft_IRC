@@ -12,14 +12,14 @@
 #include <csignal>
 #include "Client.hpp"
 #include "Channel.hpp"
-#include "CommandsHandler.hpp"
+// #include "CommandsHandler.hpp"
+#include "ClientHandler.hpp"
 
 extern bool g_isRunning;
 
 class Server{
 
 	private:
-
 		int _port;
 		int _serverSocketFd;
 		int _epollFd;
@@ -28,12 +28,10 @@ class Server{
 		std::string _serverName;
 		std::string _creationDate;
 		std::string _password;
-		// mange client
-		std::map <int,Client*> _registry;
-		ManageChannel &_ManageChannel;
-		ManageClient &_ManageClient;
-    CommandsHandler &_CommandsHandler;
-		// Parser _parser;
+
+		// ManageChannel &_ManageChannel;
+		ClientHandler _clientHandler;
+    	// CommandsHandler &_CommandsHandler;
 
 	public:
 		Server(int port, std::string password);
@@ -42,16 +40,11 @@ class Server{
 
 		void init();
 		void run();
-		void createNewClient();
-		void removeClient(int fd);
-
+		void connectNewClient();
+		void disconnectClient(int fd);
 		void eventToServer(int fd);
-
-		//mange client
-		void clientWrite(int fd);
-
+		void setEpollOut(const std::vector<int>& vec);
 		void eventToClient(int fd);
-		Client* getClientByNickname(std::string);
 
 	~Server();
 };
