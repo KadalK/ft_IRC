@@ -18,8 +18,8 @@ private:
   //Add all commands
   std::map<std::string, *Commands> _commands;
   // std::vector<std::string> tokens;
-  ClientHandler &_ClientHandler;
-  ChannelHandler &_ChannelHandler;
+  ClientHandler &_clientHandler;
+  ChannelHandler &_channelHandler;
 
   CommandsHandler();
   CommandsHandler(const CommandsHandler &src);
@@ -30,7 +30,8 @@ public:
   CommandsHandler(ClientHandler *ClientHandler, ChannelHandler *ChannelHandler);
   ~CommandsHandler();
 
-  void processCommand(Client &client, std::string rawMessage);
+  void processCommand(Client &client, ClientHandler &_ClientHandler, channelHandler &_channelHandler, std::string rawMessage);
+
 
 };
 

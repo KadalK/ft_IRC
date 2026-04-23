@@ -63,8 +63,8 @@ void Server::eventToServer(int fd)
 		{
 			std::string command = this->_registry[fd]->getBuffer().substr(0, pos);
 			this->_registry[fd]->setBuffer(this->_registry[fd]->getBuffer().erase(0, pos + 2));
+      processCommand(client, clientHandler, channelHandler, command);
 		}
-    //processCommand(client, ...);
     std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 	}
 }

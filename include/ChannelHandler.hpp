@@ -1,5 +1,4 @@
-#ifndef MANAGECHANNEL_HPP
-#define MANAGECHANNEL_HPP
+#pragma once
 
 #include <iostream>
 #include <stdexcept>
