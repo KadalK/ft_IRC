@@ -3,7 +3,7 @@
 
 CommandsHandler::CommandsHandler(ClientHandler *ClientHandler, ChannelHandler *ChannelHandler) : _ClientHandler(ClientHandler), _ChannelHandler(ChannelHandler), _pmsg(new PrivMsg), _pass(new Pass)
 {
-  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}}
+  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}};
 }
 
 CommandsHandler::~CommandsHandler()

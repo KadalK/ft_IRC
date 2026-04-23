@@ -11,7 +11,6 @@
 #include <sys/epoll.h>
 #include <csignal>
 #include "Client.hpp"
-#include "Channel.hpp"
 // #include "CommandsHandler.hpp"
 #include "ClientHandler.hpp"
 

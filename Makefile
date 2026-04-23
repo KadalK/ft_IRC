@@ -16,10 +16,8 @@ NC		:= \033[0m
 #*------------------------------------------------------------------------------*
 
 SRCS		:=	main.cpp \
-				Channel.cpp \
 				Client.cpp \
 				Server.cpp \
-				ManageChannel.cpp \
 				ClientHandler.cpp \
 # 				Preparser.cpp
 
@@ -37,10 +35,9 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	include/Channel.hpp \
+HEAD		:= \
 				include/Client.hpp \
 				include/Server.hpp \
-				include/ManageChannel.hpp \
 				include/ClientHandler.hpp \
 				include/SystemException.hpp
 

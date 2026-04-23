@@ -1,35 +1,37 @@
 #include "Channel.hpp"
 
-Channel::Channel(const std::string& name) : _name(name){
-	if (name.empty())
-		throw std::invalid_argument("Channel name cannot be empty");
-	if (name[0] != '#')
-		throw std::invalid_argument("Invalid channel name");
+Channel::Channel(const std::string& name, const Client &client) : _name(name)
+{
+  this->_clients = {{client, true}};
+  this->_invited = {};
 }
 
-const std::string& Channel::getName() const{
+const std::string& Channel::getName() const
+{
 	return(this->_name);
 }
 
-const std::string&	Channel::getTopic() const{
+const std::string&	Channel::getTopic() const
+{
 	return(this->_topic);
+}
+
+const std::string&	Channel::getPassword() const
+{
+	return(this->_password);
 }
 
 void	Channel::setTopic(std::string& topic){
 	this->_topic = topic;
 }
 
-void	Channel::addClient(Client* client){
-	if (!client){
-		std::cout << " [DEBUG] addClient  client is NULL\n";
-		return;
-	}
-	// if (hasClient(client)){
-	// 	std::cout << "[DEBUG] addClient client is already in\n";
-	// 	return;
-	// }
+void	Channel::addClient(Client* client)
+{
+  std::pair<std::map<Client*, bool>, bool> ret;
 
-	this->_clients.push_back(client);
+  ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
+  if (ret = false)
+    std::cout << "already join the channel" << std::endl;
 }
 
 void Channel::removeClient(Client* client)
@@ -40,7 +42,7 @@ void Channel::removeClient(Client* client)
 		return;
 	}
 
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	for (std::map<Client*, bool>::iterator it = _clients.begin(); it != _clients.end(); ++it)
 	{
 		if (*it == client)
 		{

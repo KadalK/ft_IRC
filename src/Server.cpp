@@ -66,21 +66,20 @@ void Server::eventToServer(int fd)
 {
 	char temp[1024] = {0};
 	int bytes = recv(fd, temp, sizeof(temp), 0);
-	Client *iencli = this->_clientHandler.getClientByFd(fd);
+	Client *client = this->_clientHandler.getClientByFd(fd);
 	if (bytes <= 0)
 		this->disconnectClient(fd);
 	else
 	{
-		iencli->appendBuffer(temp);
+		client->appendBuffer(temp);
 		size_t pos;
-		while ((pos = iencli->getBuffer().find("\r\n")) != std::string::npos)
+		while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
 		{
-			std::string command = iencli->getBuffer().substr(0, pos);
-			iencli->setBuffer(iencli->getBuffer().erase(0, pos + 2));
-			// this->_CommandsHandler.processCommand(command, iencli,this->_clientHandler,this->_channelHandler);
+			std::string command = client->getBuffer().substr(0, pos);
+			client->setBuffer(client->getBuffer().erase(0, pos + 2));
+			// this->_CommandsHandler.processCommand(iencli, this->_clientHandler, this->_channelHandler, command);
 			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 		}
-    std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 	}
 }
 

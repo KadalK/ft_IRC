@@ -7,7 +7,6 @@
 
 class Channel {
 private:
-  int _fd;
 	std::string _name;
 	std::string _topic;
 
@@ -17,7 +16,7 @@ private:
   unsigned size_t _userLimit;
 
 	std::map <Client*, bool> _clients;
-  std::map <Client *, bool> _invited;
+  std::vector <Client*> _invited;
   
   void mode_i(bool flag, const std::string &arg);
   void mode_t(bool flag, const std::string &arg);
@@ -26,7 +25,7 @@ private:
   void mode_l(bool flag, const std::string &arg);
 
 public:
-	Channel(const std::string& name);
+	Channel(const std::string& name, const Client *client);
 
 	void	setTopic(std::string& topic);
 
