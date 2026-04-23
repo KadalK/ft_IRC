@@ -10,19 +10,19 @@ void Server::init()
 	int optval = 1;
 	this->_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_serverSocketFd < 0)
-		throw SystemException("Erreur de création du socket");
+		throw SystemException("Error during the creation of the socket");
 	if (setsockopt(this->_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
-		throw SystemException("Erreur de configuration du socket");
+		throw SystemException("Error during the configuration of the socket");
 	sockaddr_in serverAddress;
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(this->_port);
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
 	if (bind(this->_serverSocketFd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
-		throw SystemException("Erreur d'attachement au port");
+		throw SystemException("Error during the bind of the port");
 	if (fcntl(this->_serverSocketFd, F_SETFL, O_NONBLOCK) < 0)
-		throw SystemException("Erreur lors du passage en mode non-bloquant");
+		throw SystemException("Error from the fcntl function");
 	if (listen(this->_serverSocketFd, 5) < 0)
-		throw SystemException("Impossible d'ouvrir les portes du serveur pour écouter");
+		throw SystemException("Error can't be able to listen");
 }
 
 void Server::createNewClient()
