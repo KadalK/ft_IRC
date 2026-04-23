@@ -53,7 +53,6 @@ void Server::eventToServer(int fd)
 {
 	char temp[1024] = {0};
 	int bytes = recv(fd, temp, sizeof(temp), 0);
-	std::vector<std::string> tokens;
 	if (bytes <= 0)
 		this->removeClient(fd);
 	else
@@ -64,10 +63,9 @@ void Server::eventToServer(int fd)
 		{
 			std::string command = this->_registry[fd]->getBuffer().substr(0, pos);
 			this->_registry[fd]->setBuffer(this->_registry[fd]->getBuffer().erase(0, pos + 2));
-			tokens = parseCommands(command)
-			executeCommands(&tokens, this->_registery[fd], _ManageChannel,_ManageClient);
-			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 		}
+    //processCommand(client, ...);
+    std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 	}
 }
 

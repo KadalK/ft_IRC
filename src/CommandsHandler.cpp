@@ -1,10 +1,9 @@
 #include "../include/CommandsHandler.hpp"
 #include <iostream>
 
-CommandsHandler::CommandsHandler() : _pmsg(new PrivMsg), _pass(new Pass)
+CommandsHandler::CommandsHandler(ClientHandler *ClientHandler, ChannelHandler *ChannelHandler) : _ClientHandler(ClientHandler), _ChannelHandler(ChannelHandler), _pmsg(new PrivMsg), _pass(new Pass)
 {
   this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}}
-  this->commands = {{"PRIVMSG", "je suis un message prive"}, {"JOIN", "je suis un join"}}; //debug
 }
 
 CommandsHandler::~CommandsHandler()
@@ -47,13 +46,13 @@ Commands *CommandsHandler::findCommand(std::string inputCommand)
 {
   std::map<std::string, *Commands>::iterator i;
 
-  i = this->commands.find(inputCommand);
-  if (i == this->commands.end())
+  i = this->_commands.find(inputCommand);
+  if (i == this->_commands.end())
     return NULL; //Commande existe pas - Throw exception
   return i->second; 
 }
 
-void CommandsHandler::processCommand(std::string rawMessage)
+void CommandsHandler::processCommand(Client &client, std::string rawMessage)
 {
   std::vector<std::string> tokens;
   Commands *cmd;
@@ -66,7 +65,7 @@ void CommandsHandler::processCommand(std::string rawMessage)
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   tokens = tokenizeCommand(rawMessage.substr(pos));
-  cmd->execute(tokens);
+  cmd->execute(client, clientHandler, channelHandlder, tokens);
 }
 
 ////debug
