@@ -41,10 +41,7 @@ HEAD		:=	include/Channel.hpp \
 				include/Client.hpp \
 				include/Server.hpp \
 				include/ManageChannel.hpp \
-				include/SystemException.hpp \
-				include/Commands.hpp \
-				include/Pass.hpp \
-				include/PrivMsg.hpp \
+				include/SystemException.hpp
 
 HEAD_D		:=	.
 

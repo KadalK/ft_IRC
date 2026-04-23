@@ -24,7 +24,7 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg, std::str
 
 	const std::string& pass = arg[1];
 
-	if (client.isRegistered())
+	// if (client.isRegistered())
 	{
 		std::cout << "[DEBUG]: Already registered" << std::endl;
 		client.setBufferOut("Already registered");

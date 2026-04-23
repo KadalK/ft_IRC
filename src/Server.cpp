@@ -54,7 +54,7 @@ void Server::removeClient(int fd)
 	std::cout << "client remove " << this->_registry[fd]->getNickname() << " le fd etait : " << fd << std::endl;
 }
 
-void Server::handleClientData(int fd)
+void Server::eventToServer(int fd)
 {
 	char temp[1024] = {0};
 	int bytes = recv(fd, temp, sizeof(temp), 0);
@@ -68,13 +68,13 @@ void Server::handleClientData(int fd)
 		{
 			std::string command = this->_registry[fd]->getBuffer().substr(0, pos);
 			this->_registry[fd]->setBuffer(this->_registry[fd]->getBuffer().erase(0, pos + 2));
-			// envoie au parseur.
-			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 		}
+    //processCommand(client, ...);
+    std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 	}
 }
 
-void Server::sendToClient(int fd)
+void Server::eventToClient(int fd)
 {
 	if (this->_registry.find(fd) == this->_registry.end())
 		return;
@@ -139,9 +139,9 @@ void Server::run()
 			else
 			{
 				if (flags & EPOLLIN)
-					this->handleClientData(clientSocketFd);
+					this->eventToServer(clientSocketFd);
 				if (flags & EPOLLOUT)
-					this->sendToClient(clientSocketFd);
+					this->eventToClient(clientSocketFd);
 			}
 		}
 	}
