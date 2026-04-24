@@ -1,6 +1,6 @@
 #include "Channel.hpp"
 
-Channel::Channel(const std::string& name, const Client &client) : _name(name)
+Channel::Channel(const std::string& name, Client *client) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0)
 {
   this->_clients = {{client, true}};
   this->_invited = {};
@@ -32,26 +32,62 @@ void	Channel::addClient(Client* client)
   ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
   if (ret = false)
     std::cout << "already join the channel" << std::endl;
+  else
+  {
+    std::vector<Client*>::iterator it;
+
+    it = std::find(this->_invited.begin(), this->_invited.end(), client);
+    if (it != this->_invited.end())
+      this->_invited.erase(it);
+  }
+}
+
+void Channel:inviteClient(Client *client)
+{
+  std::vector<Client*>::iterator it;
+
+  it = std::find(this->_invited.begin(), this->_invited.end(), client);
+  if (it != this->_invited.end())
+    std::cout << "already invited to the channel" << std::endl;
+  else
+    this->_invited.push_back(it);
+  return ;
 }
 
 void Channel::removeClient(Client* client)
 {
-	if (!client)
-	{
-		std::cout << "[DEBUG] removeClient client is NULL\n";
-		return;
-	}
+  std::map<Client *, bool>::iterator it;
 
-	for (std::map<Client*, bool>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		if (*it == client)
-		{
-			std::cout << "[DEBUG] removeClient client deleted\n";
-			_clients.erase(it);
-			return;
-		}
-	}
-			std::cout << "[DEBUG] removeClient client not found\n";
+  it = this->_clients.find();
+  if (it != this->_clients.end())
+    _clients.erase(it);
+  else
+    std::cout << "client no in channel" << std::endl;
+}
+
+void Channel::mode_i(bool flag, const std::string &arg)
+{
+  (void)arg;
+  if (flag == true)
+  {
+    if (this->_inviteOnly == true)
+    {
+      std::cout << "Channel already in invite-only mode" << std::endl;
+      return;
+    }
+    this->_inviteOnly = true;
+    std::cout << "Added invite-only mode" << std::endl;
+  }
+  else
+  {
+    if (this->_inviteOnly == false)
+    {
+      std::cout << "Channel already not in invite-only mode" << std::endl;
+      return;
+    }
+    this->_inviteOnly = true;
+    std::cout << "Deleted invite-only mode" << std::endl;
+  }
 }
 
 // void Channel::broadcast(const std::string& msg, Client* sender)
