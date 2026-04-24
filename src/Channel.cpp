@@ -90,31 +90,7 @@ void Channel::mode_i(bool flag, const std::string &arg)
   }
 }
 
-// void Channel::broadcast(const std::string& msg, Client* sender)
-// {
-// 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-// 	{
-// 		if (*it != sender)
-// 		{
-// 			std::cout << "[DEBUG] sending \n";
-// 			(*it)->send(msg);
-// 		}
-// 	}
-// }
 
-// bool	Channel::hasClient(Client* client) const{
-// 	for (size_t i = 0; i < _clients.size(); i++)
-// 	{
-// 		if (this->_clients[i] == client)
-// 		{
-// 			std::cout << "[DEBUG] : client "  << client->getName() << " is here\n";
-// 			return (true);
-// 		}
-// 	}
-
-// 	std::cout << "[DEBUG] : client "  << client->getName()<< " is not here\n";
-// 	return(false);
-// }
 
 
 Channel::~Channel(){}

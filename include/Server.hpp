@@ -36,7 +36,7 @@ class Server{
 		Server(int port, std::string password);
 		// Server(const Server& copy);
 		// Server& operator=(const Server& other);
-
+		// Server& operator=(const Server& other);
 		void init();
 		void run();
 		void connectNewClient();

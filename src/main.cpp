@@ -1,6 +1,5 @@
 #include <sstream>
 #include "Server.hpp"
-#include <iostream>
 #include "Client.hpp"
 
 bool g_isRunning = true;
