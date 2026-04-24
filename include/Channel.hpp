@@ -2,6 +2,8 @@
 #define CHANNEL_HPP
 
 #include <vector>
+#include <algorithm>
+#include <map>
 #include <iostream>
 #include "Client.hpp"
 
@@ -13,7 +15,8 @@ private:
   bool _inviteOnly;
   bool _topicRestrict;
   std::string _password;
-  unsigned size_t _userLimit;
+  size_t _userLimit;
+  size_t _userCount;
 
 	std::map <Client*, bool> _clients;
   std::vector <Client*> _invited;
@@ -32,6 +35,10 @@ public:
 	const std::string&	getName() const;
   const std::string&  getPassword() const;
 	const std::string&	getTopic() const;
+	bool	getInviteOnly() const;
+
+  bool isClientInvited(Client &client);
+  bool isChannelFull(void);
 
 	void	addClient(Client* client);
   void  inviteClient(Client* client);
@@ -44,6 +51,6 @@ public:
 	~Channel();
 };
 
-typedef void (Channel::*modeHandler)(bool flag, const std::string &arg)
+typedef void (Channel::*modeHandler)(bool flag, const std::string &arg);
 
 #endif

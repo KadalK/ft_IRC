@@ -1,15 +1,26 @@
-#include "../include/CommandsHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "ChannelHandler.hpp"
+#include "ClientHandler.hpp"
+#include "Join.hpp"
+#include "Commands.hpp"
+
 #include <iostream>
 
-CommandsHandler::CommandsHandler(ClientHandler *ClientHandler, ChannelHandler *ChannelHandler) : _ClientHandler(ClientHandler), _ChannelHandler(ChannelHandler), _pmsg(new PrivMsg), _pass(new Pass)
+CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join)
 {
-  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}};
+  this->_commands["JOIN"] = _join;
 }
+
+// CommandsHandler::CommandsHandler()
+// {
+//   this->commands = {{"JOIN", _join}};
+// }
 
 CommandsHandler::~CommandsHandler()
 {
-  delete _pmsg;
-  delete _pass;
+  // delete _pmsg;
+  // delete _pass;
+  delete _join;
 }
 
 
@@ -44,7 +55,7 @@ static std::vector<std::string> tokenizeCommand(std::string rawCommand)
 
 Commands *CommandsHandler::findCommand(std::string inputCommand)
 {
-  std::map<std::string, *Commands>::iterator i;
+  std::map<std::string, Commands*>::iterator i;
 
   i = this->_commands.find(inputCommand);
   if (i == this->_commands.end())
@@ -52,7 +63,7 @@ Commands *CommandsHandler::findCommand(std::string inputCommand)
   return i->second; 
 }
 
-void CommandsHandler::processCommand(Client &client, std::string rawMessage)
+void CommandsHandler::processCommand(Client &client, ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string rawMessage)
 {
   std::vector<std::string> tokens;
   Commands *cmd;
@@ -61,11 +72,13 @@ void CommandsHandler::processCommand(Client &client, std::string rawMessage)
   pos = rawMessage.find(' ');
   if (pos == std::string::npos)
     return; // Manque arguments - throw exception
-  cmd = findCommand(rawMessage.substr(0, pos))
+  cmd = this->findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   tokens = tokenizeCommand(rawMessage.substr(pos));
-  cmd->execute(client, clientHandler, channelHandlder, tokens);
+  for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); it++) //debug test
+    std::cout << "[" << *it << "]" << std::endl; //debug test 
+  cmd->execute(client, clientHandler, channelHandler, tokens);
 }
 
 ////debug

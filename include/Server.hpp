@@ -11,8 +11,9 @@
 #include <sys/epoll.h>
 #include <csignal>
 #include "Client.hpp"
-// #include "CommandsHandler.hpp"
+#include "CommandsHandler.hpp"
 #include "ClientHandler.hpp"
+#include "ChannelHandler.hpp"
 
 extern bool g_isRunning;
 
@@ -28,9 +29,9 @@ class Server{
 		std::string _creationDate;
 		std::string _password;
 
-		// ManageChannel &_ManageChannel;
+		ChannelHandler _channelHandler;
 		ClientHandler _clientHandler;
-    	// CommandsHandler &_CommandsHandler;
+    CommandsHandler _commandsHandler;
 
 	public:
 		Server(int port, std::string password);

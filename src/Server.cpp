@@ -1,7 +1,8 @@
 #include "Server.hpp"
 #include "SystemException.hpp"
 
-Server::Server(int port, std::string password) : _port(port), _password(password)
+Server::Server(int port, std::string password)
+  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler)
 {
 }
 
@@ -77,7 +78,7 @@ void Server::eventToServer(int fd)
 		{
 			std::string command = client->getBuffer().substr(0, pos);
 			client->setBuffer(client->getBuffer().erase(0, pos + 2));
-			// this->_CommandsHandler.processCommand(iencli, this->_clientHandler, this->_channelHandler, command);
+			this->_commandsHandler.processCommand(*client, this->_clientHandler, this->_channelHandler, command);
 			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 		}
 	}

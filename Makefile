@@ -15,11 +15,16 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-SRCS		:=	main.cpp \
-				Client.cpp \
+SRCS		:= \
+				main.cpp \
 				Server.cpp \
+				Client.cpp \
+				Channel.cpp \
 				ClientHandler.cpp \
-# 				Preparser.cpp
+				ChannelHandler.cpp \
+				CommandsHandler.cpp \
+				Join.cpp \
+				Commands.cpp
 
 
 #*------------------------------------------------------------------------------*
@@ -36,10 +41,14 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 #*------------------------------------------------------------------------------*
 
 HEAD		:= \
-				include/Client.hpp \
 				include/Server.hpp \
+				include/Client.hpp \
+				include/Channel.hpp \
 				include/ClientHandler.hpp \
-				include/SystemException.hpp
+				include/ChannelHandler.hpp \
+				include/CommandsHandler \
+				include/Join.hpp \
+				include/Commands.hpp
 
 HEAD_D		:=	.
 

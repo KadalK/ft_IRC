@@ -4,11 +4,12 @@
 #include <stdexcept>
 #include <string>
 #include "Channel.hpp"
+#include "Client.hpp"
 #include <map>
 
 class ChannelHandler{
 private:
-	std::vector<Channel*> _channelList;
+	std::map<std::string, Channel *> _channelList;
 	ChannelHandler(const ChannelHandler& copy);
 	ChannelHandler& operator=(const ChannelHandler& other);
 public:
@@ -27,10 +28,8 @@ public:
 	Channel *getChannelName(Channel *channel);
 
 	//Methods
-	void	deleteChannel(const std::string& name);
-	Channel* createChannel(const std::string& name);
+	void	deleteChannel(std::string name);
+	void createChannel(const std::string& name, Client *client);
 
 	~ChannelHandler();
 };
-
-#endif

@@ -1,9 +1,8 @@
 #include "Channel.hpp"
 
-Channel::Channel(const std::string& name, Client *client) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0)
+Channel::Channel(const std::string& name, Client *client) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0), _userCount(1)
 {
-  this->_clients = {{client, true}};
-  this->_invited = {};
+  this->_clients[client] = true;
 }
 
 const std::string& Channel::getName() const
@@ -21,44 +20,64 @@ const std::string&	Channel::getPassword() const
 	return(this->_password);
 }
 
+bool Channel::getInviteOnly() const
+{
+	return(this->_inviteOnly);
+}
+
 void	Channel::setTopic(std::string& topic){
 	this->_topic = topic;
 }
 
-void	Channel::addClient(Client* client)
-{
-  std::pair<std::map<Client*, bool>, bool> ret;
-
-  ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
-  if (ret = false)
-    std::cout << "already join the channel" << std::endl;
-  else
-  {
-    std::vector<Client*>::iterator it;
-
-    it = std::find(this->_invited.begin(), this->_invited.end(), client);
-    if (it != this->_invited.end())
-      this->_invited.erase(it);
-  }
-}
-
-void Channel:inviteClient(Client *client)
+bool Channel::isClientInvited(Client &client)
 {
   std::vector<Client*>::iterator it;
 
-  it = std::find(this->_invited.begin(), this->_invited.end(), client);
+  it = std::find(this->_invited.begin(), this->_invited.end(), &client);
   if (it != this->_invited.end())
+    return (true);
+  return (false);
+}
+
+bool Channel::isChannelFull(void)
+{
+  if (this->_userLimit == 0 || this->_userLimit > this->_userCount)
+    return (false);
+  return (true);
+}
+
+void	Channel::addClient(Client* client)
+{
+  std::pair<std::map<Client*, bool>::iterator, bool> ret;
+
+  ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
+  if (ret.second == false)
+    std::cout << "already joined the channel" << std::endl;
+  else
+  {
+    std::vector<Client*>::iterator it;
+    
+    it = std::find(this->_invited.begin(), this->_invited.end(), client);
+    if (it != this->_invited.end())
+      this->_invited.erase(it);
+    this->_userCount += 1;
+  }
+}
+
+void Channel::inviteClient(Client *client)
+{
+  if (this->isClientInvited(*client) == true)
     std::cout << "already invited to the channel" << std::endl;
   else
-    this->_invited.push_back(it);
+    this->_invited.push_back(client);
   return ;
 }
 
 void Channel::removeClient(Client* client)
 {
-  std::map<Client *, bool>::iterator it;
+  std::map<Client*, bool>::iterator it;
 
-  it = this->_clients.find();
+  it = this->_clients.find(client);
   if (it != this->_clients.end())
     _clients.erase(it);
   else
