@@ -1,53 +1,46 @@
-#include "ManageChannel.hpp"
+#include "ChannelHandler.hpp"
 
-ManageChannel::ManageChannel(){}
+ChannelHandler::ChannelHandler(){}
 
-ManageChannel::ManageChannel(const ManageChannel& copy) : _channel(copy._channel) {}
-
-ManageChannel& ManageChannel::operator=(const ManageChannel& other){
-	if (this != &other)
-		this->_channel = other._channel;
-	return(*this);
-}
-
-const char *ManageChannel::NoChannelFound::what() const throw() {
+const char *ChannelHandler::NoChannelFound::what() const throw()
+{
 	return ("Channel not found");
 }
 
-const char* ManageChannel::ChannelsEmpty::what() const throw(){
+const char *ChannelHandler::ChannelsEmpty::what() const throw()
+{
 	return ("Channels Empty");
 }
 
-Channel* ManageChannel::getChannel(const std::string& name){
-	std::map<std::string, Channel*>::iterator it = this->_channel.find(name);
-		if (it == this->_channel.end())
+Channel *ChannelHandler::getChannelByName(const std::string& name)
+{
+	std::vector<Channel*>::iterator it = this->_channelList.find(name);
+		if (it == this->_channelList.end())
 			throw NoChannelFound();
-	return(it->second);
+	return(it);
 }
 
-std::map<std::string , Channel* >& ManageChannel::getAllChannels(){
-	if (this->_channel.empty())
-		throw ChannelsEmpty();
-	return (this->_channel);
-}
-
-void ManageChannel::deleteChannel(const std::string& name){
-	std::map<std::string, Channel*>::iterator it = this->_channel.find(name);
-	if (it != this->_channel.end())
+void ChannelHandler::deleteChannel(Channel *channel)
+{
+	std::vector<Channel*>::iterator it = this->_channelList.find(channel);
+	if (it != this->_channelList.end())
 	{
-		delete it->second;
-		this->_channel.erase(it);
+		this->_channelList.erase(it);
+    delete *it;
 	}
 }
 
-Channel* ManageChannel::createChannel(const std::string& name){
-	std::map<std::string, Channel*>::iterator it = _channel.find(name);
-	if (it != this->_channel.end())
-		return it->second;
+Channel* ChannelHandler::createChannel(const std::string& name, Client *client)
+{
+	std::map<std::string, Channel*>::iterator it = _channelList.find(name);
+	if (it != this->_channelList.end())
+		return *it;
 	try
 	{
-		Channel* channel = new Channel(name);
-		this->_channel[name] = channel;
+		Channel* channel = new Channel(name, client);
+    if (!channel)
+      return NULL;
+		this->_channelList.push_back(channel);
 		return channel;
 	}
 	catch (const std::exception& e)
@@ -57,7 +50,7 @@ Channel* ManageChannel::createChannel(const std::string& name){
 	}
 }
 
-ManageChannel::~ManageChannel(){
+ChannelHandler::~ChannelHandler(){
 	for (std::map<std::string, Channel*>::iterator it = _channel.begin(); it != _channel.end(); ++it)
-		delete it->second;
+		delete *it;
 }

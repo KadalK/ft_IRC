@@ -6,13 +6,13 @@
 #include "Channel.hpp"
 #include <map>
 
-class ManageChannel{
+class ChannelHandler{
 private:
-	std::map<std::string , Channel* > _channel;
-	ManageChannel(const ManageChannel& copy);
-	ManageChannel& operator=(const ManageChannel& other);
+	std::vector<Channel*> _channelList;
+	ChannelHandler(const ChannelHandler& copy);
+	ChannelHandler& operator=(const ChannelHandler& other);
 public:
-	ManageChannel();
+	ChannelHandler();
 
 	//Exeptions
 	class NoChannelFound : public std::exception{
@@ -23,14 +23,14 @@ public:
 	};
 
 	//Getters
-	Channel* getChannel(const std::string& name);
-	std::map<std::string , Channel* >& getAllChannels();
+	Channel *getChannelByName(const std::string& name);
+	Channel *getChannelName(Channel *channel);
 
 	//Methods
 	void	deleteChannel(const std::string& name);
 	Channel* createChannel(const std::string& name);
 
-	~ManageChannel();
+	~ChannelHandler();
 };
 
 #endif

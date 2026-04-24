@@ -25,7 +25,7 @@ private:
   void mode_l(bool flag, const std::string &arg);
 
 public:
-	Channel(const std::string& name, const Client *client);
+	Channel(const std::string& name, Client *client);
 
 	void	setTopic(std::string& topic);
 
