@@ -9,16 +9,16 @@ Pass::Pass(std::string passServ): _passServ(passServ) {}
 
 void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std::vector<std::string>& arg)
 {
-	if (arg.size() < 2)
+	if (arg.size() < 1)
 	{
 		std::cout << "[debug]: invalid format" << std::endl;
 		client.setBufferOut("invalid format");
 		return;
 	}
 
-	const std::string& pass = arg[1];
+	const std::string& pass = arg[0];
 
-	if (client.isRegistered())
+	if (client.getPassBool())
 	{
 		std::cout << "[debug]: already registered" << std::endl;
 		client.setBufferOut("already registered");
@@ -32,33 +32,7 @@ void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std:
 		return;
 	}
 
-	client.setAuth(true);
+  client.setPassBool(true);
 }
 
 Pass::~Pass(){}
-// void pass::execute(client& client, const std::vector<std::string>& arg,  std::string& passserv){
-// 	if (arg.size() < 2)
-// 	{
-// 		std::cout << "[debug]: invalid format" << std::endl;
-// 		client.setbufferout("invalid format");
-// 		return;
-// 	}
-//
-// 	const std::string& pass = arg[1];
-//
-// 	if (client.isregistered())
-// 	{
-// 		std::cout << "[debug]: already registered" << std::endl;
-// 		client.setbufferout("already registered");
-// 		return;
-// 	}
-//
-// 	if (pass != passserv)
-// 	{
-// 		std::cout << "[debug]: invalid password" << std::endl;
-// 		client.setbufferout("invalid password");
-// 		return;
-// 	}
-//
-// 	client.setauth(true);
-// }

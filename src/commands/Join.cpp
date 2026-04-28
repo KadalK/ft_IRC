@@ -2,22 +2,6 @@
 
 Join::Join(){}
 
-
-/*
- 2 arguments :
-  - le nom du channel : "#channelName" (OBLIGATOIRE)
-    - Si pas -> Error
-    - Si oui :
-      - Existe deja :
-        - Check si password
-        - Check Invite only
-          - Check si Client invite
-        - Check si client deja join
-        - Ajouter client a la liste
-      - Existe pas :
-        - Creer un channel
-  - le mot de passe : "motdepasse" (Pas obligatoire mais bloquant si le channel en demande un)
- */
 std::vector<std::string> extractTokens(const std::string &str)
 {
   std::vector<std::string> v;
@@ -33,14 +17,7 @@ std::vector<std::string> extractTokens(const std::string &str)
     v.push_back(str.substr(start));
   return (v);
 }
-/*
-BEAUCOUP DE PROBLEMES
- - clH pas utiliser.
- - Faire tout le parsing dans ChannelHandler plutot que channel
- - Password commenter car il faut un 2eme iterator (je ferais plus tard)
- - revoir logique
-*
-*/
+
 void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const std::vector<std::string>& arg)
 {
   std::vector<std::string> channels;
@@ -90,8 +67,6 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       }
     }
   }
-
-
 }
 
 Join::~Join(){}
