@@ -53,7 +53,7 @@ HEAD		:= \
 				include/Join.hpp \
 				include/User.hpp \
 				include/Nick.hpp \
-				include/pass.hpp \
+				include/Pass.hpp \
 				include/Commands.hpp
 
 HEAD_D		:=	.

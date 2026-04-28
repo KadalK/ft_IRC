@@ -86,17 +86,17 @@ bool Client::isRegistered()
 {
 	if (this->_hasPassword == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->setBufferOut("Missing Password\n");
 		return false;
 	}
 	if (this->_hasNickname == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->setBufferOut("Missing Nickname\n");
 		return false;
 	}
 	if (this->_hasUsername == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->setBufferOut("Missing username\n");
 		return false;
 	}
 	this->_isAuth = true;
