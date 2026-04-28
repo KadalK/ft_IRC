@@ -38,6 +38,9 @@ public:
 	bool getAuth() const;
 	void setAuth(bool);
 
+	// bool getHostname() const;
+	void setHostname(std::string hostname);
+
 	std::string getNickname() const;
 	void setNickname(std::string nickname);
 

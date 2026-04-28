@@ -4,10 +4,10 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
-#include "Join.hpp"
-#include "Nick.hpp"
-#include "Pass.hpp"
-#include "User.hpp"
+#include "commands/Join.hpp"
+#include "commands/Nick.hpp"
+#include "commands/Pass.hpp"
+#include "commands/User.hpp"
 #include "Commands.hpp"
 #include "ClientHandler.hpp"
 #include "ChannelHandler.hpp"

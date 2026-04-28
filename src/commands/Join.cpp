@@ -1,4 +1,4 @@
-#include "Join.hpp"
+#include "commands/Join.hpp"
 
 Join::Join(){}
 

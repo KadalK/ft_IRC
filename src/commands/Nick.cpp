@@ -1,4 +1,4 @@
-#include "Nick.hpp"
+#include "commands/Nick.hpp"
 #include <iostream>
 
 Nick::Nick(){}

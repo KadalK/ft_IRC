@@ -42,6 +42,11 @@ std::string Client::getUsername() const
 	return(this->_username);
 }
 
+void Client::setHostname(std::string hostname)
+{
+	this->_hostname = hostname;
+}
+
 void	Client::setAuth(bool state)
 {
 	this->_isAuth = state;

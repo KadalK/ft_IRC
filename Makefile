@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/28 19:39:15 by tsaby            ###   ########.fr        #
+#    Updated: 2026/04/28 20:10:12 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,13 +20,13 @@ SRCS		:= \
 				Server.cpp \
 				Client.cpp \
 				Channel.cpp \
-				ClientHandler.cpp \
-				ChannelHandler.cpp \
-				CommandsHandler.cpp \
-				Join.cpp \
-				User.cpp \
-				Nick.cpp \
-				Pass.cpp \
+				handlers/ClientHandler.cpp \
+				handlers/ChannelHandler.cpp \
+				handlers/CommandsHandler.cpp \
+				commands/Join.cpp \
+				commands/User.cpp \
+				commands/Nick.cpp \
+				commands/Pass.cpp \
 				Commands.cpp
 
 
@@ -43,17 +43,17 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:= \
-				include/Server.hpp \
-				include/Client.hpp \
-				include/Channel.hpp \
-				include/ClientHandler.hpp \
-				include/ChannelHandler.hpp \
-				include/Join.hpp \
-				include/User.hpp \
-				include/Nick.hpp \
-				include/pass.hpp \
-				include/Commands.hpp
+# HEAD		:= \
+# 				include/Server.hpp \
+# 				include/Client.hpp \
+# 				include/Channel.hpp \
+# 				include/ClientHandler.hpp \
+# 				include/ChannelHandler.hpp \
+# 				include/commands/Join.hpp \
+# 				include/commands/User.hpp \
+# 				include/commands/Nick.hpp \
+# 				include/commands/Pass.hpp \
+# 				include/Commands.hpp
 
 HEAD_D		:=	.
 
@@ -92,7 +92,7 @@ $(OBJS_D)%.o:	$(SRCS_D)%.cpp
 #*------------------------------------------------------------------------------*
 
 clean		:
-				@$(RM) -r $(OBJS) $(OBJS_D)
+				@$(RM) -r $(OBJS_D)
 				@echo "$(YELLOW)Clean complete$(NC)"
 
 fclean		:	clean

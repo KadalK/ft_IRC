@@ -1,4 +1,4 @@
-#include "Pass.hpp"
+#include "commands/Pass.hpp"
 #include <iostream>
 
 // TODO:
