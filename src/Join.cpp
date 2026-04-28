@@ -1,7 +1,6 @@
-#include "Join.hpp"
+#include "../include/Join.hpp"
 
 Join::Join(){}
-
 
 /*
  2 arguments :
@@ -18,6 +17,7 @@ Join::Join(){}
         - Creer un channel
   - le mot de passe : "motdepasse" (Pas obligatoire mais bloquant si le channel en demande un)
  */
+
 std::vector<std::string> extractTokens(const std::string &str)
 {
   std::vector<std::string> v;

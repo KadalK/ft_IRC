@@ -1,11 +1,8 @@
 #include "Pass.hpp"
 #include <iostream>
 
-
-void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::string passServ)
-{
-
-	if (arg.empty() || arg.size() < 2)
+void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::string& passServ){
+	if (arg.size() < 2)
 	{
 		std::cout << "[DEBUG]: Invalid format" << std::endl;
 		client.setBufferOut("Invalid format");
@@ -27,6 +24,7 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::st
 		client.setBufferOut("invalid password");
 		return;
 	}
+
 	client.setAuth(true);
 }
 

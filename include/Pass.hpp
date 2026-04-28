@@ -15,7 +15,7 @@ public:
 	// Pass(std::string pass);
 	// Pass(const Server& server);
 
-	static void execute(Client& client,  const std::vector<std::string>& arg,  std::string passServ);
+	static void execute(Client& client,  const std::vector<std::string>& arg,  std::string& passServ);
 	~Pass();
 };
 

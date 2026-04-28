@@ -46,7 +46,7 @@ HEAD		:=	include/Channel.hpp \
 				include/CommandsHandler \
 				include/Commands.hpp
 				include/Join.hpp \
-				include/Nick.hpp \
+				include/Nick.hpp
 
 HEAD_D		:=	.
 
