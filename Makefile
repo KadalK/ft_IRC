@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/28 18:34:05 by tsaby            ###   ########.fr        #
+#    Updated: 2026/04/28 19:39:15 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,15 +15,19 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-SRCS		:=	main.cpp \
+SRCS		:= \
+				main.cpp \
 				Server.cpp \
 				Client.cpp \
 				Channel.cpp \
 				ClientHandler.cpp \
 				ChannelHandler.cpp \
-				CommandHandler.cpp \
-				commands/Join.cpp \
-				Commands.cpp \
+				CommandsHandler.cpp \
+				Join.cpp \
+				User.cpp \
+				Nick.cpp \
+				Pass.cpp \
+				Commands.cpp
 
 
 #*------------------------------------------------------------------------------*
@@ -39,14 +43,17 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	\
+HEAD		:= \
 				include/Server.hpp \
 				include/Client.hpp \
 				include/Channel.hpp \
 				include/ClientHandler.hpp \
 				include/ChannelHandler.hpp \
 				include/Join.hpp \
-				include/Commands.hpp \
+				include/User.hpp \
+				include/Nick.hpp \
+				include/pass.hpp \
+				include/Commands.hpp
 
 HEAD_D		:=	.
 

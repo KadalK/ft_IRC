@@ -4,24 +4,38 @@
 #include <map>
 #include <algorithm>
 #include <iostream>
+#include "Join.hpp"
+#include "Nick.hpp"
+#include "Pass.hpp"
+#include "User.hpp"
+#include "Commands.hpp"
+#include "ClientHandler.hpp"
+#include "ChannelHandler.hpp"
 
 class Commands;
 class ClientHandler;
 class ChannelHandler;
 class Client;
 class Join;
+class Nick;
+class Pass;
+class User;
 
 class CommandsHandler {
 
 private:
-  PrivMsg *_pmsg;
-  PassWord *_pass;
+
   //Add all commands
   std::map<std::string, Commands*> _commands;
   // std::vector<std::string> tokens;
   ClientHandler &_clientHandler;
   ChannelHandler &_channelHandler;
-  Join *_join;
+
+  Join  *_join;
+  Pass *_pass;
+  // PrivMsg *_pmsg;
+  Nick *_nick;
+  User *_user;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);
@@ -29,7 +43,7 @@ private:
   Commands *findCommand(std::string inputCommand);
 public:
   // CommandsHandler();
-  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler);
+  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string passServ);
   ~CommandsHandler();
 
   void processCommand(Client &client, ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string rawMessage);

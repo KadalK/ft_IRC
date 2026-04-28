@@ -1,7 +1,8 @@
 #include "Server.hpp"
 #include "SystemException.hpp"
 
-Server::Server(int port, std::string password) : _port(port), _password(password)
+Server::Server(int port, std::string password)
+  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler, _password)
 {
 }
 
