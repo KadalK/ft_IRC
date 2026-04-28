@@ -1,14 +1,18 @@
 #include "Pass.hpp"
 #include <iostream>
 
+// TODO:
+//   replies
+// ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
-void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::string passServ)
+Pass::Pass(std::string passServ): _passServ(passServ) {}
+
+void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std::vector<std::string>& arg)
 {
-
-	if (arg.empty() || arg.size() < 2)
+	if (arg.size() < 2)
 	{
-		std::cout << "[DEBUG]: Invalid format" << std::endl;
-		client.setBufferOut("Invalid format");
+		std::cout << "[debug]: invalid format" << std::endl;
+		client.setBufferOut("invalid format");
 		return;
 	}
 
@@ -16,18 +20,45 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::st
 
 	if (client.isRegistered())
 	{
-		std::cout << "[DEBUG]: Already registered" << std::endl;
-		client.setBufferOut("Already registered");
+		std::cout << "[debug]: already registered" << std::endl;
+		client.setBufferOut("already registered");
 		return;
 	}
 
-	if (pass != passServ)
+	if (pass != this->_passServ)
 	{
-		std::cout << "[DEBUG]: invalid password" << std::endl;
+		std::cout << "[debug]: invalid password" << std::endl;
 		client.setBufferOut("invalid password");
 		return;
 	}
+
 	client.setAuth(true);
 }
 
 Pass::~Pass(){}
+// void pass::execute(client& client, const std::vector<std::string>& arg,  std::string& passserv){
+// 	if (arg.size() < 2)
+// 	{
+// 		std::cout << "[debug]: invalid format" << std::endl;
+// 		client.setbufferout("invalid format");
+// 		return;
+// 	}
+//
+// 	const std::string& pass = arg[1];
+//
+// 	if (client.isregistered())
+// 	{
+// 		std::cout << "[debug]: already registered" << std::endl;
+// 		client.setbufferout("already registered");
+// 		return;
+// 	}
+//
+// 	if (pass != passserv)
+// 	{
+// 		std::cout << "[debug]: invalid password" << std::endl;
+// 		client.setbufferout("invalid password");
+// 		return;
+// 	}
+//
+// 	client.setauth(true);
+// }
