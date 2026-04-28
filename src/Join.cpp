@@ -1,5 +1,9 @@
 #include "../include/Join.hpp"
 
+//TODO:
+//   replies
+//   ERR_NOPRIVILEGES                ERR_NOSUCHSERVER
+
 Join::Join(){}
 
 /*
