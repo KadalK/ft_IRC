@@ -11,6 +11,7 @@ private:
 	int _fd;
 	std::string _nickname;
 	std::string _username;
+  std::string _hostname;
 	std::string _bufferIn;
 	std::string _bufferOut;
 

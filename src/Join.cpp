@@ -41,9 +41,8 @@ BEAUCOUP DE PROBLEMES
  - revoir logique
 *
 */
-void Join::execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg)
+void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const std::vector<std::string>& arg)
 {
-  (void)clH;
   std::vector<std::string> channels;
   std::vector <std::string> passwords;
   std::vector<std::string>::iterator pIt;

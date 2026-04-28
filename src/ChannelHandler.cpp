@@ -16,7 +16,7 @@ Channel *ChannelHandler::getChannelByName(const std::string& name)
 {
 	std::map<std::string, Channel *>::iterator it;
 
-  it = this->_channelList.fJoined channel #channel1ind(name);
+  it = this->_channelList.find(name);
   if (it == this->_channelList.end())
   {
     return (NULL);

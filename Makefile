@@ -24,6 +24,9 @@ SRCS		:= \
 				ChannelHandler.cpp \
 				CommandsHandler.cpp \
 				Join.cpp \
+				User.cpp \
+				Nick.cpp \
+				Pass.cpp \
 				Commands.cpp
 
 
@@ -48,6 +51,9 @@ HEAD		:= \
 				include/ChannelHandler.hpp \
 				include/CommandsHandler \
 				include/Join.hpp \
+				include/User.hpp \
+				include/Nick.hpp \
+				include/pass.hpp \
 				include/Commands.hpp
 
 HEAD_D		:=	.
