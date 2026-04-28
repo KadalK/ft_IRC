@@ -1,21 +1,11 @@
 #include "Pass.hpp"
+#include <iostream>
 
 
-// Pass::Pass(const Pass& copy) : Commands(copy) {}
-// Pass::Pass() {}
-
-// Pass::Pass(const Server& server)  {
-//
-// }
-
-//changer std::vector<std::vector<std::string> > pass std::vector<std::vector> pass
-//faire un preparsing des element a utiliser dans la fonction
-
-
-void Pass::execute(Client& client, const std::vector<std::string>& arg, std::string passServ)
+void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::string passServ)
 {
-	//TODO : Se referer a la RFC pour le format du mot de passe voila
-	if (arg.size() < 2)
+
+	if (arg.empty() || arg.size() < 2)
 	{
 		std::cout << "[DEBUG]: Invalid format" << std::endl;
 		client.setBufferOut("Invalid format");
@@ -24,7 +14,7 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg, std::str
 
 	const std::string& pass = arg[1];
 
-	// if (client.isRegistered())
+	if (client.isRegistered())
 	{
 		std::cout << "[DEBUG]: Already registered" << std::endl;
 		client.setBufferOut("Already registered");
@@ -37,7 +27,6 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg, std::str
 		client.setBufferOut("invalid password");
 		return;
 	}
-
 	client.setAuth(true);
 }
 

@@ -1,7 +1,13 @@
-#pragma once
+#ifndef PASS_HPP
+#define PASS_HPP
 
 #include "Server.hpp"
 #include "Commands.hpp"
+#include "ClientHandler.hpp"
+
+#include <cctype>
+
+
 
 
 class Pass : public Commands {
@@ -14,6 +20,8 @@ public:
 	// Pass(std::string pass);
 	// Pass(const Server& server);
 
-	static void execute(Client& client, const std::vector<std::string>& arg , std::string pasServ);
+	static void execute(Client& client,  const std::vector<std::string>& arg,  std::string passServ);
 	~Pass();
 };
+
+#endif

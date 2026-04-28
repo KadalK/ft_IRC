@@ -1,6 +1,8 @@
 #include "Commands.hpp"
+#include "Client.hpp"
+// #include "ClientHandler.hpp"
 
-#include "../include/Server.hpp"
+Commands::Commands(Server& server) : {}
 
 Commands::Commands(){}
 

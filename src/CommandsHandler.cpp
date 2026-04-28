@@ -1,20 +1,10 @@
-#include "CommandsHandler.hpp"
-#include "ChannelHandler.hpp"
-#include "ClientHandler.hpp"
-#include "Join.hpp"
-#include "Commands.hpp"
-
+#include "../include/CommandsHandler.hpp"
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join)
 {
-  this->_commands["JOIN"] = _join;
+  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}};
 }
-
-// CommandsHandler::CommandsHandler()
-// {
-//   this->commands = {{"JOIN", _join}};
-// }
 
 CommandsHandler::~CommandsHandler()
 {
@@ -72,12 +62,12 @@ void CommandsHandler::processCommand(Client &client, ClientHandler &clientHandle
   pos = rawMessage.find(' ');
   if (pos == std::string::npos)
     return; // Manque arguments - throw exception
-  cmd = this->findCommand(rawMessage.substr(0, pos));
+  cmd = findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   tokens = tokenizeCommand(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); it++) //debug test
-    std::cout << "[" << *it << "]" << std::endl; //debug test 
+    std::cout << "[" << *it << "]" << std::endl; //debug test
   cmd->execute(client, clientHandler, channelHandler, tokens);
 }
 
