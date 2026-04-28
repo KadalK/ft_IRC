@@ -1,4 +1,4 @@
-#include "../include/CommandsHandler.hpp"
+#include "CommandsHandler.hpp"
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join) , _pass(new Pass), _nick(new Nick) {
