@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
+
 #include <map>
-#include <algorithm>
 #include <iostream>
 #include "commands/Join.hpp"
 #include "commands/Nick.hpp"
