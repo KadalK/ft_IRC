@@ -46,6 +46,9 @@ void Join::execute(Client& client, ClientHandler &clH, ChannelHandler &chH, cons
   (void)clH;
   std::vector<std::string> channels;
   std::vector <std::string> passwords;
+  std::vector<std::string>::iterator pIt;
+  std::string inPassword;
+
   if (arg.empty() == true)
   {
     std::cout << "Missing arguments" << std::endl;
@@ -54,25 +57,35 @@ void Join::execute(Client& client, ClientHandler &clH, ChannelHandler &chH, cons
   channels = extractTokens(arg[0]);
   if (arg.size() > 1 && arg[1].empty() == false)
     passwords = extractTokens(arg[1]);
+  pIt = passwords.begin();
   for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
   {
+    if (pIt != passwords.end())
+    {
+      inPassword = *pIt;
+      pIt++;
+    }
+    else
+      inPassword = "";
     if ((*it)[0] != '#')
        std::cout << *it << " :No such channel" << std::endl;
     else
     {
       Channel *chToJoin = chH.getChannelByName(*it);
       if (chToJoin == NULL)
+      {
         chH.createChannel(*it, &client);
+        client.setBufferOut("Created channel connard\n");
+        std::cout << "Created channel " << chH.getChannelByName(*it)->getName() << std::endl;
+      }
       else
       {
-        if (chToJoin->getInviteOnly() == true && chToJoin->isClientInvited(client) == false)
-          std::cout << *it << " :Cannot join channel (+i)" << std::endl;
-        // else if (!(chToJoin->getPassword()).empty() && chToJoin->getPassword() != passwords[it])
-        //   std::cout << *it << " :Cannot join channel (+k)" << std::endl;
-        else if (chToJoin->isChannelFull() == true)
-          std::cout << *it << " :Cannot join channel (+l)" << std::endl;
-        else
+        if (chToJoin->canJoinChannel(client, inPassword) == true)
+        {
           chToJoin->addClient(&client);
+          // client.setBufferOut("Joined channel connard\n");
+          // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
+        }
         // Suppose to send confirmation message + all mode to client that joined.
         // + msg to all channel member to notify newcomer
       }

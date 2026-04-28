@@ -29,6 +29,26 @@ void	Channel::setTopic(std::string& topic){
 	this->_topic = topic;
 }
 
+bool Channel::canJoinChannel(Client &client, std::string inPassword)
+{
+  if (this->_inviteOnly == true && this->isClientInvited(client) == false)
+  {
+    std::cout << this->_name << " :Cannot join channel (+i)" << std::endl;
+    return (false);
+  }
+  else if (!(this->_password.empty()) && this->_password != inPassword)
+  {
+    std::cout << this->_name << " :Cannot join channel (+k)" << std::endl;
+    return (false);
+  }
+  else if (this->isChannelFull() == true)
+  {
+    std::cout << this->_name << " :Cannot join channel (+l)" << std::endl;
+    return (false);
+  }
+  return (true);
+}
+
 bool Channel::isClientInvited(Client &client)
 {
   std::vector<Client*>::iterator it;
@@ -52,11 +72,12 @@ void	Channel::addClient(Client* client)
 
   ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
   if (ret.second == false)
-    std::cout << "already joined the channel" << std::endl;
+    client->setBufferOut("already joined\n");
   else
   {
     std::vector<Client*>::iterator it;
     
+    client->setBufferOut("Client joined the channel\n");
     it = std::find(this->_invited.begin(), this->_invited.end(), client);
     if (it != this->_invited.end())
       this->_invited.erase(it);
@@ -82,6 +103,7 @@ void Channel::removeClient(Client* client)
     _clients.erase(it);
   else
     std::cout << "client no in channel" << std::endl;
+  //SI TOUS LES CLIENTS SONT PARTI DELETE CHANNEL
 }
 
 void Channel::mode_i(bool flag, const std::string &arg)

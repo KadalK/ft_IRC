@@ -37,6 +37,8 @@ public:
 	const std::string&	getTopic() const;
 	bool	getInviteOnly() const;
 
+  bool canJoinChannel(Client &client, std::string inPassword);
+
   bool isClientInvited(Client &client);
   bool isChannelFull(void);
 
