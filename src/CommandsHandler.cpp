@@ -1,9 +1,10 @@
 #include "../include/CommandsHandler.hpp"
 #include <iostream>
 
-CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join)
-{
-  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}};
+CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join) , _pass(new Pass), _nick(new Nick) {
+  this->_commands["JOIN"] = _join;
+  this->_commands["PASS"] = _pass;
+  this->_commands["NICK"] = _nick;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -11,6 +12,8 @@ CommandsHandler::~CommandsHandler()
   // delete _pmsg;
   // delete _pass;
   delete _join;
+  delete _pass;
+  delete _nick;
 }
 
 

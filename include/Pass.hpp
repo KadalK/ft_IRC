@@ -5,11 +5,6 @@
 #include "Commands.hpp"
 #include "ClientHandler.hpp"
 
-#include <cctype>
-
-
-
-
 class Pass : public Commands {
 private:
 	Pass& operator=(const Pass& other);

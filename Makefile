@@ -22,7 +22,8 @@ SRCS		:=	main.cpp \
 				ManageChannel.cpp \
 				Commands.cpp \
 				Pass.cpp \
-				PrivMsg.cpp
+				PrivMsg.cpp \
+				Nick.cpp
 
 #*------------------------------------------------------------------------------*
 
@@ -43,8 +44,9 @@ HEAD		:=	include/Channel.hpp \
 				include/ClientHandler.hpp \
 				include/ChannelHandler.hpp \
 				include/CommandsHandler \
-				include/Join.hpp \
 				include/Commands.hpp
+				include/Join.hpp \
+				include/Nick.hpp \
 
 HEAD_D		:=	.
 
