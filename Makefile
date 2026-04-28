@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/23 19:31:26 by tsaby            ###   ########.fr        #
+#    Updated: 2026/04/28 18:14:31 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,14 @@ NC		:= \033[0m
 #*------------------------------------------------------------------------------*
 
 SRCS		:=	main.cpp \
-				Channel.cpp \
+				network/Server.cpp \
 				Client.cpp \
-				Server.cpp \
-				ManageChannel.cpp \
+				Channel.cpp \
 				ClientHandler.cpp \
-# 				Preparser.cpp
+				ChannelHandler.cpp \
+				CommandHandler.cpp \
+				commands/Join.cpp \
+				Commands.cpp \
 
 
 #*------------------------------------------------------------------------------*
@@ -37,12 +39,14 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
-HEAD		:=	include/Channel.hpp \
-				include/Client.hpp \
+HEAD		:=	\
 				include/Server.hpp \
-				include/ManageChannel.hpp \
+				include/Client.hpp \
+				include/Channel.hpp \
 				include/ClientHandler.hpp \
-				include/SystemException.hpp
+				include/ChannelHandler.hpp \
+				include/Join.hpp \
+				include/Commands.hpp \
 
 HEAD_D		:=	.
 
@@ -64,18 +68,19 @@ all			:
 
 #*------------------------------------------------------------------------------*
 
-$(NAME)		:	$(OBJS_D) $(OBJS)
+$(NAME)		:	$(OBJS)
 				@$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 				@echo "$(YELLOW)$(NAME) successfully built!$(NC)"
 
 
-$(OBJS)		:	$(OBJS_D)%.o: $(SRCS_D)%.cpp | $(OBJS_D)
-				@echo "$(YELLOW)Compiling $<,...$(NC)"
+$(OBJS_D)%.o:	$(SRCS_D)%.cpp
+				@mkdir -p $(dir $@)
+				@echo "$(YELLOW)Compiling $<...$(NC)"
 				@$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
 
-$(OBJS_D)	:
-				@mkdir -p $(OBJS_D)
+# $(OBJS_D)	:
+# 				@mkdir -p $(OBJS_D)
 
 #*------------------------------------------------------------------------------*
 
