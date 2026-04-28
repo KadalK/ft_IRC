@@ -1,6 +1,10 @@
 #include "Pass.hpp"
 #include <iostream>
 
+// TODO:
+//   replies
+// ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+
 void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::string& passServ){
 	if (arg.size() < 2)
 	{
