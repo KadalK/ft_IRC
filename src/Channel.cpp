@@ -1,82 +1,115 @@
 #include "Channel.hpp"
 
-Channel::Channel(const std::string& name) : _name(name){
-	if (name.empty())
-		throw std::invalid_argument("Channel name cannot be empty");
-	if (name[0] != '#')
-		throw std::invalid_argument("Invalid channel name");
+Channel::Channel(const std::string& name, Client *client) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0), _userCount(1)
+{
+  this->_clients[client] = true;
 }
 
-const std::string& Channel::getName() const{
+const std::string& Channel::getName() const
+{
 	return(this->_name);
 }
 
-const std::string&	Channel::getTopic() const{
+const std::string&	Channel::getTopic() const
+{
 	return(this->_topic);
+}
+
+const std::string&	Channel::getPassword() const
+{
+	return(this->_password);
+}
+
+bool Channel::getInviteOnly() const
+{
+	return(this->_inviteOnly);
 }
 
 void	Channel::setTopic(std::string& topic){
 	this->_topic = topic;
 }
 
-void	Channel::addClient(Client* client){
-	if (!client){
-		std::cout << " [DEBUG] addClient  client is NULL\n";
-		return;
-	}
-	// if (hasClient(client)){
-	// 	std::cout << "[DEBUG] addClient client is already in\n";
-	// 	return;
-	// }
+bool Channel::isClientInvited(Client &client)
+{
+  std::vector<Client*>::iterator it;
 
-	this->_clients.push_back(client);
+  it = std::find(this->_invited.begin(), this->_invited.end(), &client);
+  if (it != this->_invited.end())
+    return (true);
+  return (false);
+}
+
+bool Channel::isChannelFull(void)
+{
+  if (this->_userLimit == 0 || this->_userLimit > this->_userCount)
+    return (false);
+  return (true);
+}
+
+void	Channel::addClient(Client* client)
+{
+  std::pair<std::map<Client*, bool>::iterator, bool> ret;
+
+  ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
+  if (ret.second == false)
+    std::cout << "already joined the channel" << std::endl;
+  else
+  {
+    std::vector<Client*>::iterator it;
+    
+    it = std::find(this->_invited.begin(), this->_invited.end(), client);
+    if (it != this->_invited.end())
+      this->_invited.erase(it);
+    this->_userCount += 1;
+  }
+}
+
+void Channel::inviteClient(Client *client)
+{
+  if (this->isClientInvited(*client) == true)
+    std::cout << "already invited to the channel" << std::endl;
+  else
+    this->_invited.push_back(client);
+  return ;
 }
 
 void Channel::removeClient(Client* client)
 {
-	if (!client)
-	{
-		std::cout << "[DEBUG] removeClient client is NULL\n";
-		return;
-	}
+  std::map<Client*, bool>::iterator it;
 
-	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-	{
-		if (*it == client)
-		{
-			std::cout << "[DEBUG] removeClient client deleted\n";
-			_clients.erase(it);
-			return;
-		}
-	}
-			std::cout << "[DEBUG] removeClient client not found\n";
+  it = this->_clients.find(client);
+  if (it != this->_clients.end())
+    _clients.erase(it);
+  else
+    std::cout << "client no in channel" << std::endl;
 }
 
-// void Channel::broadcast(const std::string& msg, Client* sender)
-// {
-// 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-// 	{
-// 		if (*it != sender)
-// 		{
-// 			std::cout << "[DEBUG] sending \n";
-// 			(*it)->send(msg);
-// 		}
-// 	}
-// }
+void Channel::mode_i(bool flag, const std::string &arg)
+{
+  (void)arg;
+  if (flag == true)
+  {
+    if (this->_inviteOnly == true)
+    {
+      std::cout << "Channel already in invite-only mode" << std::endl;
+      return;
+    }
+    this->_inviteOnly = true;
+    std::cout << "Added invite-only mode" << std::endl;
+  }
+  else
+  {
+    if (this->_inviteOnly == false)
+    {
+      std::cout << "Channel already not in invite-only mode" << std::endl;
+      return;
+    }
+    this->_inviteOnly = true;
+    std::cout << "Deleted invite-only mode" << std::endl;
+  }
+}
 
-// bool	Channel::hasClient(Client* client) const{
-// 	for (size_t i = 0; i < _clients.size(); i++)
-// 	{
-// 		if (this->_clients[i] == client)
-// 		{
-// 			std::cout << "[DEBUG] : client "  << client->getName() << " is here\n";
-// 			return (true);
-// 		}
-// 	}
 
-// 	std::cout << "[DEBUG] : client "  << client->getName()<< " is not here\n";
-// 	return(false);
-// }
 
 
 Channel::~Channel(){}

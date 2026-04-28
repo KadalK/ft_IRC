@@ -1,16 +1,16 @@
-#include "../include/CommandsHandler.hpp"
+#include "CommandsHandler.hpp"
 #include <iostream>
 
-CommandsHandler::CommandsHandler() : _pmsg(new PrivMsg), _pass(new Pass)
+CommandsHandler::CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler) : _clientHandler(clientHandler), _channelHandler(channelHandler), _join(new Join)
 {
-  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}}
-  this->commands = {{"PRIVMSG", "je suis un message prive"}, {"JOIN", "je suis un join"}}; //debug
+  this->commands = {{"PRIVMSG", _pmsg}, {"PASS", _pass}};
 }
 
 CommandsHandler::~CommandsHandler()
 {
-  delete _pmsg;
-  delete _pass;
+  // delete _pmsg;
+  // delete _pass;
+  delete _join;
 }
 
 
@@ -45,15 +45,15 @@ static std::vector<std::string> tokenizeCommand(std::string rawCommand)
 
 Commands *CommandsHandler::findCommand(std::string inputCommand)
 {
-  std::map<std::string, *Commands>::iterator i;
+  std::map<std::string, Commands*>::iterator i;
 
-  i = this->commands.find(inputCommand);
-  if (i == this->commands.end())
+  i = this->_commands.find(inputCommand);
+  if (i == this->_commands.end())
     return NULL; //Commande existe pas - Throw exception
   return i->second; 
 }
 
-void CommandsHandler::processCommand(std::string rawMessage)
+void CommandsHandler::processCommand(Client &client, ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string rawMessage)
 {
   std::vector<std::string> tokens;
   Commands *cmd;
@@ -62,11 +62,13 @@ void CommandsHandler::processCommand(std::string rawMessage)
   pos = rawMessage.find(' ');
   if (pos == std::string::npos)
     return; // Manque arguments - throw exception
-  cmd = findCommand(rawMessage.substr(0, pos))
+  cmd = findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   tokens = tokenizeCommand(rawMessage.substr(pos));
-  cmd->execute(tokens);
+  for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); it++) //debug test
+    std::cout << "[" << *it << "]" << std::endl; //debug test
+  cmd->execute(client, clientHandler, channelHandler, tokens);
 }
 
 ////debug

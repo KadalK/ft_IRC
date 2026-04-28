@@ -1,9 +1,6 @@
 #include <sstream>
 #include "Server.hpp"
-#include <iostream>
 #include "Client.hpp"
-#include "Channel.hpp"
-
 
 bool g_isRunning = true;
 

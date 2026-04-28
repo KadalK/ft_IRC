@@ -69,7 +69,7 @@ Client *ClientHandler::getClientByFd(int fd)
 
 ClientHandler::~ClientHandler()
 {
-	std::map<int, Client *>::iterator it = this->_registry.begin();
-	while (it != this->_registry.end())
+	for (std::map<int, Client *>::iterator it = this->_registry.begin(); it != this->_registry.end(); it++)
 		delete it->second;
+  this->_registry.clear();
 }

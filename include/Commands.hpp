@@ -1,21 +1,24 @@
 #pragma once
 
-#include "iostream"
+#include <iostream>
+#include <vector>
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
 
-class Commands
-{
+class Commands {
 private:
+  Commands(Commands const &src);
+  Commands &operator=(Commands const &rhs);
+protected:
+
 public:
   Commands();
-  Commands(Commands const &src);
   virtual ~Commands();
 
-  Commands &operator=(Commands const &rhs);
+  // virtual void parsingMessage(std::string) = 0;
+	virtual void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg) = 0;
+  // virtual void errorMessage(size_t errorValue) = 0;
 
-  // virtual size_t parsingMessage(std::string);
-  virtual size_t execute(void);
-  // virtual void errorMessage(size_t errorValue);
-
-protected:
   // JE SAIS PAS ENCORE CA MANQUE DE TRUCS
 };
