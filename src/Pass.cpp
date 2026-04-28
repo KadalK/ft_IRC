@@ -30,4 +30,4 @@ void Pass::execute(Client& client, const std::vector<std::string>& arg,  std::st
 	client.setAuth(true);
 }
 
-	Pass::~Pass(){}
+Pass::~Pass(){}
