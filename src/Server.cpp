@@ -1,7 +1,8 @@
 #include "Server.hpp"
 #include "SystemException.hpp"
 
-Server::Server(int port, std::string password) : _port(port), _password(password)
+Server::Server(int port, std::string password)
+  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler)
 {
 }
 
@@ -25,67 +26,76 @@ void Server::init()
 		throw SystemException("Error can't be able to listen");
 }
 
-std::string Server::getPass(){
-	return(this->_password);
-}
-
-
-void Server::createNewClient()
+void Server::connectNewClient()
 {
-	int clientSocketFd = accept(this->_serverSocketFd, NULL, NULL);
+	struct sockaddr_in clientAddress;
+	socklen_t AddressLen = sizeof(clientAddress);
+	int clientSocketFd = accept(this->_serverSocketFd,(struct sockaddr*)&clientAddress , &AddressLen);
+	if (clientSocketFd < 0)
+	{
+		std::cout << "Error: accept" << std::endl;
+		return;
+	}
+	if (fcntl(clientSocketFd, F_SETFL, O_NONBLOCK) < 0)
+	{
+		std::cout << "Error: fcntl" << std::endl;
+		close(clientSocketFd);
+		return;
+	}
 	epoll_event clientEvent;
-	Client *newCLient = new Client;
-	newCLient->setFd(clientSocketFd);
-	this->_registry[clientSocketFd] = newCLient;
 	clientEvent.events = EPOLLIN;
 	clientEvent.data.fd = clientSocketFd;
-	fcntl(clientSocketFd, F_SETFL, O_NONBLOCK);
-	epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, clientSocketFd, &clientEvent);
-	std::cout << "new CLIENT connected " << clientSocketFd << std::endl;
+	if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, clientSocketFd, &clientEvent) < 0)
+	{
+		std::cout << "Error: epoll_ctl" << std::endl;
+		close(clientSocketFd);
+		return;
+	}
+	//Send clientAddr si besoin pour avoir ip pour whois ect
+	this->_clientHandler.addClient(clientSocketFd);
+
 }
 
-void Server::removeClient(int fd)
+void Server::disconnectClient(int fd)
 {
 	epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, fd, NULL);
-	Client *toDelete = this->_registry[fd];
-	delete toDelete;
-	this->_registry.erase(fd);
 	close(fd);
-	std::cout << "client remove " << this->_registry[fd]->getNickname() << " le fd etait : " << fd << std::endl;
+	this->_clientHandler.removeClient(fd);
 }
 
 void Server::eventToServer(int fd)
 {
 	char temp[1024] = {0};
 	int bytes = recv(fd, temp, sizeof(temp), 0);
+	Client *client = this->_clientHandler.getClientByFd(fd);
 	if (bytes <= 0)
-		this->removeClient(fd);
+		this->disconnectClient(fd);
 	else
 	{
-		this->_registry[fd]->appendBuffer(temp);
+		client->appendBuffer(temp);
 		size_t pos;
-		while ((pos = this->_registry[fd]->getBuffer().find("\r\n")) != std::string::npos)
+		while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
 		{
-			std::string command = this->_registry[fd]->getBuffer().substr(0, pos);
-			this->_registry[fd]->setBuffer(this->_registry[fd]->getBuffer().erase(0, pos + 2));
+			std::string command = client->getBuffer().substr(0, pos);
+			client->setBuffer(client->getBuffer().erase(0, pos + 2));
+			this->_commandsHandler.processCommand(*client, this->_clientHandler, this->_channelHandler, command);
+			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 		}
-    //processCommand(client, ...);
-    std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
 	}
 }
 
 void Server::eventToClient(int fd)
 {
-	if (this->_registry.find(fd) == this->_registry.end())
+	if (this->_clientHandler.getClientByFd(fd) == NULL)
 		return;
-	Client *client = this->_registry[fd];
+	Client *client = this->_clientHandler.getClientByFd(fd);
 	std::string message = client->getBufferOut();
 	if (message.empty())
 		return;
 	int bytesSent = send(fd, message.c_str(), message.length(), MSG_NOSIGNAL);
-	if (!bytesSent)
+	if (bytesSent <= 0)
 	{
-		this->removeClient(fd);
+		this->disconnectClient(fd);
 		return;
 	}
 	client->setBufferOut(message.erase(0, bytesSent));
@@ -98,24 +108,15 @@ void Server::eventToClient(int fd)
 	}
 }
 
-Client *Server::getClientByNickname(std::string nickname)
+void Server::setEpollOut(const std::vector <int>& vec)
 {
-	std::map<int, Client *>::iterator it = this->_registry.begin();
-	while (it != this->_registry.end())
+	for(std::vector<int>::const_iterator it = vec.begin(); it != vec.end();++it)
 	{
-		if (it->second->getNickname() == nickname)
-			return (it->second);
-		it++;
+		epoll_event event;
+		event.events = EPOLLIN | EPOLLOUT;
+		event.data.fd = *it;
+		epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, *it, &event);
 	}
-	return NULL;
-}
-
-void Server::clientWrite(int fd)
-{
-	epoll_event event;
-	event.events = EPOLLIN | EPOLLOUT;
-	event.data.fd = fd;
-	epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, fd, &event);
 }
 
 void Server::run()
@@ -126,7 +127,6 @@ void Server::run()
 	eventsServer.data.fd = this->_serverSocketFd;
 	this->_events.resize(64);
 	epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventsServer.data.fd, &eventsServer);
-
 	while (g_isRunning)
 	{
 		int eventCount = epoll_wait(this->_epollFd, this->_events.data(), 64, -1);
@@ -135,7 +135,7 @@ void Server::run()
 			int clientSocketFd = this->_events[i].data.fd;
 			u_int32_t flags = this->_events[i].events;
 			if (clientSocketFd == this->_serverSocketFd)
-				this->createNewClient();
+				this->connectNewClient();
 			else
 			{
 				if (flags & EPOLLIN)
@@ -144,17 +144,17 @@ void Server::run()
 					this->eventToClient(clientSocketFd);
 			}
 		}
+		std::vector<int> vec = this->_clientHandler.getFdWithData();
+		if (!vec.empty())
+			setEpollOut(vec);
 	}
 }
 
 Server::~Server()
 {
-	std::map<int, Client *>::iterator it = this->_registry.begin();
-	while (it != this->_registry.end())
-	{
-		delete it->second;
-		close(it->first);
-	}
+	std::vector<int> vec = this->_clientHandler.getAllFd();
+	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+		close(*it);
 	if (this->_serverSocketFd != -1)
 		close(this->_serverSocketFd);
 	if (this->_epollFd != -1)

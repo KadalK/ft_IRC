@@ -1,12 +1,6 @@
 #include <sstream>
 #include "Server.hpp"
 #include "Client.hpp"
-#include "Channel.hpp"
-#include <map>
-#include <algorithm>
-#include "Commands.hpp"
-#include "PrivMsg.hpp"
-
 
 bool g_isRunning = true;
 

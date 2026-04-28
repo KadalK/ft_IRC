@@ -13,7 +13,8 @@ private:
 	std::string _username;
 	std::string _bufferIn;
 	std::string _bufferOut;
-	bool _isAuthentificated;
+
+	bool _isAuth;
 	bool _hasPassword;
 	bool _hasNickname;
 	bool _hasUsername;
@@ -49,7 +50,7 @@ public:
 	std::string getBufferOut() const;
 
 	void appendBuffer(std::string const &temp);
-
+	bool isRegistered();
 	~Client();
 };
 

@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn("NULL"),_bufferOut("NULL"),_isAuthentificated(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
+Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn("NULL"),_bufferOut("NULL"),_isAuth(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
 
 int		Client::getFd() const{
 	return(this->_fd);
@@ -14,7 +14,7 @@ std::string		Client::getBufferOut() const{
 
 bool	Client::getAuth() const
 {
-	return(this->_isAuthentificated);
+	return(this->_isAuth);
 }
 
 bool	Client::getUserBool() const
@@ -44,7 +44,7 @@ std::string Client::getUsername() const
 
 void	Client::setAuth(bool state)
 {
-	this->_isAuthentificated = state;
+	this->_isAuth = state;
 }
 void	Client::setNickBool(bool state)
 {
@@ -80,6 +80,27 @@ void	Client::setBufferOut(std::string buffer){
 
 void Client::appendBuffer(std::string const &temp) {
     this->_bufferIn += temp;
+}
+
+bool Client::isRegistered()
+{
+	if (this->_hasPassword == false)
+	{
+		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		return false;
+	}
+	if (this->_hasNickname == false)
+	{
+		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		return false;
+	}
+	if (this->_hasUsername == false)
+	{
+		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		return false;
+	}
+	this->_isAuth = true;
+	return true;
 }
 
 Client::~Client(){}
