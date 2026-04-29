@@ -36,26 +36,26 @@ void ChannelHandler::deleteChannel(std::string name)
 	}
 }
 
-void ChannelHandler::createChannel(const std::string& name, Client *client)
+Channel *ChannelHandler::createChannel(const std::string& name)
 {
 
 	std::map<std::string, Channel *>::iterator it;
 
   it = this->_channelList.find(name);
 	if (it != this->_channelList.end())
-		return;
+		return (NULL);
 	try
 	{
-		Channel* channel = new Channel(name, client);
+		Channel* channel = new Channel(name);
     if (!channel)
-      return;
+      return (NULL);
 		this->_channelList[name] = channel;
-		return;
+		return (channel);
 	}
 	catch (const std::exception& e)
 	{
 		std::cout << "[ERROR] createChannel:" << e.what() << std::endl;
-		return;
+		return (NULL);
 	}
 }
 

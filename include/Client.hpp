@@ -47,6 +47,8 @@ public:
 	std::string getUsername() const;
 	void setUsername(std::string username);
 
+	std::string getHostname() const;
+
 	std::string getBuffer() const;
 	void setBuffer(std::string buffer);
 

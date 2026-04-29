@@ -48,24 +48,30 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
     else
     {
       Channel *chToJoin = chH.getChannelByName(*it);
+      std::cout << *it << std::endl;
+      std::cout << chToJoin << std::endl;
       if (chToJoin == NULL)
       {
-        chH.createChannel(*it, &client);
-        client.appendBufferOut("Created channel connard\n");
-        std::cout << "Created channel " << chH.getChannelByName(*it)->getName() << std::endl;
+        chToJoin = chH.createChannel(*it);
+        if (chToJoin == NULL)
+          return ;
       }
-      else
+      if (chToJoin->canJoinChannel(client, inPassword) == true)
       {
-        if (chToJoin->canJoinChannel(client, inPassword) == true)
-        {
-          std::cout << "avant addclient " << &client << std::endl;
-          chToJoin->addClient(&client);
-          // client.appendBufferOut("Joined channel connard\n");
-          // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
-        }
+        chToJoin->addClient(&client);
+        std::string replyJoin = ":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN :" + chToJoin->getName() + "\r\n";
+        client.appendBufferOut(replyJoin);
+        std::string replyTopic = ": ircserv 331 " + client.getNickname() + " " + chToJoin->getName() + " :No topic is set\r\n";
+        client.appendBufferOut(replyTopic);
+        std::string replyNames = ": ircserv 353 " + client.getNickname() + " = " + chToJoin->getName() + " :@" + client.getNickname() + "\r\n"; //LIST ALL CLIENTS ON CHANNEL
+        client.appendBufferOut(replyNames);
+        std::string replyEndOfNames = ": ircserv 366 " + client.getNickname() + " " + chToJoin->getName() + " :End of /NAMES list.\r\n";
+        client.appendBufferOut(replyEndOfNames);
+        // client.appendBufferOut("Joined channel connard\n");
+        // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
+      }
         // Suppose to send confirmation message + all mode to client that joined.
         // + msg to all channel member to notify newcomer
-      }
     }
   }
 }

@@ -1,8 +1,7 @@
 #include "Channel.hpp"
 
-Channel::Channel(const std::string& name, Client *client) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0), _userCount(1)
+Channel::Channel(const std::string& name) : _name(name), _inviteOnly(false), _topicRestrict(false), _userLimit(0), _userCount(0)
 {
-  this->_clients[client] = true;
 }
 
 const std::string& Channel::getName() const
@@ -69,13 +68,17 @@ bool Channel::isChannelFull(void)
 void	Channel::addClient(Client* client)
 {
   std::pair<std::map<Client*, bool>::iterator, bool> ret;
-  ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
+  
+  if (this->_userCount == 0)
+    ret = this->_clients.insert(std::pair<Client*, bool>(client, true));
+  else
+    ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
   if (ret.second == false)
     client->appendBufferOut("already joineds\n");
   else
   {
     std::vector<Client*>::iterator it;
-    // client->appendBufferOut("Client joined the channel\n");
+
     it = std::find(this->_invited.begin(), this->_invited.end(), client);
     if (it != this->_invited.end())
       this->_invited.erase(it);
