@@ -33,6 +33,7 @@ void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std:
 	}
 
   client.setPassBool(true);
+  //CHECK SI LES DEUX AUTRES SONT TRUE -> SI OUI -> isREGISTERED
 }
 
 Pass::~Pass(){}

@@ -14,18 +14,20 @@ private:
 
   bool _inviteOnly;
   bool _topicRestrict;
+  bool _hasPassword;
   std::string _password;
+  bool _hasUserLimit;
   size_t _userLimit;
   size_t _userCount;
 
 	std::map <Client*, bool> _clients;
   std::vector <Client*> _invited;
   
-  void mode_i(bool flag, const std::string &arg);
-  void mode_t(bool flag, const std::string &arg);
-  void mode_k(bool flag, const std::string &arg);
-  void mode_o(bool flag, const std::string &arg);
-  void mode_l(bool flag, const std::string &arg);
+  void mode_i(bool flag, const std::string &arg, Client *sender);
+  void mode_t(bool flag, const std::string &arg, Client *sender);
+  void mode_k(bool flag, const std::string &arg, Client *sender);
+  void mode_o(bool flag, const std::string &arg, Client *sender);
+  void mode_l(bool flag, const std::string &arg, Client *sender);
 
 public:
 	Channel(const std::string& name);
@@ -45,6 +47,7 @@ public:
 	void	addClient(Client* client);
   void  inviteClient(Client* client);
 	void	removeClient(Client* client);
+  Client *findClientByNick(const std::string &nick)
 
 
 	// void	broadcast(const std::string& msg, Client* sender);
