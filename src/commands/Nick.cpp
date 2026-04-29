@@ -1,4 +1,4 @@
-#include "../include/Nick.hpp"
+#include "commands/Nick.hpp"
 #include <iostream>
 
 Nick::Nick(){}
@@ -23,16 +23,16 @@ static bool validNick(const std::string& nick)
 	}
 	return true;
 }
-
+// 
 void Nick::execute(Client& client, ClientHandler &clH, ChannelHandler &, const std::vector<std::string>& arg)
 {
-	if (arg.size() < 2)
+	if (arg.size() < 1)
 	{
 		std::cout << "[DEBUG] : ERR_NONICKNAMEGIVEN" << std::endl;
 		return;
 	}
 
-	const std::string& nick = arg[1];
+	const std::string& nick = arg[0];
 
 	if (!validNick(nick))
 	{

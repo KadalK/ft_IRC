@@ -28,7 +28,7 @@ private:
   void mode_l(bool flag, const std::string &arg);
 
 public:
-	Channel(const std::string& name, Client *client);
+	Channel(const std::string& name);
 
 	void	setTopic(std::string& topic);
 
@@ -36,6 +36,8 @@ public:
   const std::string&  getPassword() const;
 	const std::string&	getTopic() const;
 	bool	getInviteOnly() const;
+
+  bool canJoinChannel(Client &client, std::string inPassword);
 
   bool isClientInvited(Client &client);
   bool isChannelFull(void);

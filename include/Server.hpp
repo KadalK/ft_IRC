@@ -14,6 +14,7 @@
 #include "CommandsHandler.hpp"
 #include "ClientHandler.hpp"
 #include "ChannelHandler.hpp"
+#include <arpa/inet.h>
 
 extern bool g_isRunning;
 
@@ -25,8 +26,6 @@ class Server{
 		int _epollFd;
 
 		std::vector<epoll_event> _events;
-		std::string _serverName;
-		std::string _creationDate;
 		std::string _password;
 
 		ChannelHandler _channelHandler;

@@ -6,10 +6,12 @@ ClientHandler::ClientHandler(/* args */)
 {
 }
 
-void ClientHandler::addClient(int fd)
+
+void ClientHandler::addClient(int fd,std::string hostname)
 {
 	Client *newClient = new Client();
 	newClient->setFd(fd);
+	newClient->setHostname(hostname);
 	this->_registry[fd] = newClient;
 	std::cout << "The Client is connected , fd : " << fd << std::endl;
 }

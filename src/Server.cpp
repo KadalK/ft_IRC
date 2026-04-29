@@ -2,7 +2,7 @@
 #include "SystemException.hpp"
 
 Server::Server(int port, std::string password)
-  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler)
+  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler, _password)
 {
 }
 
@@ -36,6 +36,8 @@ void Server::connectNewClient()
 		std::cout << "Error: accept" << std::endl;
 		return;
 	}
+	char * ipString = inet_ntoa(clientAddress.sin_addr);
+	std::string hostname = ipString;
 	if (fcntl(clientSocketFd, F_SETFL, O_NONBLOCK) < 0)
 	{
 		std::cout << "Error: fcntl" << std::endl;
@@ -52,7 +54,7 @@ void Server::connectNewClient()
 		return;
 	}
 	//Send clientAddr si besoin pour avoir ip pour whois ect
-	this->_clientHandler.addClient(clientSocketFd);
+	this->_clientHandler.addClient(clientSocketFd, hostname);
 
 }
 

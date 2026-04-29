@@ -3,10 +3,13 @@
 
 #include <map>
 #include <iostream>
-#include "Join.hpp"
+#include "commands/Join.hpp"
+#include "commands/Nick.hpp"
+#include "commands/Pass.hpp"
+#include "commands/User.hpp"
 #include "Commands.hpp"
-#include "Pass.hpp"
-#include "Nick.hpp"
+#include "ClientHandler.hpp"
+#include "ChannelHandler.hpp"
 
 class Commands;
 class ClientHandler;
@@ -15,14 +18,11 @@ class Client;
 class Join;
 class Nick;
 class Pass;
+class User;
 
 class CommandsHandler {
 
 private:
-  PrivMsg *_pmsg;
-  Join  *_join;
-  Pass *_pass;
-  Nick *_nick;
 
   //Add all commands
   std::map<std::string, Commands*> _commands;
@@ -30,13 +30,19 @@ private:
   ClientHandler &_clientHandler;
   ChannelHandler &_channelHandler;
 
+  Join  *_join;
+  Pass *_pass;
+  // PrivMsg *_pmsg;
+  Nick *_nick;
+  User *_user;
+
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);
 
   Commands *findCommand(std::string inputCommand);
 public:
   // CommandsHandler();
-  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler);
+  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string passServ);
   ~CommandsHandler();
 
   void processCommand(Client &client, ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string rawMessage);

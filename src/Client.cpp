@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn("NULL"),_bufferOut("NULL"),_isAuth(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
+Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn(),_bufferOut(),_isAuth(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
 
 int		Client::getFd() const{
 	return(this->_fd);
@@ -42,6 +42,16 @@ std::string Client::getUsername() const
 	return(this->_username);
 }
 
+std::string Client::getHostname() const
+{
+	return(this->_hostname);
+}
+
+void Client::setHostname(std::string hostname)
+{
+	this->_hostname = hostname;
+}
+
 void	Client::setAuth(bool state)
 {
 	this->_isAuth = state;
@@ -78,6 +88,12 @@ void	Client::setBufferOut(std::string buffer){
 	this->_bufferOut = buffer;
 }
 
+void Client::appendBufferOut(std::string const &temp)
+{
+	this->_bufferOut += temp;
+}
+
+
 void Client::appendBuffer(std::string const &temp) {
     this->_bufferIn += temp;
 }
@@ -86,17 +102,17 @@ bool Client::isRegistered()
 {
 	if (this->_hasPassword == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->appendBufferOut("Missing Password\n");
 		return false;
 	}
 	if (this->_hasNickname == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->appendBufferOut("Missing Nickname\n");
 		return false;
 	}
 	if (this->_hasUsername == false)
 	{
-		this->setBufferOut("ERROR REPLY METTRE LA BONNE");
+		this->appendBufferOut("Missing username\n");
 		return false;
 	}
 	this->_isAuth = true;

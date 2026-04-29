@@ -1,5 +1,5 @@
-#ifndef NICK_HPP
-#define NICK_HPP
+#ifndef USER_HPP
+#define USER_HPP
 
 #include "ChannelHandler.hpp"
 #include "CommandsHandler.hpp"
@@ -8,17 +8,16 @@
 #include "Commands.hpp"
 #include <iostream>
 
-class Nick : public Commands {
+class User : public Commands {
 private:
-	Nick& operator=(const Nick& other);
-	Nick(const Nick& copy);
+	User& operator=(const User& other);
+	User(const User& copy);
 public:
-	Nick();
+	User();
 
 	void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
 
-	~Nick();
+	~User();
 };
 
 #endif
-

@@ -11,6 +11,7 @@ private:
 	int _fd;
 	std::string _nickname;
 	std::string _username;
+	std::string _hostname;
 	std::string _bufferIn;
 	std::string _bufferOut;
 
@@ -37,17 +38,24 @@ public:
 	bool getAuth() const;
 	void setAuth(bool);
 
+	// bool getHostname() const;
+	void setHostname(std::string hostname);
+
 	std::string getNickname() const;
 	void setNickname(std::string nickname);
 
 	std::string getUsername() const;
 	void setUsername(std::string username);
 
+	std::string getHostname() const;
+
 	std::string getBuffer() const;
 	void setBuffer(std::string buffer);
 
 	void setBufferOut(std::string buffer);
 	std::string getBufferOut() const;
+
+	void appendBufferOut(std::string const &temp);
 
 	void appendBuffer(std::string const &temp);
 	bool isRegistered();
