@@ -4,21 +4,22 @@
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
                                  ChannelHandler &channelHandler, std::string passServ)
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
-      _join(new Join), _pass(new Pass(passServ)), _nick(new Nick), _user(new User)
+      _join(new Join), _pass(new Pass(passServ)), _nick(new Nick), _user(new User), _pvmsg(new PrivMsg)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
   this->_commands["NICK"] = _nick;
   this->_commands["USER"] = _user;
+  this->_commands["PRIVMSG"] = _pvmsg;
 }
 
 CommandsHandler::~CommandsHandler()
 {
-  // delete _pmsg;
   delete _pass;
   delete _join;
   delete _nick;
   delete _user;
+  delete _pvmsg;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)
@@ -89,6 +90,7 @@ void CommandsHandler::processCommand(Client &client,
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   cmdStr = rawMessage.substr(0, pos);
+  std::cout << "comd handler   " <<  &client << std::endl;
   if (isRegisterCmd(cmdStr) == false && client.isRegistered() == false)
     return ; //Client pas registered et commande necessite registered
   tokens = tokenizeCommand(rawMessage.substr(pos));
