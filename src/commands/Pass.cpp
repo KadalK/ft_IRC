@@ -12,7 +12,7 @@ void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std:
 	if (arg.size() < 1)
 	{
 		std::cout << "[debug]: invalid format" << std::endl;
-		client.setBufferOut("invalid format");
+		client.appendBufferOut("invalid format");
 		return;
 	}
 
@@ -21,14 +21,14 @@ void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std:
 	if (client.getPassBool())
 	{
 		std::cout << "[debug]: already registered" << std::endl;
-		client.setBufferOut("already registered");
+		client.appendBufferOut("already registered");
 		return;
 	}
 
 	if (pass != this->_passServ)
 	{
 		std::cout << "[debug]: invalid password" << std::endl;
-		client.setBufferOut("invalid password");
+		client.appendBufferOut("invalid password");
 		return;
 	}
 

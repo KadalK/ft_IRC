@@ -51,15 +51,16 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       if (chToJoin == NULL)
       {
         chH.createChannel(*it, &client);
-        client.setBufferOut("Created channel connard\n");
+        client.appendBufferOut("Created channel connard\n");
         std::cout << "Created channel " << chH.getChannelByName(*it)->getName() << std::endl;
       }
       else
       {
         if (chToJoin->canJoinChannel(client, inPassword) == true)
         {
+          std::cout << "avant addclient " << &client << std::endl;
           chToJoin->addClient(&client);
-          // client.setBufferOut("Joined channel connard\n");
+          // client.appendBufferOut("Joined channel connard\n");
           // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
         }
         // Suppose to send confirmation message + all mode to client that joined.

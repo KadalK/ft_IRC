@@ -53,6 +53,8 @@ public:
 	void setBufferOut(std::string buffer);
 	std::string getBufferOut() const;
 
+	void appendBufferOut(std::string const &temp);
+
 	void appendBuffer(std::string const &temp);
 	bool isRegistered();
 	~Client();

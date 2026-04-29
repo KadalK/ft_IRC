@@ -69,15 +69,13 @@ bool Channel::isChannelFull(void)
 void	Channel::addClient(Client* client)
 {
   std::pair<std::map<Client*, bool>::iterator, bool> ret;
-
   ret = this->_clients.insert(std::pair<Client*, bool>(client, false));
   if (ret.second == false)
-    client->setBufferOut("already joined\n");
+    client->appendBufferOut("already joineds\n");
   else
   {
     std::vector<Client*>::iterator it;
-    
-    client->setBufferOut("Client joined the channel\n");
+    // client->appendBufferOut("Client joined the channel\n");
     it = std::find(this->_invited.begin(), this->_invited.end(), client);
     if (it != this->_invited.end())
       this->_invited.erase(it);
