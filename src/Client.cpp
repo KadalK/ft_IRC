@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn("NULL"),_bufferOut("NULL"),_isAuth(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
+Client::Client() : _fd(-1), _nickname("NULL"),_username("NULL"),_bufferIn(),_bufferOut(),_isAuth(false),_hasPassword(false),_hasNickname(false),_hasUsername(false) {}
 
 int		Client::getFd() const{
 	return(this->_fd);
