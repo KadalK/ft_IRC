@@ -59,14 +59,7 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       if (chToJoin->canJoinChannel(client, inPassword) == true)
       {
         chToJoin->addClient(&client);
-        std::string replyJoin = ":" + client.getNickname() + "!" + client.getUsername() + "@" + client.getHostname() + " JOIN :" + chToJoin->getName() + "\r\n";
-        client.appendBufferOut(replyJoin);
-        std::string replyTopic = ": ircserv 331 " + client.getNickname() + " " + chToJoin->getName() + " :No topic is set\r\n";
-        client.appendBufferOut(replyTopic);
-        std::string replyNames = ": ircserv 353 " + client.getNickname() + " = " + chToJoin->getName() + " :@" + client.getNickname() + "\r\n"; //LIST ALL CLIENTS ON CHANNEL
-        client.appendBufferOut(replyNames);
-        std::string replyEndOfNames = ": ircserv 366 " + client.getNickname() + " " + chToJoin->getName() + " :End of /NAMES list.\r\n";
-        client.appendBufferOut(replyEndOfNames);
+        chToJoin->replyJoinChannel(&client);
         // client.appendBufferOut("Joined channel connard\n");
         // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
       }

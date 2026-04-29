@@ -20,7 +20,7 @@ private:
 
 	std::map <Client*, bool> _clients;
   std::vector <Client*> _invited;
-  
+
   void mode_i(bool flag, const std::string &arg);
   void mode_t(bool flag, const std::string &arg);
   void mode_k(bool flag, const std::string &arg);
@@ -46,6 +46,8 @@ public:
   void  inviteClient(Client* client);
 	void	removeClient(Client* client);
 
+  void  replyJoinChannel(Client *client);
+  std::string getClientInChan();
 
 	// void	broadcast(const std::string& msg, Client* sender);
 	// bool	hasClient(Client* client) const;
