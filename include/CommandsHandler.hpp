@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
+
 #include <map>
-#include <algorithm>
 #include <iostream>
 #include "commands/Join.hpp"
 #include "commands/Nick.hpp"
@@ -11,6 +10,7 @@
 #include "Commands.hpp"
 #include "ClientHandler.hpp"
 #include "ChannelHandler.hpp"
+#include "commands/PrivMsg.hpp"
 
 class Commands;
 class ClientHandler;
@@ -20,6 +20,7 @@ class Join;
 class Nick;
 class Pass;
 class User;
+class PrivMsg;
 
 class CommandsHandler {
 
@@ -33,9 +34,9 @@ private:
 
   Join  *_join;
   Pass *_pass;
-  // PrivMsg *_pmsg;
   Nick *_nick;
   User *_user;
+  PrivMsg *_pvmsg;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

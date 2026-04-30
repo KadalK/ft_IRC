@@ -2,12 +2,12 @@
 
 #include "Commands.hpp"
 #include <vector>
-// #include "Client.hpp"
+#include <iostream>
 
-  // struct param
-  // {
-  //   std::string textMsg;
-  // };
+
+class Client;
+class ClientHandler;
+class ChannelHandler;
 
 class PrivMsg : public Commands
 {
@@ -18,7 +18,7 @@ public:
   PrivMsg();
 
   void parsingMessage(std::string rawText);
-  void execute(Client*, Server*,  std::vector<std::string>);
+  void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
   void errorMessage(size_t errorValue);
   ~PrivMsg();
 };
