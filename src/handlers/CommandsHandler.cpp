@@ -6,13 +6,14 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
                                  std::string passServ)
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
-      _user(new User), _pvmsg(new PrivMsg)
+      _user(new User), _pvmsg(new PrivMsg), _mode(new Mode)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
   this->_commands["NICK"] = _nick;
   this->_commands["USER"] = _user;
   this->_commands["PRIVMSG"] = _pvmsg;
+  this->_commands["MODE"] = _mode;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -22,6 +23,7 @@ CommandsHandler::~CommandsHandler()
   delete _nick;
   delete _user;
   delete _pvmsg;
+  delete _mode;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)

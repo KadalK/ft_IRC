@@ -1,16 +1,16 @@
 #pragma once
 
-
-#include <map>
-#include <iostream>
+#include "ChannelHandler.hpp"
+#include "ClientHandler.hpp"
+#include "Commands.hpp"
 #include "commands/Join.hpp"
+#include "commands/Mode.hpp"
 #include "commands/Nick.hpp"
 #include "commands/Pass.hpp"
-#include "commands/User.hpp"
-#include "Commands.hpp"
-#include "ClientHandler.hpp"
-#include "ChannelHandler.hpp"
 #include "commands/PrivMsg.hpp"
+#include "commands/User.hpp"
+#include <iostream>
+#include <map>
 
 class Commands;
 class ClientHandler;
@@ -21,33 +21,38 @@ class Nick;
 class Pass;
 class User;
 class PrivMsg;
+class Mode;
 
-class CommandsHandler {
+class CommandsHandler
+{
 
 private:
-
-  //Add all commands
-  std::map<std::string, Commands*> _commands;
+  // Add all commands
+  std::map<std::string, Commands *> _commands;
   // std::vector<std::string> tokens;
   ClientHandler &_clientHandler;
   ChannelHandler &_channelHandler;
 
-  Join  *_join;
+  Join *_join;
   Pass *_pass;
   Nick *_nick;
   User *_user;
   PrivMsg *_pvmsg;
+  Mode *_mode;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);
 
   Commands *findCommand(std::string inputCommand);
+
 public:
   // CommandsHandler();
-  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string passServ);
+  CommandsHandler(ClientHandler &clientHandler, ChannelHandler &channelHandler,
+                  std::string passServ);
   ~CommandsHandler();
 
-  void processCommand(Client &client, ClientHandler &clientHandler, ChannelHandler &channelHandler, std::string rawMessage);
+  void processCommand(Client &client, ClientHandler &clientHandler,
+                      ChannelHandler &channelHandler, std::string rawMessage);
 };
 
 // class CommandsHandler {

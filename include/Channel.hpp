@@ -26,7 +26,6 @@ private:
 
   typedef void (Channel::*modeHandler)(bool flag, const std::string &arg,
                                        Client *sender);
-  std::map<char, modeHandler> _modeFt;
   void mode_i(bool flag, const std::string &arg, Client *sender);
   void mode_t(bool flag, const std::string &arg, Client *sender);
   void mode_k(bool flag, const std::string &arg, Client *sender);
@@ -35,6 +34,8 @@ private:
 
 public:
   Channel(const std::string &name);
+
+  std::map<char, modeHandler> _modeFt;
 
   void setTopic(std::string &topic);
 

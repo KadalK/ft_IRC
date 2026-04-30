@@ -10,6 +10,7 @@ Channel::Channel(const std::string &name)
   this->_modeFt['k'] = &Channel::mode_k;
   this->_modeFt['o'] = &Channel::mode_o;
   this->_modeFt['l'] = &Channel::mode_l;
+  // Avoir l'heure de creation du channel
 }
 
 const std::string &Channel::getName() const { return (this->_name); }
@@ -155,7 +156,8 @@ void Channel::replyJoinChannel(Client *client)
 
 void Channel::broadcast(const std::string &msg, Client *sender)
 {
-  for (std::map<Client *, bool>::iterator it = this->_clients.begin() ; it != this->_clients.end(); it++)
+  for (std::map<Client *, bool>::iterator it = this->_clients.begin();
+       it != this->_clients.end(); it++)
   {
     if (it->first && it->first != sender)
       it->first->appendBufferOut(msg);
@@ -187,11 +189,6 @@ void Channel::mode_t(bool flag, const std::string &, Client *)
 
 void Channel::mode_k(bool flag, const std::string &arg, Client *)
 {
-  if (arg.empty())
-  {
-    std::cout << "Need more params" << std::endl;
-    return;
-  }
   if (this->_hasPassword == flag)
   {
     std::cout << "Already same mode" << std::endl;
@@ -199,6 +196,11 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *)
   }
   if (flag == true)
   {
+    if (arg.empty())
+    {
+      std::cout << "Need more params" << std::endl;
+      return;
+    }
     if (!this->_password.empty())
     {
       std::cout << "ya deja un mot de passe" << std::endl;
@@ -259,23 +261,36 @@ void Channel::mode_o(bool flag, const std::string &arg, Client *sender)
   // BROADCAST A TOUT LE MONDE
 }
 
+static bool isInteger(const std::string &str)
+{
+  if ((!isdigit(str[0])) && (str[0] != '-') && (str[0] != '+'))
+    return false;
+
+  char *p;
+  strtol(str.c_str(), &p, 10);
+
+  return (*p == 0);
+}
+
 void Channel::mode_l(bool flag, const std::string &arg, Client *)
 {
-  if (arg.empty() && flag == true)
+  if (flag == true)
   {
-    std::cout << "Need more params" << std::endl;
-    return;
+    if (arg.empty())
+    {
+      std::cout << "Need more params" << std::endl;
+      return;
+    }
+    if (isInteger(arg))
+      this->_userLimit = atol(arg.c_str());
+    else
+      std::cout << "Not a positive integer" << std::endl;
   }
-  if (this->_hasUserLimit == flag)
-  {
-    std::cout << "Channel already in this mode" << std::endl;
-    return;
-  }
-  this->_hasUserLimit = flag;
-  if (!arg.empty())
-    this->_userLimit = std::atoi(arg.c_str());
   else
     this->_userLimit = 0;
+  this->_hasUserLimit = flag;
+  std::cout << "New limit : " << this->_userLimit << std::endl;
+  return;
 }
 
 Channel::~Channel() {}
