@@ -67,6 +67,7 @@ void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,cons
 		//pour les chan
 		if (target[0] == '#')
 		{
+
 			Channel* chan = chH.getChannelByName(target);
 			if (!chan)
 			{
