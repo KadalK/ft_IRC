@@ -2,9 +2,11 @@
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
-                                 ChannelHandler &channelHandler, std::string passServ)
+                                 ChannelHandler &channelHandler,
+                                 std::string passServ)
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
-      _join(new Join), _pass(new Pass(passServ)), _nick(new Nick), _user(new User), _pvmsg(new PrivMsg)
+      _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
+      _user(new User), _pvmsg(new PrivMsg)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
@@ -32,7 +34,7 @@ static std::vector<std::string> tokenizeCommand(std::string rawCommand)
   {
     if (rawCommand[i] == ':')
     {
-      tokens.push_back(rawCommand.substr(start));
+      tokens.push_back(rawCommand.substr(start + 1));
       return (tokens);
     }
     if (rawCommand[i] == ' ')
@@ -70,7 +72,6 @@ bool isRegisterCmd(const std::string &cmdStr)
       return (true);
   }
   return (false);
-
 }
 
 void CommandsHandler::processCommand(Client &client,
@@ -90,9 +91,9 @@ void CommandsHandler::processCommand(Client &client,
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   cmdStr = rawMessage.substr(0, pos);
-  std::cout << "comd handler   " <<  &client << std::endl;
+  std::cout << "comd handler   " << &client << std::endl;
   if (isRegisterCmd(cmdStr) == false && client.isRegistered() == false)
-    return ; //Client pas registered et commande necessite registered
+    return; // Client pas registered et commande necessite registered
   tokens = tokenizeCommand(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = tokens.begin();
        it != tokens.end(); it++)                 // debug test
