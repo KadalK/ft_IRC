@@ -74,6 +74,7 @@ void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,cons
 				client.appendBufferOut("No such channel");
 				continue;
 			}
+			chan->broadcast(formatMsg(msg, client.getNickname(), *it), &client);
 		}
 		//pour les cli
 		else
