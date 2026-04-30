@@ -18,6 +18,15 @@ void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
 {
+  int fd = client.getFd();
+  for (std::map<Client *, bool>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
+  {
+    if (it->first->getFd() == fd)
+    {
+      client.appendBufferOut( client.getNickname() +" : Already join the channel\n");
+      return (false);
+    }
+  }
   if (this->_inviteOnly == true && this->isClientInvited(client) == false)
   {
     std::cout << this->_name << " :Cannot join channel (+i)" << std::endl;
@@ -55,23 +64,16 @@ bool Channel::isChannelFull(void)
 
 void Channel::addClient(Client *client)
 {
-  std::pair<std::map<Client *, bool>::iterator, bool> ret;
-
   if (this->_userCount == 0)
-    ret = this->_clients.insert(std::pair<Client *, bool>(client, true));
+    this->_clients.insert(std::pair<Client *, bool>(client, true));
   else
-    ret = this->_clients.insert(std::pair<Client *, bool>(client, false));
-  if (ret.second == false)
-    client->appendBufferOut("already joineds\n");
-  else
-  {
-    std::vector<Client *>::iterator it;
+    this->_clients.insert(std::pair<Client *, bool>(client, false));
+  std::vector<Client *>::iterator it;
 
-    it = std::find(this->_invited.begin(), this->_invited.end(), client);
-    if (it != this->_invited.end())
-      this->_invited.erase(it);
-    this->_userCount += 1;
-  }
+  it = std::find(this->_invited.begin(), this->_invited.end(), client);
+  if (it != this->_invited.end())
+    this->_invited.erase(it);
+  this->_userCount += 1;
 }
 
 void Channel::inviteClient(Client *client)
@@ -165,61 +167,35 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *)
   }
 }
 
-void Channel::mode_o(bool flag, const std::string &arg, Client *sender)
+std::string Channel::getClientInChan()
 {
-  if (arg.empty())
+  std::string list;
+  for (std::map<Client *, bool>::iterator it = this->_clients.begin(); it != this->_clients.end(); ++it)
   {
-    std::cout << "Need more params" << std::endl;
-    return ;
+    std::string tmp = "";
+    if (it->second == true)
+      tmp = "@";
+    tmp += it->first->getNickname();
+    if (!list.empty())
+      list += " " + tmp;
+    else
+      list = tmp;
   }
-
-  std::map<Client *,bool>::iterator itSend;
-
-  itSend = this->_clients.find(sender);
-  if (*itSend == this->_clients.end())
-  {
-    std::cout << "sender pas dans le channel" << std::cout;
-    return ;
-  }
-  if (*itSend->second == false)
-  {
-    std::cout << "sender n'a pas les droits" << std::cout;
-    return ;
-  }
-
-  std::map<Client *,bool>::iterator itReceiv;
-
-  itReceiv = this->findClientByNick(arg)
-  if (*itReceiv == this->_clients.end())
-  {
-    std::cout << "receiver pas dans le channel" << std::cout;
-    return ;
-  }
-  if (*itReceiv->second == flag)
-    return ;
-  *itReceiv->second = flag;
-  std::cout << ":" << *itSend->first->getName() << " " << this->_name << " " << (flag ? "+o" : "-o") << " " << *itReceiv->first->getName() << std::endl;
-  // BROADCAST A TOUT LE MONDE
+  return list;
 }
 
-void Channel::mode_l(bool flag, const std::string &arg, Client *)
+void Channel::replyJoinChannel(Client *client)
 {
-  if (arg.empty() && flag == true)
-  {
-    std::cout << "Need more params" << std::endl;
-    return ;
-  }
-  if (this->_hasUserLimit == flag)
-  {
-      std::cout << "Channel already in this mode" << std::endl;
-      return;
-  }
-  this->_hasUserLimit = flag;
-  if (!arg.empty())
-    this->_userLimit = atoi(arg);
-  else
-    this->_userLimit = 0;
-  }
+  std::string list = this->getClientInChan();
+
+  std::string replyJoin = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getHostname() + " JOIN :" + this->_name + "\r\n";
+  client->appendBufferOut(replyJoin);
+  std::string replyTopic = ": ircserv 331 " + client->getNickname() + " " + this->_name + " :No topic is set\r\n";
+  client->appendBufferOut(replyTopic);
+  std::string replyNames = ": ircserv 353 " + client->getNickname() + " " + this->_name + " :" + list + "\r\n"; // LIST ALL CLIENTS ON CHANNEL
+  client->appendBufferOut(replyNames);
+  std::string replyEndOfNames = ": ircserv 366 " + client->getNickname() + " " + this->_name + " :End of /NAMES list.\r\n";
+  client->appendBufferOut(replyEndOfNames);
 }
 
 Channel::~Channel() {}

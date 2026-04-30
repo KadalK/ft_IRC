@@ -49,6 +49,8 @@ public:
 	void	removeClient(Client* client);
   Client *findClientByNick(const std::string &nick)
 
+  void  replyJoinChannel(Client *client);
+  std::string getClientInChan();
 
 	// void	broadcast(const std::string& msg, Client* sender);
 	// bool	hasClient(Client* client) const;
