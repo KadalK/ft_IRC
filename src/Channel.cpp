@@ -25,16 +25,11 @@ void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
 {
-  int fd = client.getFd();
-  for (std::map<Client *, bool>::iterator it = this->_clients.begin();
-       it != this->_clients.end(); ++it)
+  if (this->isClientInChannel(client) == true)
   {
-    if (it->first->getFd() == fd)
-    {
-      client.appendBufferOut(client.getNickname() +
-                             " : Already join the channel\n");
-      return (false);
-    }
+    client.appendBufferOut(client.getNickname() +
+                           " : Already join the channel\n");
+    return (false);
   }
   if (this->_inviteOnly == true && this->isClientInvited(client) == false)
   {
@@ -52,6 +47,24 @@ bool Channel::canJoinChannel(Client &client, std::string inPassword)
     return (false);
   }
   return (true);
+}
+
+bool Channel::isClientInChannel(Client &client)
+{
+  std::map<Client *, bool>::iterator itSend;
+
+  itSend = this->_clients.find(&client);
+  if (itSend == this->_clients.end())
+    return false;
+  return true;
+}
+
+bool Channel::isClientOperator(Client &client)
+{
+  std::map<Client *, bool>::iterator itClient;
+
+  itClient = this->_clients.find(&client);
+  return (itClient->second);
 }
 
 bool Channel::isClientInvited(Client &client)
@@ -85,13 +98,15 @@ void Channel::addClient(Client *client)
   this->_userCount += 1;
 }
 
-void Channel::inviteClient(Client *client)
+bool Channel::inviteClient(Client *client)
 {
   if (this->isClientInvited(*client) == true)
-    std::cout << "already invited to the channel" << std::endl;
+    return (false);
   else
+  {
     this->_invited.push_back(client);
-  return;
+    return (true);
+  }
 }
 
 void Channel::removeClient(Client *client)
@@ -163,8 +178,16 @@ void Channel::broadcast(const std::string &msg, Client *sender)
   return;
 }
 
-void Channel::mode_i(bool flag, const std::string &, Client *)
+void Channel::mode_i(bool flag, const std::string &, Client *sender)
 {
+  std::map<Client *, bool>::iterator itSend;
+
+  itSend = this->_clients.find(sender);
+  if (itSend->second == false)
+  {
+    std::cout << "sender n'a pas les droits" << std::cout;
+    return;
+  }
   if (this->_inviteOnly == flag)
   {
     std::cout << "Channel already in this mode" << std::endl;
@@ -174,8 +197,16 @@ void Channel::mode_i(bool flag, const std::string &, Client *)
   std::cout << "Added invite-only mode" << std::endl;
 }
 
-void Channel::mode_t(bool flag, const std::string &, Client *)
+void Channel::mode_t(bool flag, const std::string &, Client *sender)
 {
+  std::map<Client *, bool>::iterator itSend;
+
+  itSend = this->_clients.find(sender);
+  if (itSend->second == false)
+  {
+    std::cout << "sender n'a pas les droits" << std::cout;
+    return;
+  }
   if (this->_topicRestrict == flag)
   {
     std::cout << "Channel already in this mode" << std::endl;
@@ -185,8 +216,16 @@ void Channel::mode_t(bool flag, const std::string &, Client *)
   std::cout << "Modified topic-restrict mode" << std::endl;
 }
 
-void Channel::mode_k(bool flag, const std::string &arg, Client *)
+void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
 {
+  std::map<Client *, bool>::iterator itSend;
+
+  itSend = this->_clients.find(sender);
+  if (itSend->second == false)
+  {
+    std::cout << "sender n'a pas les droits" << std::cout;
+    return;
+  }
   if (this->_hasPassword == flag)
   {
     std::cout << "Already same mode" << std::endl;
@@ -206,6 +245,7 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *)
     }
     this->_password = arg;
     this->_hasPassword = flag;
+    std::cout << "mot de passe ajoute" << std::endl;
   }
   else
   {

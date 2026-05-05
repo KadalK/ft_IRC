@@ -47,10 +47,12 @@ public:
   bool canJoinChannel(Client &client, std::string inPassword);
 
   bool isClientInvited(Client &client);
+  bool isClientInChannel(Client &client);
+  bool isClientOperator(Client &client);
   bool isChannelFull(void);
 
   void addClient(Client *client);
-  void inviteClient(Client *client);
+  bool inviteClient(Client *client);
   void removeClient(Client *client);
   std::map<Client *, bool>::iterator findClientByNick(const std::string &nick);
 
