@@ -12,6 +12,21 @@ const char *ChannelHandler::ChannelsEmpty::what() const throw()
 	return ("Channels Empty");
 }
 
+void ChannelHandler::deleteClient(Client *client)
+{
+	std::map<std::string,Channel *>:: iterator it;
+
+	for (it = this->_channelList.begin(); it != this->_channelList.end(); ++it)
+	{
+		it->second->removeClient(client);
+		//if(it->second->getNbClient() == 0)
+		// {
+		//		delete it->second;
+		//		this->_channelList.erase(it);
+		// }
+	}
+}
+
 Channel *ChannelHandler::getChannelByName(const std::string& name)
 {
 	std::map<std::string, Channel *>::iterator it;
@@ -26,9 +41,9 @@ Channel *ChannelHandler::getChannelByName(const std::string& name)
 
 void ChannelHandler::deleteChannel(std::string name)
 {
-	std::map<std::string, Channel *>::iterator it;
 
-  it = this->_channelList.find(name);
+	std::map<std::string, Channel *>::iterator it;
+ 	it = this->_channelList.find(name);
 	if (it != this->_channelList.end())
 	{
     delete it->second;

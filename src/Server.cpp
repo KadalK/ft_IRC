@@ -2,163 +2,171 @@
 #include "SystemException.hpp"
 
 Server::Server(int port, std::string password)
-  : _port(port), _password(password), _channelHandler(), _clientHandler(), _commandsHandler(_clientHandler, _channelHandler, _password)
+    : _port(port), _password(password), _channelHandler(), _clientHandler(),
+      _commandsHandler(_clientHandler, _channelHandler, _password)
 {
 }
 
 void Server::init()
 {
-	int optval = 1;
-	this->_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
-	if (this->_serverSocketFd < 0)
-		throw SystemException("Error during the creation of the socket");
-	if (setsockopt(this->_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) < 0)
-		throw SystemException("Error during the configuration of the socket");
-	sockaddr_in serverAddress;
-	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_port = htons(this->_port);
-	serverAddress.sin_addr.s_addr = INADDR_ANY;
-	if (bind(this->_serverSocketFd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0)
-		throw SystemException("Error during the bind of the port");
-	if (fcntl(this->_serverSocketFd, F_SETFL, O_NONBLOCK) < 0)
-		throw SystemException("Error from the fcntl function");
-	if (listen(this->_serverSocketFd, 5) < 0)
-		throw SystemException("Error can't be able to listen");
+  int optval = 1;
+  this->_serverSocketFd = socket(AF_INET, SOCK_STREAM, 0);
+  if (this->_serverSocketFd < 0)
+    throw SystemException("Error during the creation of the socket");
+  if (setsockopt(this->_serverSocketFd, SOL_SOCKET, SO_REUSEADDR, &optval,
+                 sizeof(optval)) < 0)
+    throw SystemException("Error during the configuration of the socket");
+  sockaddr_in serverAddress;
+  serverAddress.sin_family = AF_INET;
+  serverAddress.sin_port = htons(this->_port);
+  serverAddress.sin_addr.s_addr = INADDR_ANY;
+  if (bind(this->_serverSocketFd, (struct sockaddr *)&serverAddress,
+           sizeof(serverAddress)) < 0)
+    throw SystemException("Error during the bind of the port");
+  if (fcntl(this->_serverSocketFd, F_SETFL, O_NONBLOCK) < 0)
+    throw SystemException("Error from the fcntl function");
+  if (listen(this->_serverSocketFd, 5) < 0)
+    throw SystemException("Error can't be able to listen");
 }
 
 void Server::connectNewClient()
 {
-	struct sockaddr_in clientAddress;
-	socklen_t AddressLen = sizeof(clientAddress);
-	int clientSocketFd = accept(this->_serverSocketFd,(struct sockaddr*)&clientAddress , &AddressLen);
-	if (clientSocketFd < 0)
-	{
-		std::cout << "Error: accept" << std::endl;
-		return;
-	}
-	char * ipString = inet_ntoa(clientAddress.sin_addr);
-	std::string hostname = ipString;
-	if (fcntl(clientSocketFd, F_SETFL, O_NONBLOCK) < 0)
-	{
-		std::cout << "Error: fcntl" << std::endl;
-		close(clientSocketFd);
-		return;
-	}
-	epoll_event clientEvent;
-	clientEvent.events = EPOLLIN;
-	clientEvent.data.fd = clientSocketFd;
-	if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, clientSocketFd, &clientEvent) < 0)
-	{
-		std::cout << "Error: epoll_ctl" << std::endl;
-		close(clientSocketFd);
-		return;
-	}
-	//Send clientAddr si besoin pour avoir ip pour whois ect
-	this->_clientHandler.addClient(clientSocketFd, hostname);
-
+  struct sockaddr_in clientAddress;
+  socklen_t AddressLen = sizeof(clientAddress);
+  int clientSocketFd = accept(this->_serverSocketFd,
+                              (struct sockaddr *)&clientAddress, &AddressLen);
+  if (clientSocketFd < 0)
+  {
+    std::cout << "Error: accept" << std::endl;
+    return;
+  }
+  char *ipString = inet_ntoa(clientAddress.sin_addr);
+  std::string hostname = ipString;
+  if (fcntl(clientSocketFd, F_SETFL, O_NONBLOCK) < 0)
+  {
+    std::cout << "Error: fcntl" << std::endl;
+    close(clientSocketFd);
+    return;
+  }
+  epoll_event clientEvent;
+  clientEvent.events = EPOLLIN;
+  clientEvent.data.fd = clientSocketFd;
+  if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, clientSocketFd, &clientEvent) <
+      0)
+  {
+    std::cout << "Error: epoll_ctl" << std::endl;
+    close(clientSocketFd);
+    return;
+  }
+  // Send clientAddr si besoin pour avoir ip pour whois ect
+  this->_clientHandler.addClient(clientSocketFd, hostname);
 }
 
 void Server::disconnectClient(int fd)
 {
-	epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, fd, NULL);
-	close(fd);
-	this->_clientHandler.removeClient(fd);
+  this->_channelHandler.deleteClient(this->_clientHandler.getClientByFd(fd));
+  this->_clientHandler.removeClient(fd);
+  epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, fd, NULL);
+  close(fd);
+  // DELETE LE CLIENT DE TOUS LES CHANNELS
 }
 
 void Server::eventToServer(int fd)
 {
-	char temp[1024] = {0};
-	int bytes = recv(fd, temp, sizeof(temp), 0);
-	Client *client = this->_clientHandler.getClientByFd(fd);
-	if (bytes <= 0)
-		this->disconnectClient(fd);
-	else
-	{
-		client->appendBuffer(temp);
-		size_t pos;
-		while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
-		{
-			std::string command = client->getBuffer().substr(0, pos);
-			client->setBuffer(client->getBuffer().erase(0, pos + 2));
-			this->_commandsHandler.processCommand(*client, this->_clientHandler, this->_channelHandler, command);
-			std::cout << "commande recu :" << command << " fd :" << fd << "lenght : " << command.length() << std::endl;
-		}
-	}
+  char temp[1024] = {0};
+  int bytes = recv(fd, temp, sizeof(temp), 0);
+  Client *client = this->_clientHandler.getClientByFd(fd);
+  if (bytes <= 0)
+    this->disconnectClient(fd);
+  else
+  {
+    client->appendBuffer(temp);
+    size_t pos;
+    while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
+    {
+      std::string command = client->getBuffer().substr(0, pos);
+      client->setBuffer(client->getBuffer().erase(0, pos + 2));
+      this->_commandsHandler.processCommand(*client, this->_clientHandler,
+                                            this->_channelHandler, command);
+      std::cout << "commande recu :" << command << " fd :" << fd
+                << "lenght : " << command.length() << std::endl;
+    }
+  }
 }
 
 void Server::eventToClient(int fd)
 {
-	if (this->_clientHandler.getClientByFd(fd) == NULL)
-		return;
-	Client *client = this->_clientHandler.getClientByFd(fd);
-	std::string message = client->getBufferOut();
-	if (message.empty())
-		return;
-	int bytesSent = send(fd, message.c_str(), message.length(), MSG_NOSIGNAL);
-	if (bytesSent <= 0)
-	{
-		this->disconnectClient(fd);
-		return;
-	}
-	client->setBufferOut(message.erase(0, bytesSent));
-	if (client->getBufferOut().empty())
-	{
-		epoll_event event;
-		event.events = EPOLLIN;
-		event.data.fd = fd;
-		epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, fd, &event);
-	}
+  if (this->_clientHandler.getClientByFd(fd) == NULL)
+    return;
+  Client *client = this->_clientHandler.getClientByFd(fd);
+  std::string message = client->getBufferOut();
+  if (message.empty())
+    return;
+  int bytesSent = send(fd, message.c_str(), message.length(), MSG_NOSIGNAL);
+  if (bytesSent <= 0)
+  {
+    this->disconnectClient(fd);
+    return;
+  }
+  client->setBufferOut(message.erase(0, bytesSent));
+  if (client->getBufferOut().empty())
+  {
+    epoll_event event;
+    event.events = EPOLLIN;
+    event.data.fd = fd;
+    epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, fd, &event);
+  }
 }
 
-void Server::setEpollOut(const std::vector <int>& vec)
+void Server::setEpollOut(const std::vector<int> &vec)
 {
-	for(std::vector<int>::const_iterator it = vec.begin(); it != vec.end();++it)
-	{
-		epoll_event event;
-		event.events = EPOLLIN | EPOLLOUT;
-		event.data.fd = *it;
-		epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, *it, &event);
-	}
+  for (std::vector<int>::const_iterator it = vec.begin(); it != vec.end(); ++it)
+  {
+    epoll_event event;
+    event.events = EPOLLIN | EPOLLOUT;
+    event.data.fd = *it;
+    epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, *it, &event);
+  }
 }
 
 void Server::run()
 {
-	this->_epollFd = epoll_create1(0);
-	epoll_event eventsServer;
-	eventsServer.events = EPOLLIN;
-	eventsServer.data.fd = this->_serverSocketFd;
-	this->_events.resize(64);
-	epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventsServer.data.fd, &eventsServer);
-	while (g_isRunning)
-	{
-		int eventCount = epoll_wait(this->_epollFd, this->_events.data(), 64, -1);
-		for (int i = 0; i < eventCount; i++)
-		{
-			int clientSocketFd = this->_events[i].data.fd;
-			u_int32_t flags = this->_events[i].events;
-			if (clientSocketFd == this->_serverSocketFd)
-				this->connectNewClient();
-			else
-			{
-				if (flags & EPOLLIN)
-					this->eventToServer(clientSocketFd);
-				if (flags & EPOLLOUT)
-					this->eventToClient(clientSocketFd);
-			}
-		}
-		std::vector<int> vec = this->_clientHandler.getFdWithData();
-		if (!vec.empty())
-			setEpollOut(vec);
-	}
+  this->_epollFd = epoll_create1(0);
+  epoll_event eventsServer;
+  eventsServer.events = EPOLLIN;
+  eventsServer.data.fd = this->_serverSocketFd;
+  this->_events.resize(64);
+  epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventsServer.data.fd, &eventsServer);
+  while (g_isRunning)
+  {
+    int eventCount = epoll_wait(this->_epollFd, this->_events.data(), 64, -1);
+    for (int i = 0; i < eventCount; i++)
+    {
+      int clientSocketFd = this->_events[i].data.fd;
+      u_int32_t flags = this->_events[i].events;
+      if (clientSocketFd == this->_serverSocketFd)
+        this->connectNewClient();
+      else
+      {
+        if (flags & EPOLLIN)
+          this->eventToServer(clientSocketFd);
+        if (flags & EPOLLOUT)
+          this->eventToClient(clientSocketFd);
+      }
+    }
+    std::vector<int> vec = this->_clientHandler.getFdWithData();
+    if (!vec.empty())
+      setEpollOut(vec);
+  }
 }
 
 Server::~Server()
 {
-	std::vector<int> vec = this->_clientHandler.getAllFd();
-	for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
-		close(*it);
-	if (this->_serverSocketFd != -1)
-		close(this->_serverSocketFd);
-	if (this->_epollFd != -1)
-		close(this->_epollFd);
+  std::vector<int> vec = this->_clientHandler.getAllFd();
+  for (std::vector<int>::iterator it = vec.begin(); it != vec.end(); ++it)
+    close(*it);
+  if (this->_serverSocketFd != -1)
+    close(this->_serverSocketFd);
+  if (this->_epollFd != -1)
+    close(this->_epollFd);
 }

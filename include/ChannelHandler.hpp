@@ -30,6 +30,7 @@ public:
 	//Methods
 	void	deleteChannel(std::string name);
 	Channel *createChannel(const std::string& name);
+	void	deleteClient(Client *client);
 
   /*
   FONCTION BROADCAST : transmet le message a tous les FD necessaires

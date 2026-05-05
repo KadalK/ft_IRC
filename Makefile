@@ -28,6 +28,7 @@ SRCS		:= \
 				commands/Nick.cpp \
 				commands/Pass.cpp \
 				commands/PrivMsg.cpp \
+				commands/Mode.cpp \
 				Commands.cpp
 
 
