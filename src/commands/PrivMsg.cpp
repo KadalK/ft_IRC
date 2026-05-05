@@ -50,7 +50,6 @@ std::string formatMsg(const std::string& msg, const std::string& sender, const s
 	return (":" + sender + " PRIVMSG " + target + " :" + msg + "\r\n");
 }
 
-
 void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,const std::vector<std::string>& arg)
 {
 	if (arg.size() < 2)
@@ -85,19 +84,14 @@ void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,cons
 				client.appendBufferOut("No such nick");
 				continue;
 			}
-
 			if (!receiver->getAuth())
 			{
 				client.appendBufferOut("Not authenticated");
 				continue;
 			}
-			//a changer
-			client.appendBufferOut(formatMsg(msg, client.getNickname(), *it));
 			receiver->appendBufferOut(formatMsg(msg, client.getNickname(), *it));
 		}
 	}
 }
-
-
 
 PrivMsg::~PrivMsg(){}
