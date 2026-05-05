@@ -30,6 +30,8 @@ SRCS		:= \
 				commands/PrivMsg.cpp \
 				commands/Mode.cpp \
 				commands/Topic.cpp \
+				commands/Invite.cpp \
+				commands/Kick.cpp \
 				Commands.cpp
 
 

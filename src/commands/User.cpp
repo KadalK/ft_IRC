@@ -19,6 +19,8 @@ static bool parsingUsername(std::string str)
 void User::execute(Client &client, ClientHandler &, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
+  if (arg.empty())
+    return;
   if (parsingUsername(arg[0]) == false)
     return;
   client.setUsername(arg[0]);

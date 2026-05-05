@@ -10,7 +10,7 @@ Pass::Pass(std::string passServ) : _passServ(passServ) {}
 void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
-  if (arg.size() < 1)
+  if (arg.empty())
   {
     std::cout << "[debug]: invalid format" << std::endl;
     client.appendBufferOut("invalid format");

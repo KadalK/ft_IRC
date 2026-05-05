@@ -22,13 +22,10 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
       client.appendBufferOut("This channel has no topic");
     }
   }
-  if (channel->getTopicRestrict())
+  if (channel->getTopicRestrict() && !channel->isClientOperator(client))
   {
-    if (!channel->isClientOperator(client))
-    {
-      std::cout << " [DEBUG]: You are no operator brother\n";
-      return;
-    }
+    std::cout << " [DEBUG]: You are no operator brother\n";
+    return;
   }
   else
   {

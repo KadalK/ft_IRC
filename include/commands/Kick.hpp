@@ -6,17 +6,17 @@
 #include "Commands.hpp"
 #include "CommandsHandler.hpp"
 
-class Invite : public Commands
+class Kick : public Commands
 {
 private:
-  Invite &operator=(const Invite &other);
-  Invite(const Invite &copy);
+  Kick &operator=(const Kick &other);
+  Kick(const Kick &copy);
 
 public:
-  Invite();
+  Kick();
 
   void execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
                const std::vector<std::string> &arg);
 
-  ~Invite();
+  ~Kick();
 };

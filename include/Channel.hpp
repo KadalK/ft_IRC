@@ -12,12 +12,12 @@ class Channel
 private:
   std::string _name;
   std::string _topic;
+  std::string _password;
 
   bool _inviteOnly;
   bool _topicRestrict;
   bool _hasPassword;
   bool _hasTopic;
-  std::string _password;
   bool _hasUserLimit;
   size_t _userLimit;
   size_t _userCount;
