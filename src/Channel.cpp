@@ -97,13 +97,11 @@ void Channel::inviteClient(Client *client)
 void Channel::removeClient(Client *client)
 {
   std::map<Client *, bool>::iterator it;
-
   it = this->_clients.find(client);
   if (it != this->_clients.end())
     _clients.erase(it);
   else
     std::cout << "client no in channel" << std::endl;
-  // SI TOUS LES CLIENTS SONT PARTI DELETE CHANNEL
 }
 
 std::map<Client *, bool>::iterator
@@ -142,14 +140,14 @@ void Channel::replyJoinChannel(Client *client)
                           client->getUsername() + "@" + client->getHostname() +
                           " JOIN :" + this->_name + "\r\n";
   client->appendBufferOut(replyJoin);
-  std::string replyTopic = ": ircserv 331 " + client->getNickname() + " " +
+  std::string replyTopic = ":ircserv 331 " + client->getNickname() + " " +
                            this->_name + " :No topic is set\r\n";
   client->appendBufferOut(replyTopic);
-  std::string replyNames = ": ircserv 353 " + client->getNickname() + " " +
+  std::string replyNames = ":ircserv 353 " + client->getNickname() + " = " +
                            this->_name + " :" + list +
                            "\r\n"; // LIST ALL CLIENTS ON CHANNEL
   client->appendBufferOut(replyNames);
-  std::string replyEndOfNames = ": ircserv 366 " + client->getNickname() + " " +
+  std::string replyEndOfNames = ":ircserv 366 " + client->getNickname() + " " +
                                 this->_name + " :End of /NAMES list.\r\n";
   client->appendBufferOut(replyEndOfNames);
 }

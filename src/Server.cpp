@@ -64,9 +64,10 @@ void Server::connectNewClient()
 
 void Server::disconnectClient(int fd)
 {
+  this->_channelHandler.deleteClient(this->_clientHandler.getClientByFd(fd));
+  this->_clientHandler.removeClient(fd);
   epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, fd, NULL);
   close(fd);
-  this->_clientHandler.removeClient(fd);
   // DELETE LE CLIENT DE TOUS LES CHANNELS
 }
 
