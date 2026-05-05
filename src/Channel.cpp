@@ -21,6 +21,8 @@ const std::string &Channel::getPassword() const { return (this->_password); }
 
 bool Channel::getInviteOnly() const { return (this->_inviteOnly); }
 
+bool Channel::getHasTopic() const {return (this->_hasTopic);}
+
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)

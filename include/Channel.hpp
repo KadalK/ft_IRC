@@ -16,6 +16,7 @@ private:
   bool _inviteOnly;
   bool _topicRestrict;
   bool _hasPassword;
+  bool _hasTopic;
   std::string _password;
   bool _hasUserLimit;
   size_t _userLimit;
@@ -43,6 +44,7 @@ public:
   const std::string &getPassword() const;
   const std::string &getTopic() const;
   bool getInviteOnly() const;
+  bool getHasTopic() const;
 
   bool canJoinChannel(Client &client, std::string inPassword);
 

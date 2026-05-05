@@ -29,6 +29,7 @@ SRCS		:= \
 				commands/Pass.cpp \
 				commands/PrivMsg.cpp \
 				commands/Mode.cpp \
+				commands/Topic.cpp \
 				Commands.cpp
 
 
@@ -56,7 +57,9 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 # 				include/commands/Nick.hpp \
 # 				include/commands/Pass.hpp \
 # 				include/commands/PrivMsg.hpp \
+# 				include/commands/Topic.hpp \
 # 				include/Commands.hpp
+
 
 HEAD_D		:=	.
 
