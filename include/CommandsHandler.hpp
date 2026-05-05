@@ -8,6 +8,7 @@
 #include "commands/Nick.hpp"
 #include "commands/Pass.hpp"
 #include "commands/PrivMsg.hpp"
+#include "commands/Topic.hpp"
 #include "commands/User.hpp"
 #include <iostream>
 #include <map>
@@ -22,6 +23,7 @@ class Pass;
 class User;
 class PrivMsg;
 class Mode;
+class Topic;
 
 class CommandsHandler
 {
@@ -39,6 +41,7 @@ private:
   User *_user;
   PrivMsg *_pvmsg;
   Mode *_mode;
+  Topic *_topic;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

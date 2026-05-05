@@ -8,7 +8,7 @@ void Invite::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
   Channel *channel;
   Client *clientInvited;
 
-  if (arg.empty())
+  if (arg.size() == 1)
   {
   }
   channel = chH.getChannelByName(arg[1]);

@@ -39,11 +39,13 @@ public:
   std::map<char, modeHandler> _modeFt;
 
   void setTopic(std::string &topic);
+  void setTopicBool(bool flag);
 
   const std::string &getName() const;
   const std::string &getPassword() const;
   const std::string &getTopic() const;
   bool getInviteOnly() const;
+  bool getTopicRestrict() const;
   bool getHasTopic() const;
 
   bool canJoinChannel(Client &client, std::string inPassword);

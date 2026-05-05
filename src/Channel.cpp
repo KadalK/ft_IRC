@@ -3,7 +3,8 @@
 
 Channel::Channel(const std::string &name)
     : _name(name), _inviteOnly(false), _topicRestrict(false),
-      _hasPassword(false), _hasUserLimit(false), _userLimit(0), _userCount(0)
+      _hasPassword(false), _hasTopic(false), _hasUserLimit(false),
+      _userLimit(0), _userCount(0)
 {
   this->_modeFt['i'] = &Channel::mode_i;
   this->_modeFt['t'] = &Channel::mode_t;
@@ -22,9 +23,13 @@ const std::string &Channel::getPassword() const { return (this->_password); }
 
 bool Channel::getInviteOnly() const { return (this->_inviteOnly); }
 
-bool Channel::getHasTopic() const {return (this->_hasTopic);}
+bool Channel::getTopicRestrict() const { return (this->_topicRestrict); }
+
+bool Channel::getHasTopic() const { return (this->_hasTopic); }
 
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
+
+void Channel::setTopicBool(bool flag) { this->_hasTopic = flag; }
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
 {
