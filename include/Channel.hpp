@@ -59,6 +59,8 @@ public:
   void replyJoinChannel(Client *client);
   std::string getClientInChan();
 
+  size_t getUserCount() const;
+
   void broadcast(const std::string &msg, Client *sender);
   // bool	hasClient(Client* client) const;
 

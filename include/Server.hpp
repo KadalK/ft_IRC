@@ -30,7 +30,7 @@ class Server{
 
 		ChannelHandler _channelHandler;
 		ClientHandler _clientHandler;
-    CommandsHandler _commandsHandler;
+    	CommandsHandler _commandsHandler;
 
 	public:
 		Server(int port, std::string password);
