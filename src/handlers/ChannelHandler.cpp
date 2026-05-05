@@ -14,16 +14,18 @@ const char *ChannelHandler::ChannelsEmpty::what() const throw()
 
 void ChannelHandler::deleteClient(Client *client)
 {
-	std::map<std::string,Channel *>:: iterator it;
+	std::map<std::string,Channel *>:: iterator it = this->_channelList.begin();
 
-	for (it = this->_channelList.begin(); it != this->_channelList.end(); ++it)
+	while(it != this->_channelList.end())
 	{
 		it->second->removeClient(client);
 		if (it->second->getUserCount() == 0)
 		{
 				delete it->second;
-				this->_channelList.erase(it);
+				this->_channelList.erase(it++);
 		}
+		else
+			++it;
 	}
 }
 

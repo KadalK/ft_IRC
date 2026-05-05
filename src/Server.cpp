@@ -68,7 +68,6 @@ void Server::disconnectClient(int fd)
   this->_clientHandler.removeClient(fd);
   epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, fd, NULL);
   close(fd);
-  // DELETE LE CLIENT DE TOUS LES CHANNELS
 }
 
 void Server::eventToServer(int fd)
@@ -77,11 +76,20 @@ void Server::eventToServer(int fd)
   int bytes = recv(fd, temp, sizeof(temp), 0);
   Client *client = this->_clientHandler.getClientByFd(fd);
   if (bytes <= 0)
+  {
+    std::cout << "TENTATIVE DE DECONNEXION DU FD : " << fd << std::endl;
     this->disconnectClient(fd);
+  }
   else
   {
     std::string message(temp,bytes);
     client->appendBuffer(message);
+    if (client->getBuffer().length() > 2048)
+    {
+      client->setBuffer("");
+      client->appendBufferOut(":ircserv 417 " + client->getNickname() + " :Line too long\r\n");
+      return;
+    }
     size_t pos;
     while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
     {
