@@ -12,6 +12,7 @@ Channel::Channel(const std::string &name)
   this->_modeFt['l'] = &Channel::mode_l;
   // Avoir l'heure de creation du channel
 }
+size_t Channel::getUserCount() const { return (this->_userCount); }
 
 const std::string &Channel::getName() const { return (this->_name); }
 
@@ -20,6 +21,8 @@ const std::string &Channel::getTopic() const { return (this->_topic); }
 const std::string &Channel::getPassword() const { return (this->_password); }
 
 bool Channel::getInviteOnly() const { return (this->_inviteOnly); }
+
+bool Channel::getHasTopic() const {return (this->_hasTopic);}
 
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
@@ -113,8 +116,11 @@ void Channel::removeClient(Client *client)
 {
   std::map<Client *, bool>::iterator it;
   it = this->_clients.find(client);
-  if (it != this->_clients.end())
-    _clients.erase(it);
+  if (it != this->_clients.end() && this->_userCount != 0)
+  {
+    this->_clients.erase(it);
+    this->_userCount--;
+  }
   else
     std::cout << "client no in channel" << std::endl;
 }

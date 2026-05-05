@@ -19,11 +19,11 @@ void ChannelHandler::deleteClient(Client *client)
 	for (it = this->_channelList.begin(); it != this->_channelList.end(); ++it)
 	{
 		it->second->removeClient(client);
-		//if(it->second->getNbClient() == 0)
-		// {
-		//		delete it->second;
-		//		this->_channelList.erase(it);
-		// }
+		if (it->second->getUserCount() == 0)
+		{
+				delete it->second;
+				this->_channelList.erase(it);
+		}
 	}
 }
 
@@ -46,7 +46,7 @@ void ChannelHandler::deleteChannel(std::string name)
  	it = this->_channelList.find(name);
 	if (it != this->_channelList.end())
 	{
-    delete it->second;
+   	 	delete it->second;
 		this->_channelList.erase(it);
 	}
 }
