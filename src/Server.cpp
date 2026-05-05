@@ -80,7 +80,8 @@ void Server::eventToServer(int fd)
     this->disconnectClient(fd);
   else
   {
-    client->appendBuffer(temp);
+    std::string message(temp,bytes);
+    client->appendBuffer(message);
     size_t pos;
     while ((pos = client->getBuffer().find("\r\n")) != std::string::npos)
     {
