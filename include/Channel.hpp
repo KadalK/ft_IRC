@@ -2,6 +2,7 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "Replies.hpp"
 #include <algorithm>
 #include <iostream>
 #include <map>
@@ -46,7 +47,14 @@ public:
   const std::string &getTopic() const;
   bool getInviteOnly() const;
   bool getTopicRestrict() const;
+  bool getHasPassword() const;
   bool getHasTopic() const;
+  bool getHasUserLimit() const;
+  size_t getUserCount() const;
+  size_t getUserLimit() const;
+  std::string getUserLimitString() const;
+  const std::string getModeString() const;
+  const std::map<Client *, bool> &getClients() const;
 
   bool canJoinChannel(Client &client, std::string inPassword);
 
@@ -62,8 +70,6 @@ public:
 
   void replyJoinChannel(Client *client);
   std::string getClientInChan();
-
-  size_t getUserCount() const;
 
   void broadcast(const std::string &msg, Client *sender);
   // bool	hasClient(Client* client) const;

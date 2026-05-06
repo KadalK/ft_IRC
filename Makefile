@@ -20,7 +20,6 @@ SRCS		:= \
 				Server.cpp \
 				Client.cpp \
 				Channel.cpp \
-				Replies.cpp
 				handlers/ClientHandler.cpp \
 				handlers/ChannelHandler.cpp \
 				handlers/CommandsHandler.cpp \
@@ -33,7 +32,8 @@ SRCS		:= \
 				commands/Topic.cpp \
 				commands/Invite.cpp \
 				commands/Kick.cpp \
-				Commands.cpp
+				Commands.cpp \
+				Replies.cpp
 
 
 #*------------------------------------------------------------------------------*
@@ -62,6 +62,7 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 # 				include/commands/PrivMsg.hpp \
 # 				include/commands/Topic.hpp \
 # 				include/Commands.hpp
+# 				include/Replies.hpp
 
 
 HEAD_D		:=	.

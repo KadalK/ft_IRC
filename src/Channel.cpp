@@ -1,5 +1,6 @@
 #include "Channel.hpp"
 #include <cstdlib>
+#include <sstream>
 
 Channel::Channel(const std::string &name)
     : _name(name), _inviteOnly(false), _topicRestrict(false),
@@ -13,7 +14,10 @@ Channel::Channel(const std::string &name)
   this->_modeFt['l'] = &Channel::mode_l;
   // Avoir l'heure de creation du channel
 }
+
 size_t Channel::getUserCount() const { return (this->_userCount); }
+
+size_t Channel::getUserLimit() const { return (this->_userLimit); }
 
 const std::string &Channel::getName() const { return (this->_name); }
 
@@ -27,11 +31,29 @@ bool Channel::getTopicRestrict() const { return (this->_topicRestrict); }
 
 bool Channel::getHasTopic() const { return (this->_hasTopic); }
 
+bool Channel::getHasUserLimit() const { return (this->_hasUserLimit); }
+
+bool Channel::getHasPassword() const { return (this->_hasPassword); }
+
+std::string Channel::getUserLimitString() const
+{
+  std::stringstream ss;
+  ss << this->_userLimit;
+
+  return (ss.str());
+}
+
+const std::map<Client *, bool> &Channel::getClients() const
+{
+  return (this->_clients);
+}
+
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 void Channel::setTopicBool(bool flag) { this->_hasTopic = flag; }
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
+
 {
   if (this->isClientInChannel(client) == true)
   {
@@ -195,17 +217,10 @@ void Channel::mode_i(bool flag, const std::string &, Client *sender)
 
   itSend = this->_clients.find(sender);
   if (itSend->second == false)
-  {
-    std::cout << "sender n'a pas les droits" << std::cout;
     return;
-  }
   if (this->_inviteOnly == flag)
-  {
-    std::cout << "Channel already in this mode" << std::endl;
     return;
-  }
   this->_inviteOnly = flag;
-  std::cout << "Added invite-only mode" << std::endl;
 }
 
 void Channel::mode_t(bool flag, const std::string &, Client *sender)
@@ -214,17 +229,10 @@ void Channel::mode_t(bool flag, const std::string &, Client *sender)
 
   itSend = this->_clients.find(sender);
   if (itSend->second == false)
-  {
-    std::cout << "sender n'a pas les droits" << std::cout;
     return;
-  }
   if (this->_topicRestrict == flag)
-  {
-    std::cout << "Channel already in this mode" << std::endl;
     return;
-  }
   this->_topicRestrict = flag;
-  std::cout << "Modified topic-restrict mode" << std::endl;
 }
 
 void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
@@ -233,27 +241,20 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
 
   itSend = this->_clients.find(sender);
   if (itSend->second == false)
-  {
-    std::cout << "sender n'a pas les droits" << std::cout;
     return;
-  }
   if (this->_hasPassword == flag)
-  {
-    std::cout << "Already same mode" << std::endl;
     return;
-  }
   if (flag == true)
   {
     if (arg.empty())
     {
-      std::cout << "Need more params" << std::endl;
+      // A VOIR SI ON DOIT PAS JUSTE STOP S IL MANQUE DES PARAM
       return;
     }
     if (!this->_password.empty())
-    {
-      std::cout << "ya deja un mot de passe" << std::endl;
       return;
-    }
+    // CHECK SI ARG EST VALID : 4-16 char max \ only alphanumeric
+    // pas de NUM ERROR DANS RFC 2812
     this->_password = arg;
     this->_hasPassword = flag;
     std::cout << "mot de passe ajoute" << std::endl;
@@ -263,11 +264,11 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
     if (arg != this->_password)
     {
       std::cout << "Wrong paswsowrd to clear" << std::endl;
+      // ERR_KEYSET (467)
       return;
     }
     this->_password.clear();
     this->_hasPassword = flag;
-    std::cout << "Cleared password" << std::endl;
   }
 }
 
@@ -275,21 +276,6 @@ void Channel::mode_o(bool flag, const std::string &arg, Client *sender)
 {
   if (arg.empty())
   {
-    std::cout << "Need more params" << std::endl;
-    return;
-  }
-
-  std::map<Client *, bool>::iterator itSend;
-
-  itSend = this->_clients.find(sender);
-  if (itSend == this->_clients.end())
-  {
-    std::cout << "sender pas dans le channel" << std::cout;
-    return;
-  }
-  if (itSend->second == false)
-  {
-    std::cout << "sender n'a pas les droits" << std::cout;
     return;
   }
 
@@ -298,27 +284,25 @@ void Channel::mode_o(bool flag, const std::string &arg, Client *sender)
   itReceiv = this->findClientByNick(arg);
   if (itReceiv == this->_clients.end())
   {
-    std::cout << "receiver pas dans le channel" << std::cout;
-    return;
+    return (sender->appendBufferOut(Replies::ERR_USERNOTINCHANNEL(
+        sender->getFullName(), arg, this->_name)));
   }
   if (itReceiv->second == flag)
     return;
   itReceiv->second = flag;
-  std::cout << ":" << itSend->first->getNickname() << " " << this->_name << " "
-            << (flag ? "+o" : "-o") << " " << itReceiv->first->getNickname()
-            << std::endl;
-  // BROADCAST A TOUT LE MONDE
 }
 
 static bool isInteger(const std::string &str)
 {
   if ((!isdigit(str[0])) && (str[0] != '-') && (str[0] != '+'))
-    return false;
+    return (false);
 
   char *p;
   strtol(str.c_str(), &p, 10);
 
-  return (*p == 0);
+  if (*p == 0)
+    return (true);
+  return (false);
 }
 
 void Channel::mode_l(bool flag, const std::string &arg, Client *)
@@ -340,6 +324,27 @@ void Channel::mode_l(bool flag, const std::string &arg, Client *)
   this->_hasUserLimit = flag;
   std::cout << "New limit : " << this->_userLimit << std::endl;
   return;
+}
+
+const std::string Channel::getModeString() const
+{
+  std::string flags = "+";
+  std::string params = "";
+
+  if (this->_inviteOnly)
+    flags += "i";
+  if (this->_topicRestrict)
+    flags += "t";
+  if (this->_hasPassword)
+    flags += "k";
+  if (this->_hasUserLimit)
+  {
+    flags += "l";
+    params += " " + this->getUserLimitString();
+  }
+  if (flags.size() == 1)
+    flags = "";
+  return (flags + params);
 }
 
 Channel::~Channel() {}
