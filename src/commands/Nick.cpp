@@ -10,9 +10,6 @@ Nick::Nick() {}
 
 static bool validNick(const std::string &nick)
 {
-  if (nick.empty())
-    return false;
-
   if (!std::isalpha(static_cast<unsigned char>(nick[0])) && nick[0] != '_')
     return false;
 
@@ -28,7 +25,7 @@ static bool validNick(const std::string &nick)
 void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
-  if (arg.size() < 1)
+  if (arg.empty())
   {
     std::cout << "[DEBUG] : ERR_NONICKNAMEGIVEN" << std::endl;
     return;

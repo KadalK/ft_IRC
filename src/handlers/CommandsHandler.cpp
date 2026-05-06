@@ -1,4 +1,5 @@
 #include "CommandsHandler.hpp"
+#include "commands/Invite.hpp"
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
@@ -6,7 +7,8 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
                                  std::string passServ)
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
-      _user(new User), _pvmsg(new PrivMsg), _mode(new Mode)
+      _user(new User), _pvmsg(new PrivMsg), _mode(new Mode), _topic(new Topic),
+      _invite(new Invite), _kick(new Kick)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
@@ -14,6 +16,9 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
   this->_commands["USER"] = _user;
   this->_commands["PRIVMSG"] = _pvmsg;
   this->_commands["MODE"] = _mode;
+  this->_commands["TOPIC"] = _topic;
+  this->_commands["INVITE"] = _invite;
+  this->_commands["KICK"] = _kick;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -24,6 +29,9 @@ CommandsHandler::~CommandsHandler()
   delete _user;
   delete _pvmsg;
   delete _mode;
+  delete _topic;
+  delete _invite;
+  delete _kick;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)
@@ -85,18 +93,17 @@ void CommandsHandler::processCommand(Client &client,
   std::string cmdStr;
   Commands *cmd;
   size_t pos;
-
+  if (rawMessage.size() > 512)
+    rawMessage = rawMessage.substr(0, 512);
   pos = rawMessage.find(' ');
-  if (pos == std::string::npos)
-    return; // Manque arguments - throw exception
   cmd = findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
     return; // Commande existe pas - throw exception
   cmdStr = rawMessage.substr(0, pos);
-  std::cout << "comd handler   " << &client << std::endl;
   if (isRegisterCmd(cmdStr) == false && client.isRegistered() == false)
     return; // Client pas registered et commande necessite registered
-  tokens = tokenizeCommand(rawMessage.substr(pos));
+  if (pos != std::string::npos)
+    tokens = tokenizeCommand(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = tokens.begin();
        it != tokens.end(); it++)                 // debug test
     std::cout << "[" << *it << "]" << std::endl; // debug test

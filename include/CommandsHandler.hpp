@@ -3,11 +3,14 @@
 #include "ChannelHandler.hpp"
 #include "ClientHandler.hpp"
 #include "Commands.hpp"
+#include "commands/Invite.hpp"
 #include "commands/Join.hpp"
+#include "commands/Kick.hpp"
 #include "commands/Mode.hpp"
 #include "commands/Nick.hpp"
 #include "commands/Pass.hpp"
 #include "commands/PrivMsg.hpp"
+#include "commands/Topic.hpp"
 #include "commands/User.hpp"
 #include <iostream>
 #include <map>
@@ -22,6 +25,9 @@ class Pass;
 class User;
 class PrivMsg;
 class Mode;
+class Topic;
+class Invite;
+class Kick;
 
 class CommandsHandler
 {
@@ -39,6 +45,9 @@ private:
   User *_user;
   PrivMsg *_pvmsg;
   Mode *_mode;
+  Topic *_topic;
+  Invite *_invite;
+  Kick *_kick;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

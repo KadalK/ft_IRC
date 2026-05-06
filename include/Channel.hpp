@@ -12,12 +12,12 @@ class Channel
 private:
   std::string _name;
   std::string _topic;
+  std::string _password;
 
   bool _inviteOnly;
   bool _topicRestrict;
   bool _hasPassword;
   bool _hasTopic;
-  std::string _password;
   bool _hasUserLimit;
   size_t _userLimit;
   size_t _userCount;
@@ -39,20 +39,24 @@ public:
   std::map<char, modeHandler> _modeFt;
 
   void setTopic(std::string &topic);
+  void setTopicBool(bool flag);
 
   const std::string &getName() const;
   const std::string &getPassword() const;
   const std::string &getTopic() const;
   bool getInviteOnly() const;
+  bool getTopicRestrict() const;
   bool getHasTopic() const;
 
   bool canJoinChannel(Client &client, std::string inPassword);
 
   bool isClientInvited(Client &client);
+  bool isClientInChannel(Client &client);
+  bool isClientOperator(Client &client);
   bool isChannelFull(void);
 
   void addClient(Client *client);
-  void inviteClient(Client *client);
+  bool inviteClient(Client *client);
   void removeClient(Client *client);
   std::map<Client *, bool>::iterator findClientByNick(const std::string &nick);
 

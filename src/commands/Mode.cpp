@@ -55,7 +55,16 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
     // 403 "<client> <channel> :No such channel"
     return;
   }
-
+  if (channel->isClientInChannel(client) == false)
+  {
+    // 442 "<client> <channel> :You're not on that channel"
+    return;
+  }
+  if (channel->isClientOperator(client) == false)
+  {
+    // 482 "<client> <channel> :You're not channel operator"
+    return;
+  }
   if (arg.size() == 1)
   {
     std::cout << "modes are : hehehe" << std::endl;
@@ -63,7 +72,6 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
     // 329 "<client> <channel> <creationtime>"
     return;
   }
-
   flags = arg[1];
   if (flags[0] != '-' && flags[0] != '+')
   {
