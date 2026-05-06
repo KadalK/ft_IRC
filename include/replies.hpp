@@ -17,7 +17,7 @@ std::string ERR_CANNOTSENDTOCHAN(const std::string& server, const std::string& c
 //414
 // std::string ERR_WILDTOPLEVEL();
 //407
-std::string ERR_TOOMANYTARGETS(const std::string& server, const std::string& target);
+std::string ERR_TOOMANYTARGETS(const std::string& server, const std::string& target, const std::string& abortMessage);
 //301
 std::string RPL_AWAY(const std::string& nick);
 
