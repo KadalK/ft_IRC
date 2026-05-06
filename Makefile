@@ -20,6 +20,7 @@ SRCS		:= \
 				Server.cpp \
 				Client.cpp \
 				Channel.cpp \
+				Replies.cpp
 				handlers/ClientHandler.cpp \
 				handlers/ChannelHandler.cpp \
 				handlers/CommandsHandler.cpp \
