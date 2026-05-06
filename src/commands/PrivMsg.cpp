@@ -2,7 +2,7 @@
 #include "commands/PrivMsg.hpp"
 #include <string>
 
-#include "../../include/Client.hpp"
+#include "Client.hpp"
 
 // PrivMsg::PrivMsg() {}
 // PrivMsg::PrivMsg(PrivMsg const &src) { (void)src; }
