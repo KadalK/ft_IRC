@@ -1,4 +1,4 @@
-#include "../include/commands/Topic.hpp"
+#include "commands/Topic.hpp"
 
 Topic::Topic() {}
 
@@ -11,6 +11,11 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
     return;
   const std::string &ChanName = arg[0];
   Channel *channel = chH.getChannelByName(ChanName);
+  if (!channel)
+  {
+      std::cout << " [DEBUG]: This channel doesnt exist brother\n";
+    return;
+  }
 
   if (arg.size() == 1)
   {
@@ -29,8 +34,11 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   }
   else
   {
-    std::string topic = arg[1];
-    channel->setTopic(topic);
+    if (arg.size() >= 2)
+    {
+      std::string topic = arg[1] + "\r\n";
+      channel->setTopic(topic);
+    }
     channel->setTopicBool(true); // pas besoin de parametre en vrai
     std::cout << "topic has been set" << std::endl;
   }
