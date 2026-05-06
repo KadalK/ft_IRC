@@ -45,7 +45,7 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       inPassword = "";
     if ((*it)[0] != '#')
        std::cout << *it << " :No such channel" << std::endl;
-    else
+    else if ((*it)[0] == '#' && (*it)[1])
     {
       Channel *chToJoin = chH.getChannelByName(*it);
       std::cout << *it << std::endl;

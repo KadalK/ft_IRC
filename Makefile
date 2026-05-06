@@ -69,7 +69,7 @@ CXX 		:= c++
 
 #*------------------------------------------------------------------------------*
 
-CXXFLAGS	:=	-Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP
+CXXFLAGS	:=	-Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP -Iinclude
 
 #*------------------------------------------------------------------------------*
 
@@ -91,7 +91,7 @@ $(NAME)		:	$(OBJS)
 $(OBJS_D)%.o:	$(SRCS_D)%.cpp
 				@mkdir -p $(dir $@)
 				@echo "$(YELLOW)Compiling $<...$(NC)"
-				@$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
+				@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 
 # $(OBJS_D)	:
