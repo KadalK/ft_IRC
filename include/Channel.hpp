@@ -14,6 +14,7 @@ private:
   std::string _name;
   std::string _topic;
   std::string _password;
+  std::string _time;
 
   bool _inviteOnly;
   bool _topicRestrict;
@@ -41,6 +42,7 @@ public:
 
   void setTopic(std::string &topic);
   void setTopicBool(bool flag);
+  void setTime();
 
   const std::string &getName() const;
   const std::string &getPassword() const;
@@ -55,6 +57,7 @@ public:
   std::string getUserLimitString() const;
   const std::string getModeString() const;
   const std::map<Client *, bool> &getClients() const;
+  const std::string &getTime();
 
   bool canJoinChannel(Client &client, std::string inPassword);
 

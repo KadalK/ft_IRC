@@ -8,15 +8,17 @@ private:
   Replies();
 
 public:
-
-  /* WELCOME SUCCEFULL REGISTRATION --------------------------------------------------------------*/
+  /* WELCOME SUCCEFULL REGISTRATION
+   * --------------------------------------------------------------*/
 
   // 001
-  static const std::string RPL_WELCOME(const std::string &client, const std::string &nick);
+  static const std::string RPL_WELCOME(const std::string &client,
+                                       const std::string &nick);
   // 002
   static const std::string RPL_YOURHOST(const std::string &nick);
   // 003
-  static const std::string RPL_CREATED(const std::string &nick, const std::string &time);
+  static const std::string RPL_CREATED(const std::string &nick,
+                                       const std::string &time);
   // 004
   static const std::string RPL_MYINFO(const std::string &nick);
 
@@ -81,6 +83,7 @@ public:
                                              const std::string &channel);
   // BROADCAST
   static const std::string BC_INVITE(const std::string &client,
+                                     const std::string &nick,
                                      const std::string &channel);
   /* PRIVMSG --------------------------------------------------------------*/
   // 411

@@ -2,59 +2,61 @@
 #include <iostream>
 #include <string>
 
- /* WELCOME SUCCEFULL REGISTRATION --------------------------------------------------------------*/
+/* WELCOME SUCCEFULL REGISTRATION
+ * --------------------------------------------------------------*/
 
-  // 001
-  const std::string Replies::RPL_WELCOME(const std::string &client, const std::string &nick)
-  {
-    std::string out = "";
+// 001
+const std::string Replies::RPL_WELCOME(const std::string &client,
+                                       const std::string &nick)
+{
+  std::string out = "";
 
-    out += ":ircserv 001 ";
-    out += nick;
-    out += " :Welcome to the Internet Relay Network ";
-    out += client;
-    out += "\r\n";
+  out += ":ircserv 001 ";
+  out += nick;
+  out += " :Welcome to the Internet Relay Network ";
+  out += client;
+  out += "\r\n";
 
-    return (out);
-  }
+  return (out);
+}
 
-  // 002
-  const std::string Replies::RPL_YOURHOST(const std::string &nick)
-  {
-    std::string out = "";
+// 002
+const std::string Replies::RPL_YOURHOST(const std::string &nick)
+{
+  std::string out = "";
 
-    out += ":ircserv 002 ";
-    out += nick;
-    out += " :Your host is ircserv, running version 1.0\r\n";
+  out += ":ircserv 002 ";
+  out += nick;
+  out += " :Your host is ircserv, running version 1.0\r\n";
 
-    return (out);
-  }
+  return (out);
+}
 
-  // 003
-  const std::string Replies::RPL_CREATED(const std::string &nick, const std::string &time)
-  {
-    std::string out = "";
+// 003
+const std::string Replies::RPL_CREATED(const std::string &nick,
+                                       const std::string &time)
+{
+  std::string out = "";
 
-    out += ":ircserv 003 ";
-    out += nick;
-    out += " :This server was created ";
-    out += time;
-    out += "\r\n";
+  out += ":ircserv 003 ";
+  out += nick;
+  out += " :This server was created ";
+  out += time;
+  out += "\r\n";
 
-    return (out);
-  }
+  return (out);
+}
 
-  const std::string Replies::RPL_MYINFO(const std::string &nick)
-  {
-    std::string out = "";
+const std::string Replies::RPL_MYINFO(const std::string &nick)
+{
+  std::string out = "";
 
-    out += ":ircserv 004 ";
-    out += nick;
-    out += " ircserv 1.0 o itkol\r\n";
+  out += ":ircserv 004 ";
+  out += nick;
+  out += " ircserv 1.0 o itkol\r\n";
 
-    return (out);
-  }
-
+  return (out);
+}
 
 /* GLOBAL --------------------------------------------------------------*/
 // 401
@@ -325,7 +327,8 @@ const std::string Replies::ERR_USERONCHANNEL(const std::string &client,
 
 // BROADCAST
 const std::string Replies::BC_INVITE(const std::string &client,
-                                     const std::string &channel)
+                                     const std::string &channel,
+                                     const std::string &nick)
 {
 
   std::string out = "";
@@ -333,6 +336,8 @@ const std::string Replies::BC_INVITE(const std::string &client,
   out += ":" + client;
   out += " INVITE ";
   out += channel;
+  out += " ";
+  out += nick;
   out += "\r\n";
 
   return (out);

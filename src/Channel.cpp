@@ -3,9 +3,9 @@
 #include <sstream>
 
 Channel::Channel(const std::string &name)
-    : _name(name),_topic("No topic is set"), _inviteOnly(false), _topicRestrict(false),
-      _hasPassword(false), _hasTopic(false), _hasUserLimit(false),
-      _userLimit(0), _userCount(0)
+    : _name(name), _topic("No topic is set"), _inviteOnly(false),
+      _topicRestrict(false), _hasPassword(false), _hasTopic(false),
+      _hasUserLimit(false), _userLimit(0), _userCount(0)
 {
   this->_modeFt['i'] = &Channel::mode_i;
   this->_modeFt['t'] = &Channel::mode_t;
@@ -35,6 +35,8 @@ bool Channel::getHasUserLimit() const { return (this->_hasUserLimit); }
 
 bool Channel::getHasPassword() const { return (this->_hasPassword); }
 
+const std::string &Channel::getTime() { return (this->_time); }
+
 std::string Channel::getUserLimitString() const
 {
   std::stringstream ss;
@@ -51,6 +53,14 @@ const std::map<Client *, bool> &Channel::getClients() const
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 void Channel::setTopicBool(bool flag) { this->_hasTopic = flag; }
+
+void Channel::setTime()
+{
+  time_t rawtimes;
+  time(&rawtimes);
+  this->_time = ctime(&rawtimes);
+  this->_time = this->_time.erase(this->_time.length() - 1);
+}
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
 
@@ -148,8 +158,6 @@ void Channel::removeClient(Client *client)
     this->_clients.erase(it);
     this->_userCount--;
   }
-  else
-    std::cout << "client no in channel" << std::endl;
 }
 
 std::map<Client *, bool>::iterator
