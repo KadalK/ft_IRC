@@ -3,7 +3,7 @@
 #include <sstream>
 
 Channel::Channel(const std::string &name)
-    : _name(name),_topic("No topic is set"), _inviteOnly(false), _topicRestrict(false),
+    : _name(name), _topic("No topic is set"), _inviteOnly(false), _topicRestrict(false),
       _hasPassword(false), _hasTopic(false), _hasUserLimit(false),
       _userLimit(0), _userCount(0)
 {
