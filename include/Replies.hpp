@@ -22,6 +22,9 @@ public:
   // 004
   static const std::string RPL_MYINFO(const std::string &nick);
 
+  // 005
+  static const std::string RPL_ISUPPORT(const std::string &nick);
+
   /* GLOBAL --------------------------------------------------------------*/
   // 401
   static const std::string ERR_NOSUCHNICK(const std::string &client,
@@ -53,14 +56,16 @@ public:
   // 431
   static const std::string ERR_NONICKGIVEN(const std::string &nick);
 
-   // 432
-  static const std::string ERR_ERRONEUSNICKNAME (const std::string &nick, const std::string &new_nick);
+  // 432
+  static const std::string ERR_ERRONEUSNICKNAME(const std::string &nick,
+                                                const std::string &new_nick);
 
   // 433
-  static const std::string ERR_NICKNAMEINUSE (const std::string &nick, const std::string &new_nick);
+  static const std::string ERR_NICKNAMEINUSE(const std::string &nick,
+                                             const std::string &new_nick);
 
-   /* PASS ----------------------------------------------------------------*/
-    // 324
+  /* PASS ----------------------------------------------------------------*/
+  // 324
   static const std::string ERR_PASSWDMISMATCH(const std::string &client);
 
   /* MODE ----------------------------------------------------------------*/
@@ -103,7 +108,7 @@ public:
                                      const std::string &nick,
                                      const std::string &channel);
 
-  /* INVITE --------------------------------------------------------------*/
+  /* KICK  ----------------------------------------------------------------*/
   // BROADCAST
   static const std::string BC_KICK(const std::string &client,
                                    const std::string &nick,
@@ -112,23 +117,25 @@ public:
 
   /* PRIVMSG --------------------------------------------------------------*/
   // 411
-  static const std::string ERR_NORECIPIENT(const std::string &server,
-                                           const std::string &client,
+  static const std::string ERR_NORECIPIENT(const std::string &client,
                                            const std::string &command);
   // 412
-  static const std::string ERR_NOTEXTTOSEND(const std::string &server,
-                                            const std::string &client);
+  static const std::string ERR_NOTEXTTOSEND(const std::string &client);
   // 404
   static const std::string ERR_CANNOTSENDTOCHAN(const std::string &server,
                                                 const std::string &channel);
   // 414
   //  std::string ERR_WILDTOPLEVEL();
   // 407
-  static const std::string ERR_TOOMANYTARGETS(const std::string &server,
-                                              const std::string &target,
-                                              const std::string &abortMessage);
+  static const std::string ERR_TOOMANYTARGETS(const std::string &target,
+                                              const std::string &targetsCount);
   // 301
   static const std::string RPL_AWAY(const std::string &nick);
+
+  // BROADCAST
+  static const std::string BC_PRIVMSG(const std::string &client,
+                                      const std::string &target,
+                                      const std::string &msg);
 
   /* JOIN --------------------------------------------------------------*/
 
