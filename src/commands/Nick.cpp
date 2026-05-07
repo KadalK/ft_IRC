@@ -49,7 +49,10 @@ void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
   client.setNickname(nick);
   client.setNickBool(true);
   if (client.getPassBool() && client.getUserBool())
-    client.setAuth(true);
+  {
+    if (client.getNickBool() == false)
+        client.setAuth(true);
+  }
   return;
 }
 
