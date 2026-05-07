@@ -3,7 +3,7 @@
 #include <sstream>
 
 Channel::Channel(const std::string &name)
-    : _name(name), _inviteOnly(false), _topicRestrict(false),
+    : _name(name),_topic("No topic is set"), _inviteOnly(false), _topicRestrict(false),
       _hasPassword(false), _hasTopic(false), _hasUserLimit(false),
       _userLimit(0), _userCount(0)
 {
@@ -189,7 +189,7 @@ void Channel::replyJoinChannel(Client *client)
                           " JOIN :" + this->_name + "\r\n";
   client->appendBufferOut(replyJoin);
   std::string replyTopic = ":ircserv 331 " + client->getNickname() + " " +
-                           this->_name + " :No topic is set\r\n";
+                           this->_name + " :" + this->getTopic() + "\r\n";
   client->appendBufferOut(replyTopic);
   std::string replyNames = ":ircserv 353 " + client->getNickname() + " = " +
                            this->_name + " :" + list +

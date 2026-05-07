@@ -25,6 +25,7 @@ class Server{
 		int _port;
 		int _serverSocketFd;
 		int _epollFd;
+		std::string _time;
 
 		std::vector<epoll_event> _events;
 		std::string _password;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "Replies.hpp"
 
 class Client
 {
@@ -14,6 +15,7 @@ private:
   std::string _hostname;
   std::string _bufferIn;
   std::string _bufferOut;
+  std::string _timeServ;
 
   bool _isAuth;
   bool _hasPassword;
@@ -46,6 +48,9 @@ public:
 
   std::string getUsername() const;
   void setUsername(std::string username);
+
+  std::string getTimeServ() const;
+  void setTimeServ (std::string time);
 
   std::string getHostname() const;
 
