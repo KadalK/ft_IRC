@@ -47,12 +47,12 @@ void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
     return;
   }
   client.setNickname(nick);
-  client.setNickBool(true);
   if (client.getPassBool() && client.getUserBool())
   {
     if (client.getNickBool() == false)
-        client.setAuth(true);
+      client.setAuth(true);
   }
+  client.setNickBool(true);
   return;
 }
 

@@ -192,20 +192,13 @@ void Channel::replyJoinChannel(Client *client)
 {
   std::string list = this->getClientInChan();
 
-  std::string replyJoin = ":" + client->getNickname() + "!" +
-                          client->getUsername() + "@" + client->getHostname() +
-                          " JOIN :" + this->_name + "\r\n";
-  client->appendBufferOut(replyJoin);
-  std::string replyTopic = ":ircserv 331 " + client->getNickname() + " " +
-                           this->_name + " :" + this->getTopic() + "\r\n";
-  client->appendBufferOut(replyTopic);
-  std::string replyNames = ":ircserv 353 " + client->getNickname() + " = " +
-                           this->_name + " :" + list +
-                           "\r\n"; // LIST ALL CLIENTS ON CHANNEL
-  client->appendBufferOut(replyNames);
-  std::string replyEndOfNames = ":ircserv 366 " + client->getNickname() + " " +
-                                this->_name + " :End of /NAMES list.\r\n";
-  client->appendBufferOut(replyEndOfNames);
+  client->appendBufferOut(Replies::RPL_JOIN(client->getFullName(),this->_name));
+  if (this->_hasTopic == false)
+    client->appendBufferOut(Replies::RPL_NOTOPIC(client->getNickname(),this->getTopic(), this->_name));
+  else
+     client->appendBufferOut(Replies::RPL_TOPIC(client->getNickname(), this->getTopic(), this->_name));
+  client->appendBufferOut(Replies::RPL_NAMREPLY(client->getNickname(),list,this->_name));
+  client->appendBufferOut(Replies::RPL_ENDOFNAMES(client->getNickname(),this->_name));
 }
 
 void Channel::broadcast(const std::string &msg, Client *sender)

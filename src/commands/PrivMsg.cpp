@@ -70,7 +70,7 @@ void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,cons
 			Channel* chan = chH.getChannelByName(target);
 			if (!chan)
 			{
-				client.appendBufferOut("No such channel");
+				client.appendBufferOut("No such channel\r\n");
 				continue;
 			}
 			chan->broadcast(formatMsg(msg, client.getNickname(), *it), &client);
@@ -81,12 +81,12 @@ void PrivMsg::execute(Client& client,ClientHandler &clH,ChannelHandler &chH,cons
 			Client* receiver = clH.getClientByNickname(target);
 			if (!receiver)
 			{
-				client.appendBufferOut("No such nick");
+				client.appendBufferOut("No such nick\r\n");
 				continue;
 			}
 			if (!receiver->getAuth())
 			{
-				client.appendBufferOut("Not authenticated");
+				client.appendBufferOut("Not authenticated\r\n");
 				continue;
 			}
 			receiver->appendBufferOut(formatMsg(msg, client.getNickname(), *it));
