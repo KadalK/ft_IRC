@@ -235,38 +235,38 @@ void Channel::mode_t(bool flag, const std::string &, Client *sender)
   this->_topicRestrict = flag;
 }
 
+#define invalidChars " :,\0\r\n"
+
+static bool isValidKeyFormat(const std::string &key)
+{
+  if (key.size() > 23)
+    return (false);
+  size_t pos = key.find_first_of(invalidChars);
+  if (pos != std::string::npos)
+    return (false);
+  return (true);
+}
+
 void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
 {
-  std::map<Client *, bool>::iterator itSend;
-
-  itSend = this->_clients.find(sender);
-  if (itSend->second == false)
+  if (arg.empty())
     return;
-  if (this->_hasPassword == flag)
-    return;
+  if (!isValidKeyFormat(arg))
+    return (sender->appendBufferOut(
+        Replies::ERR_INVALIDKEY(sender->getNickname(), this->_name)));
   if (flag == true)
   {
-    if (arg.empty())
-    {
-      // A VOIR SI ON DOIT PAS JUSTE STOP S IL MANQUE DES PARAM
-      return;
-    }
-    if (!this->_password.empty())
-      return;
-    // CHECK SI ARG EST VALID : 4-16 char max \ only alphanumeric
-    // pas de NUM ERROR DANS RFC 2812
+    if (this->_hasPassword == flag)
+      return (sender->appendBufferOut(Replies::ERR_KEYSET(this->_name)));
     this->_password = arg;
     this->_hasPassword = flag;
-    std::cout << "mot de passe ajoute" << std::endl;
   }
   else
   {
-    if (arg != this->_password)
-    {
-      std::cout << "Wrong paswsowrd to clear" << std::endl;
-      // ERR_KEYSET (467)
+    if (this->_hasPassword == flag)
       return;
-    }
+    if (arg != this->_password)
+      return (sender->appendBufferOut(Replies::ERR_KEYSET(this->_name)));
     this->_password.clear();
     this->_hasPassword = flag;
   }
@@ -310,19 +310,14 @@ void Channel::mode_l(bool flag, const std::string &arg, Client *)
   if (flag == true)
   {
     if (arg.empty())
-    {
-      std::cout << "Need more params" << std::endl;
       return;
-    }
-    if (isInteger(arg))
-      this->_userLimit = atol(arg.c_str());
-    else
-      std::cout << "Not a positive integer" << std::endl;
+    if (!isInteger(arg))
+      return;
+    this->_userLimit = atol(arg.c_str());
   }
   else
     this->_userLimit = 0;
   this->_hasUserLimit = flag;
-  std::cout << "New limit : " << this->_userLimit << std::endl;
   return;
 }
 

@@ -145,6 +145,19 @@ const std::string Replies::ERR_USERDONTMATCH(const std::string &client)
   return (out);
 }
 
+// 467
+const std::string Replies::ERR_KEYSET(const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 467 ";
+  out += channel;
+  out += " :Channel key already set";
+  out += "\r\n";
+
+  return (out);
+}
+
 // 472
 const std::string Replies::ERR_UNKNOWNMODE(const std::string &client, char c)
 {

@@ -40,6 +40,9 @@ public:
   // 502
   static const std::string ERR_USERDONTMATCH(const std::string &client);
 
+  // 467
+  static const std::string ERR_KEYSET(const std::string &channel);
+
   // 472
   static const std::string ERR_UNKNOWNMODE(const std::string &client, char c);
 
