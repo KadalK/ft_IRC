@@ -398,6 +398,85 @@ std::string Replies::ERR_TOOMANYTARGETS(const std::string &ircserv,
           abortMessage + "\r\n");
 }
 
+ /* JOIN --------------------------------------------------------------*/
+
+  const std::string Replies::RPL_JOIN(const std::string &client, const std::string& channel)
+  {
+
+    std::string out = "";
+
+    out += ":";
+    out += client;
+    out += " JOIN :";
+    out += channel;
+    out += "\r\n";
+
+    return(out);
+
+  }
+
+    // 331
+  const std::string Replies::RPL_NOTOPIC( const std::string &nick, const std::string &topic, const std::string &channel)
+  {
+    std::string out = "";
+
+    out += ":ircserv 331 ";
+    out += nick;
+    out += " ";
+    out += channel;
+    out += " :";
+    out += topic;
+    out += "\r\n";
+
+    return (out);
+  }
+
+    // 332
+  const std::string Replies::RPL_TOPIC( const std::string &nick, const std::string &topic, const std::string &channel)
+  {
+    std::string out = "";
+
+    out += ":ircserv 332 ";
+    out += nick;
+    out += " ";
+    out += channel;
+    out += " :";
+    out += topic;
+    out += "\r\n";
+
+    return (out);
+  }
+
+     // 353
+  const std::string Replies::RPL_NAMREPLY( const std::string &nick, const std::string &list, const std::string &channel)
+  {
+    std::string out = "";
+
+    out += ":ircserv 353 ";
+    out += nick;
+    out += " = ";
+    out += channel;
+    out += " :";
+    out += list;
+    out += "\r\n";
+
+    return (out);
+  }
+
+     // 366
+  const std::string Replies::RPL_ENDOFNAMES( const std::string &nick, const std::string &channel)
+  {
+    std::string out = "";
+
+    out += ":ircserv 366 ";
+    out += nick;
+    out += " ";
+    out += channel;
+    out += " :End of /NAMES list\r\n";
+
+    return (out);
+  }
+
 // // 301
 // std::string Replies::RPL_AWAY(const std::string &ircserv,
 //                               const std::string &nick,

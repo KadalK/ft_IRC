@@ -113,5 +113,19 @@ public:
   // 301
   static std::string RPL_AWAY(const std::string &nick);
 
+  /* JOIN --------------------------------------------------------------*/
+
+  static const std::string RPL_JOIN(const std::string &client, const std::string& channel);
+  // 331
+  static const std::string RPL_NOTOPIC(const std::string &nick, const std::string &topic, const std::string &channel);
+  // 332
+  static const std::string RPL_TOPIC(const std::string &nick, const std::string &topic, const std::string &channel);
+  // 353
+  static const std::string RPL_NAMREPLY(const std::string &nick, const std::string &list, const std::string &channel);
+  // 366
+  static const std::string RPL_ENDOFNAMES(const std::string &nick, const std::string &channel);
+
+
+
   ~Replies();
 };
