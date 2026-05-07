@@ -148,6 +148,10 @@ public:
 
   static const std::string RPL_JOIN(const std::string &client,
                                     const std::string &channel);
+
+  // BROADCAST
+  static const std::string BC_JOIN(const std::string &client,
+                                   const std::string &channel);
   // 331
   static const std::string RPL_NOTOPIC(const std::string &nick,
                                        const std::string &topic,

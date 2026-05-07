@@ -12,7 +12,6 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
     return (client.appendBufferOut(
         Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC")));
   }
-    return;
   const std::string &ChanName = arg[0];
   Channel *channel = chH.getChannelByName(ChanName);
   if (!channel)

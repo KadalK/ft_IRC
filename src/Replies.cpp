@@ -512,6 +512,20 @@ const std::string Replies::BC_PRIVMSG(const std::string &client,
 }
 /* JOIN --------------------------------------------------------------*/
 
+// BROADCAST
+const std::string Replies::BC_JOIN(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += client;
+  out += " JOIN";
+  out += " :" + channel;
+  out += "\r\n";
+
+  return (out);
+}
+
 const std::string Replies::RPL_JOIN(const std::string &client,
                                     const std::string &channel)
 {

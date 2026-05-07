@@ -192,8 +192,9 @@ void Channel::replyJoinChannel(Client *client)
 {
   std::string list = this->getClientInChan();
 
-  client->appendBufferOut(
-      Replies::RPL_JOIN(client->getFullName(), this->_name));
+  // client->appendBufferOut(
+  //     Replies::RPL_JOIN(client->getFullName(), this->_name));
+  this->broadcast(Replies::BC_JOIN(client->getFullName(), this->_name),client, false);
   if (this->_hasTopic == false)
     client->appendBufferOut(Replies::RPL_NOTOPIC(
         client->getNickname(), this->getTopic(), this->_name));
