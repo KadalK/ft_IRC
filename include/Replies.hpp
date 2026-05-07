@@ -85,6 +85,14 @@ public:
   static const std::string BC_INVITE(const std::string &client,
                                      const std::string &nick,
                                      const std::string &channel);
+
+  /* INVITE --------------------------------------------------------------*/
+  // BROADCAST
+  static const std::string BC_KICK(const std::string &client,
+                                   const std::string &nick,
+                                   const std::string &channel,
+                                   const std::string &comment);
+
   /* PRIVMSG --------------------------------------------------------------*/
   // 411
   static std::string ERR_NORECIPIENT(const std::string &server,

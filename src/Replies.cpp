@@ -319,7 +319,7 @@ const std::string Replies::ERR_USERONCHANNEL(const std::string &client,
   out += nick;
   out += " ";
   out += channel;
-  out += ":is already on channel";
+  out += " :is already on channel";
   out += "\r\n";
 
   return (out);
@@ -342,6 +342,26 @@ const std::string Replies::BC_INVITE(const std::string &client,
 
   return (out);
 }
+/* KICK -----------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_KICK(const std::string &client,
+                                   const std::string &nick,
+                                   const std::string &channel,
+                                   const std::string &comment)
+{
+  std::string out = "";
+
+  out += ":" + client;
+  out += " KICK ";
+  out += channel;
+  out += " ";
+  out += nick;
+  out += " :" + comment;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
 std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,
