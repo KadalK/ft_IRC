@@ -103,12 +103,19 @@ public:
                                      const std::string &nick,
                                      const std::string &channel);
 
-  /* INVITE --------------------------------------------------------------*/
+  /* KICK --------------------------------------------------------------*/
   // BROADCAST
   static const std::string BC_KICK(const std::string &client,
                                    const std::string &nick,
                                    const std::string &channel,
                                    const std::string &comment);
+
+  /* TOPIC --------------------------------------------------------------*/
+  // BROADCAST
+  static const std::string BC_TOPIC(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment);
+
 
   /* PRIVMSG --------------------------------------------------------------*/
   // 411

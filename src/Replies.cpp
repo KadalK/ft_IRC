@@ -429,6 +429,23 @@ const std::string Replies::BC_KICK(const std::string &client,
   return (out);
 }
 
+/* TOPIC -----------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_TOPIC(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment)
+{
+  std::string out = "";
+
+  out += client;
+  out += " TOPIC ";
+  out += channel;
+  out += " :" + comment;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
 const std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,

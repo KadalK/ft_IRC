@@ -8,29 +8,40 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
                     const std::vector<std::string> &arg)
 {
   if (arg.empty())
+  {
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC")));
+  }
     return;
   const std::string &ChanName = arg[0];
   Channel *channel = chH.getChannelByName(ChanName);
   if (!channel)
   {
-      std::cout << " [DEBUG]: This channel doesnt exist brother\n";
-    return;
+    return (client.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(client.getNickname(), ChanName)));
   }
-
+  if (channel->isClientInChannel(client) == false)
+  {
+    return (client.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(client.getNickname(), ChanName)));
+  }
   if (arg.size() == 1)
   {
     if (channel->getHasTopic())
-      client.appendBufferOut(channel->getTopic());
+      {
+        client.appendBufferOut(Replies::RPL_TOPIC(
+        client.getNickname(), channel->getTopic(), ChanName));
+      }
     else
     {
-      std::cout << " [DEBUG]: This channel has no topic brother\n";
-      client.appendBufferOut("This channel has no topic");
+      client.appendBufferOut(Replies::RPL_NOTOPIC(
+        client.getNickname(), channel->getTopic(), ChanName));
     }
   }
   if (channel->getTopicRestrict() && !channel->isClientOperator(client))
   {
-    std::cout << " [DEBUG]: You are no operator brother\n";
-    return;
+    return (client.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), ChanName)));
   }
   else
   {
@@ -40,7 +51,7 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
       channel->setTopic(topic);
     }
     channel->setTopicBool(true); // pas besoin de parametre en vrai
-    std::cout << "topic has been set" << std::endl;
+    channel->broadcast(Replies::BC_TOPIC(client.getFullName(), ChanName,channel->getTopic()),&client, false);
   }
 }
 
