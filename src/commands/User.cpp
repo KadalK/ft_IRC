@@ -20,9 +20,20 @@ void User::execute(Client &client, ClientHandler &, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
   if (arg.empty())
+  {
+    client.appendBufferOut(Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "USER"));
     return;
+  }
+  if (client.getUserBool())
+  {
+    client.appendBufferOut(Replies::ERR_ALREADYREGISTERED(client.getNickname()));
+    return;
+  }
   if (parsingUsername(arg[0]) == false)
+  {
+    client.appendBufferOut("ERROR :Invalid characters in username\r\n");
     return;
+  }
   client.setUsername(arg[0]);
   client.setUserBool(true);
   if (client.getPassBool() && client.getNickBool())

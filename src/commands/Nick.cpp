@@ -27,15 +27,14 @@ void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
 {
   if (arg.empty())
   {
-    std::cout << "[DEBUG] : ERR_NONICKNAMEGIVEN" << std::endl;
+    client.appendBufferOut(Replies::ERR_NONICKGIVEN(client.getNickname()));
     return;
   }
 
   const std::string &nick = arg[0];
-
   if (!validNick(nick))
   {
-    std::cout << "[DEBUG] : ERR_ERRONEUSNICKNAME" << std::endl;
+    client.appendBufferOut(Replies::ERR_ERRONEUSNICKNAME(client.getNickname(), nick));
     return;
   }
 
@@ -43,7 +42,7 @@ void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
 
   if (existing && existing != &client)
   {
-    std::cout << "[DEBUG] : ERR_NICKNAMEINUSE" << std::endl;
+    client.appendBufferOut(Replies::ERR_ERRONEUSNICKNAME(client.getNickname(), nick));
     return;
   }
   client.setNickname(nick);

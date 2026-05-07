@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 Client::Client()
-    : _fd(-1), _nickname("NULL"), _username("NULL"), _bufferIn(), _bufferOut(),
+    : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),
       _isAuth(false), _hasPassword(false), _hasNickname(false),
       _hasUsername(false)
 {

@@ -125,6 +125,8 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   size_t type;
   size_t paramApplied;
 
+  if(arg.empty())
+    return;
   channel = chH.getChannelByName(arg[0]);
   if (!channel)
     return (client.appendBufferOut(
