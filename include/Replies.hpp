@@ -95,37 +95,43 @@ public:
 
   /* PRIVMSG --------------------------------------------------------------*/
   // 411
-  static std::string ERR_NORECIPIENT(const std::string &server,
-                                     const std::string &client,
-                                     const std::string &command);
+  static const std::string ERR_NORECIPIENT(const std::string &server,
+                                           const std::string &client,
+                                           const std::string &command);
   // 412
-  static std::string ERR_NOTEXTTOSEND(const std::string &server,
-                                      const std::string &client);
+  static const std::string ERR_NOTEXTTOSEND(const std::string &server,
+                                            const std::string &client);
   // 404
-  static std::string ERR_CANNOTSENDTOCHAN(const std::string &server,
-                                          const std::string &channel);
+  static const std::string ERR_CANNOTSENDTOCHAN(const std::string &server,
+                                                const std::string &channel);
   // 414
   //  std::string ERR_WILDTOPLEVEL();
   // 407
-  static std::string ERR_TOOMANYTARGETS(const std::string &server,
-                                        const std::string &target,
-                                        const std::string &abortMessage);
+  static const std::string ERR_TOOMANYTARGETS(const std::string &server,
+                                              const std::string &target,
+                                              const std::string &abortMessage);
   // 301
-  static std::string RPL_AWAY(const std::string &nick);
+  static const std::string RPL_AWAY(const std::string &nick);
 
   /* JOIN --------------------------------------------------------------*/
 
-  static const std::string RPL_JOIN(const std::string &client, const std::string& channel);
+  static const std::string RPL_JOIN(const std::string &client,
+                                    const std::string &channel);
   // 331
-  static const std::string RPL_NOTOPIC(const std::string &nick, const std::string &topic, const std::string &channel);
+  static const std::string RPL_NOTOPIC(const std::string &nick,
+                                       const std::string &topic,
+                                       const std::string &channel);
   // 332
-  static const std::string RPL_TOPIC(const std::string &nick, const std::string &topic, const std::string &channel);
+  static const std::string RPL_TOPIC(const std::string &nick,
+                                     const std::string &topic,
+                                     const std::string &channel);
   // 353
-  static const std::string RPL_NAMREPLY(const std::string &nick, const std::string &list, const std::string &channel);
+  static const std::string RPL_NAMREPLY(const std::string &nick,
+                                        const std::string &list,
+                                        const std::string &channel);
   // 366
-  static const std::string RPL_ENDOFNAMES(const std::string &nick, const std::string &channel);
-
-
+  static const std::string RPL_ENDOFNAMES(const std::string &nick,
+                                          const std::string &channel);
 
   ~Replies();
 };

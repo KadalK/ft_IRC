@@ -42,40 +42,40 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
 
   if (arg.size() < 2)
     return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getFullName(), "KICK")));
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
   channels = extractTokens(arg[0]);
   targets = extractTokens(arg[1]);
   if (channels.size() > 1 && channels.size() != targets.size())
     return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getFullName(), "KICK")));
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
   if (channels.size() == 1)
   {
     channel = chH.getChannelByName(channels[0]);
     if (!channel)
       return (client.appendBufferOut(
-          Replies::ERR_NOSUCHANNEL(client.getFullName(), channel->getName())));
+          Replies::ERR_NOSUCHANNEL(client.getNickname(), channel->getName())));
     for (tIt = targets.begin(); tIt != targets.end(); tIt++)
     {
       if (channel->isClientInChannel(client) == false)
         return (client.appendBufferOut(Replies::ERR_NOTONCHANNEL(
-            client.getFullName(), channel->getName())));
+            client.getNickname(), channel->getName())));
       if (channel->isClientOperator(client) == false)
       {
         client.appendBufferOut(Replies::ERR_CHANNOPRIVSNEEDED(
-            client.getFullName(), channel->getName()));
+            client.getNickname(), channel->getName()));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
         client.appendBufferOut(
-            Replies::ERR_NOSUCHNICK(client.getFullName(), *tIt));
+            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
         client.appendBufferOut(Replies::ERR_USERNOTINCHANNEL(
-            client.getFullName(), *tIt, channel->getName()));
+            client.getNickname(), *tIt, channel->getName()));
         continue;
       }
       if (arg.size() >= 3)
@@ -85,7 +85,7 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
       channel->broadcast(Replies::BC_KICK(client.getFullName(),
                                           clientKicked->getNickname(),
                                           channel->getName(), comment),
-                         &client);
+                         &client, false);
       channel->removeClient(clientKicked);
       std::cout << channel->getClientInChan() << std::endl;
     }
@@ -99,30 +99,30 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
       channel = chH.getChannelByName(*cIt);
       if (!channel)
         return (client.appendBufferOut(
-            Replies::ERR_NOSUCHANNEL(client.getFullName(), *cIt)));
+            Replies::ERR_NOSUCHANNEL(client.getNickname(), *cIt)));
       if (channel->isClientInChannel(client) == false)
       {
         client.appendBufferOut(
-            Replies::ERR_NOTONCHANNEL(client.getFullName(), *cIt));
+            Replies::ERR_NOTONCHANNEL(client.getNickname(), *cIt));
         continue;
       }
       if (channel->isClientOperator(client) == false)
       {
         client.appendBufferOut(
-            Replies::ERR_CHANNOPRIVSNEEDED(client.getFullName(), *cIt));
+            Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), *cIt));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
         client.appendBufferOut(
-            Replies::ERR_NOSUCHNICK(client.getFullName(), *tIt));
+            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
         client.appendBufferOut(
-            Replies::ERR_USERNOTINCHANNEL(client.getFullName(), *tIt, *cIt));
+            Replies::ERR_USERNOTINCHANNEL(client.getNickname(), *tIt, *cIt));
         continue;
       }
       if (arg.size() >= 3)
@@ -132,7 +132,7 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
       channel->broadcast(Replies::BC_KICK(client.getFullName(),
                                           clientKicked->getNickname(),
                                           channel->getName(), comment),
-                         &client);
+                         &client, false);
       channel->removeClient(clientKicked);
     }
     return;

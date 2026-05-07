@@ -74,7 +74,7 @@ public:
   void replyJoinChannel(Client *client);
   std::string getClientInChan();
 
-  void broadcast(const std::string &msg, Client *sender);
+  void broadcast(const std::string &msg, Client *sender, bool excluded);
   // bool	hasClient(Client* client) const;
 
   ~Channel();

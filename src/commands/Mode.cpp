@@ -125,6 +125,8 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   size_t type;
   size_t paramApplied;
 
+  if (arg.empty())
+    return;
   channel = chH.getChannelByName(arg[0]);
   if (!channel)
     return (client.appendBufferOut(
@@ -187,8 +189,8 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   std::string modeString = listModesChanges(old, *channel);
   if (!modeString.empty())
     channel->broadcast(
-        Replies::BC_MODE(client.getNickname(), channel->getName(), modeString),
-        &client);
+        Replies::BC_MODE(client.getFullName(), channel->getName(), modeString),
+        &client, false);
 }
 
 Mode::~Mode() {}

@@ -1,7 +1,7 @@
 #include "Client.hpp"
 
 Client::Client()
-    : _fd(-1), _nickname("NULL"), _username("NULL"), _bufferIn(), _bufferOut(),
+    : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),
       _isAuth(false), _hasPassword(false), _hasNickname(false),
       _hasUsername(false)
 {
@@ -27,7 +27,7 @@ std::string Client::getHostname() const { return (this->_hostname); }
 
 std::string Client::getTimeServ() const { return (this->_timeServ); }
 
-void Client::setTimeServ (std::string time) { this->_timeServ = time;}
+void Client::setTimeServ(std::string time) { this->_timeServ = time; }
 
 std::string Client::getFullName() const
 {
@@ -44,7 +44,9 @@ void Client::setAuth(bool state)
   client = this->getFullName();
   nick = this->getNickname();
   time = this->_timeServ;
-  this->appendBufferOut(Replies::RPL_WELCOME(client, nick) + Replies::RPL_YOURHOST(nick) + Replies::RPL_CREATED(nick, time) + Replies::RPL_MYINFO(nick));
+  this->appendBufferOut(
+      Replies::RPL_WELCOME(client, nick) + Replies::RPL_YOURHOST(nick) +
+      Replies::RPL_CREATED(nick, time) + Replies::RPL_MYINFO(nick));
 }
 void Client::setNickBool(bool state) { this->_hasNickname = state; }
 void Client::setPassBool(bool state) { this->_hasPassword = state; }

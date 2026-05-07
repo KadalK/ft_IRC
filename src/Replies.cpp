@@ -250,7 +250,7 @@ const std::string Replies::BC_MODE(const std::string &client,
 {
   std::string out = "";
 
-  out += ":" + client;
+  out += client;
   out += " MODE ";
   out += channel;
   out += " ";
@@ -333,7 +333,7 @@ const std::string Replies::BC_INVITE(const std::string &client,
 
   std::string out = "";
 
-  out += ":" + client;
+  out += client;
   out += " INVITE ";
   out += channel;
   out += " ";
@@ -351,7 +351,7 @@ const std::string Replies::BC_KICK(const std::string &client,
 {
   std::string out = "";
 
-  out += ":" + client;
+  out += client;
   out += " KICK ";
   out += channel;
   out += " ";
@@ -364,24 +364,24 @@ const std::string Replies::BC_KICK(const std::string &client,
 
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
-std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,
-                                     const std::string &client,
-                                     const std::string &command)
+const std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,
+                                           const std::string &client,
+                                           const std::string &command)
 {
   return (":" + ircserv + " 411 " + client + " :No recipient given (" +
           command + ")\r\n");
 }
 
 // 412
-std::string Replies::ERR_NOTEXTTOSEND(const std::string &ircserv,
-                                      const std::string &client)
+const std::string Replies::ERR_NOTEXTTOSEND(const std::string &ircserv,
+                                            const std::string &client)
 {
   return (":" + ircserv + " 412 " + client + " :No text to send\r\n");
 }
 
 // 404
-std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
-                                          const std::string &channel)
+const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
+                                                const std::string &channel)
 {
   return (":" + ircserv + " 404 " + channel + " :Cannot send to channel\r\n");
 }
@@ -390,92 +390,98 @@ std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
 //  std::string Replies::ERR_WILDTOPLEVEL(){}
 
 // 407
-std::string Replies::ERR_TOOMANYTARGETS(const std::string &ircserv,
-                                        const std::string &target,
-                                        const std::string &abortMessage)
+const std::string Replies::ERR_TOOMANYTARGETS(const std::string &ircserv,
+                                              const std::string &target,
+                                              const std::string &abortMessage)
 {
   return (":" + ircserv + " 407 " + target + " :407 recipients. " +
           abortMessage + "\r\n");
 }
 
- /* JOIN --------------------------------------------------------------*/
+/* JOIN --------------------------------------------------------------*/
 
-  const std::string Replies::RPL_JOIN(const std::string &client, const std::string& channel)
-  {
+const std::string Replies::RPL_JOIN(const std::string &client,
+                                    const std::string &channel)
+{
 
-    std::string out = "";
+  std::string out = "";
 
-    out += ":";
-    out += client;
-    out += " JOIN :";
-    out += channel;
-    out += "\r\n";
+  out += client;
+  out += " JOIN :";
+  out += channel;
+  out += "\r\n";
 
-    return(out);
+  return (out);
+}
 
-  }
+// 331
+const std::string Replies::RPL_NOTOPIC(const std::string &nick,
+                                       const std::string &topic,
+                                       const std::string &channel)
+{
+  std::string out = "";
 
-    // 331
-  const std::string Replies::RPL_NOTOPIC( const std::string &nick, const std::string &topic, const std::string &channel)
-  {
-    std::string out = "";
+  out += ":ircserv 331 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " :";
+  out += topic;
+  out += "\r\n";
 
-    out += ":ircserv 331 ";
-    out += nick;
-    out += " ";
-    out += channel;
-    out += " :";
-    out += topic;
-    out += "\r\n";
+  return (out);
+}
 
-    return (out);
-  }
+// 332
+const std::string Replies::RPL_TOPIC(const std::string &nick,
+                                     const std::string &topic,
+                                     const std::string &channel)
+{
+  std::string out = "";
 
-    // 332
-  const std::string Replies::RPL_TOPIC( const std::string &nick, const std::string &topic, const std::string &channel)
-  {
-    std::string out = "";
+  out += ":ircserv 332 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " :";
+  out += topic;
+  out += "\r\n";
 
-    out += ":ircserv 332 ";
-    out += nick;
-    out += " ";
-    out += channel;
-    out += " :";
-    out += topic;
-    out += "\r\n";
+  return (out);
+}
 
-    return (out);
-  }
+// 353
+const std::string Replies::RPL_NAMREPLY(const std::string &nick,
+                                        const std::string &list,
+                                        const std::string &channel)
+{
+  std::string out = "";
 
-     // 353
-  const std::string Replies::RPL_NAMREPLY( const std::string &nick, const std::string &list, const std::string &channel)
-  {
-    std::string out = "";
+  out += ":ircserv 353 ";
+  out += nick;
+  out += " = ";
+  out += channel;
+  out += " :";
+  out += list;
+  out += "\r\n";
 
-    out += ":ircserv 353 ";
-    out += nick;
-    out += " = ";
-    out += channel;
-    out += " :";
-    out += list;
-    out += "\r\n";
+  return (out);
+}
 
-    return (out);
-  }
+// 366
+const std::string Replies::RPL_ENDOFNAMES(const std::string &nick,
+                                          const std::string &channel)
+{
+  std::string out = "";
 
-     // 366
-  const std::string Replies::RPL_ENDOFNAMES( const std::string &nick, const std::string &channel)
-  {
-    std::string out = "";
+  out += ":ircserv 366 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " :End of /NAMES list\r\n";
 
-    out += ":ircserv 366 ";
-    out += nick;
-    out += " ";
-    out += channel;
-    out += " :End of /NAMES list\r\n";
-
-    return (out);
-  }
+  return (out);
+}
 
 // // 301
 // std::string Replies::RPL_AWAY(const std::string &ircserv,

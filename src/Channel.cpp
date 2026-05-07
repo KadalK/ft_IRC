@@ -192,22 +192,36 @@ void Channel::replyJoinChannel(Client *client)
 {
   std::string list = this->getClientInChan();
 
-  client->appendBufferOut(Replies::RPL_JOIN(client->getFullName(),this->_name));
+  client->appendBufferOut(
+      Replies::RPL_JOIN(client->getFullName(), this->_name));
   if (this->_hasTopic == false)
-    client->appendBufferOut(Replies::RPL_NOTOPIC(client->getNickname(),this->getTopic(), this->_name));
+    client->appendBufferOut(Replies::RPL_NOTOPIC(
+        client->getNickname(), this->getTopic(), this->_name));
   else
-     client->appendBufferOut(Replies::RPL_TOPIC(client->getNickname(), this->getTopic(), this->_name));
-  client->appendBufferOut(Replies::RPL_NAMREPLY(client->getNickname(),list,this->_name));
-  client->appendBufferOut(Replies::RPL_ENDOFNAMES(client->getNickname(),this->_name));
+    client->appendBufferOut(Replies::RPL_TOPIC(client->getNickname(),
+                                               this->getTopic(), this->_name));
+  client->appendBufferOut(
+      Replies::RPL_NAMREPLY(client->getNickname(), list, this->_name));
+  client->appendBufferOut(
+      Replies::RPL_ENDOFNAMES(client->getNickname(), this->_name));
 }
 
-void Channel::broadcast(const std::string &msg, Client *)
+void Channel::broadcast(const std::string &msg, Client *sender, bool excluded)
 {
-  for (std::map<Client *, bool>::iterator it = this->_clients.begin();
-       it != this->_clients.end(); it++)
+  if (excluded == true)
   {
-    // if (it->first && it->first != sender)
-    it->first->appendBufferOut(msg);
+    for (std::map<Client *, bool>::iterator it = this->_clients.begin();
+         it != this->_clients.end(); it++)
+    {
+      if (it->first && it->first != sender)
+        it->first->appendBufferOut(msg);
+    }
+  }
+  else
+  {
+    for (std::map<Client *, bool>::iterator it = this->_clients.begin();
+         it != this->_clients.end(); it++)
+      it->first->appendBufferOut(msg);
   }
   return;
 }

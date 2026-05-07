@@ -17,36 +17,36 @@ void Invite::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
     {
       if (it->second->isClientInvited(client) == true)
         client.appendBufferOut(
-            Replies::RPL_INVITELIST(client.getFullName(), it->first));
+            Replies::RPL_INVITELIST(client.getNickname(), it->first));
     }
     return (client.appendBufferOut(
-        Replies::RPL_ENDOFINVITELIST(client.getFullName())));
+        Replies::RPL_ENDOFINVITELIST(client.getNickname())));
   }
   if (arg.size() < 2)
     return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getFullName(), "INVITE")));
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "INVITE")));
   channel = chH.getChannelByName(arg[1]);
   if (!channel)
     return (client.appendBufferOut(
-        Replies::ERR_NOSUCHANNEL(client.getFullName(), arg[1])));
+        Replies::ERR_NOSUCHANNEL(client.getNickname(), arg[1])));
   if (channel->isClientInChannel(client) == false)
     return (client.appendBufferOut(
-        Replies::ERR_NOTONCHANNEL(client.getFullName(), arg[1])));
+        Replies::ERR_NOTONCHANNEL(client.getNickname(), arg[1])));
   clientInvited = clH.getClientByNickname(arg[0]);
   if (!clientInvited)
     return (client.appendBufferOut(
-        Replies::ERR_NOSUCHNICK(client.getFullName(), arg[0])));
+        Replies::ERR_NOSUCHNICK(client.getNickname(), arg[0])));
   if (channel->isClientInChannel(*clientInvited) == true)
     return (client.appendBufferOut(
-        Replies::ERR_USERONCHANNEL(client.getFullName(), arg[0], arg[1])));
+        Replies::ERR_USERONCHANNEL(client.getNickname(), arg[0], arg[1])));
   if (channel->getInviteOnly() == true &&
       channel->isClientOperator(client) == false)
     return (client.appendBufferOut(
-        Replies::ERR_CHANNOPRIVSNEEDED(client.getFullName(), arg[1])));
+        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), arg[1])));
   if (channel->inviteClient(clientInvited) == true)
   {
     client.appendBufferOut(
-        Replies::RPL_INVITING(client.getFullName(), arg[0], arg[1]));
+        Replies::RPL_INVITING(client.getNickname(), arg[0], arg[1]));
     clientInvited->appendBufferOut(
         Replies::BC_INVITE(client.getFullName(), arg[0], arg[1]));
     return;
