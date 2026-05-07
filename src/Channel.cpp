@@ -208,13 +208,13 @@ void Channel::replyJoinChannel(Client *client)
   client->appendBufferOut(replyEndOfNames);
 }
 
-void Channel::broadcast(const std::string &msg, Client *sender)
+void Channel::broadcast(const std::string &msg, Client *)
 {
   for (std::map<Client *, bool>::iterator it = this->_clients.begin();
        it != this->_clients.end(); it++)
   {
-    if (it->first && it->first != sender)
-      it->first->appendBufferOut(msg);
+    // if (it->first && it->first != sender)
+    it->first->appendBufferOut(msg);
   }
   return;
 }
