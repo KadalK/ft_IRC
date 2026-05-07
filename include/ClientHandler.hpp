@@ -14,7 +14,7 @@ public:
 	ClientHandler(/* args */);
 	~ClientHandler();
 
-	void addClient(int fd, std::string hostname);
+	void addClient(int fd, std::string hostname, std::string time);
 	void removeClient(int fd);
 
 	Client *getClientByNickname(std::string nickname);

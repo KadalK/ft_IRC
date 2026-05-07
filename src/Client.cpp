@@ -25,6 +25,10 @@ std::string Client::getUsername() const { return (this->_username); }
 
 std::string Client::getHostname() const { return (this->_hostname); }
 
+std::string Client::getTimeServ() const { return (this->_timeServ); }
+
+void Client::setTimeServ (std::string time) { this->_timeServ = time;}
+
 std::string Client::getFullName() const
 {
   return (":" + this->getNickname() + "!" + this->getUsername() + "@" +
@@ -33,7 +37,15 @@ std::string Client::getFullName() const
 
 void Client::setHostname(std::string hostname) { this->_hostname = hostname; }
 
-void Client::setAuth(bool state) { this->_isAuth = state; }
+void Client::setAuth(bool state)
+{
+  this->_isAuth = state;
+  std::string client, nick, time;
+  client = this->getFullName();
+  nick = this->getNickname();
+  time = this->_timeServ;
+  this->appendBufferOut(Replies::RPL_WELCOME(client, nick) + Replies::RPL_YOURHOST(nick) + Replies::RPL_CREATED(nick, time) + Replies::RPL_MYINFO(nick));
+}
 void Client::setNickBool(bool state) { this->_hasNickname = state; }
 void Client::setPassBool(bool state) { this->_hasPassword = state; }
 void Client::setUserBool(bool state) { this->_hasUsername = state; }

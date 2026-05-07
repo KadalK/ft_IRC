@@ -8,6 +8,18 @@ private:
   Replies();
 
 public:
+
+  /* WELCOME SUCCEFULL REGISTRATION --------------------------------------------------------------*/
+
+  // 001
+  static const std::string RPL_WELCOME(const std::string &client, const std::string &nick);
+  // 002
+  static const std::string RPL_YOURHOST(const std::string &nick);
+  // 003
+  static const std::string RPL_CREATED(const std::string &nick, const std::string &time);
+  // 004
+  static const std::string RPL_MYINFO(const std::string &nick);
+
   /* GLOBAL --------------------------------------------------------------*/
   // 401
   static const std::string ERR_NOSUCHNICK(const std::string &client,

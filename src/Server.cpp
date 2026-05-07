@@ -59,7 +59,8 @@ void Server::connectNewClient()
     return;
   }
   // Send clientAddr si besoin pour avoir ip pour whois ect
-  this->_clientHandler.addClient(clientSocketFd, hostname);
+  std::string time = this->_time;
+  this->_clientHandler.addClient(clientSocketFd, hostname, time);
 }
 
 void Server::disconnectClient(int fd)
@@ -146,6 +147,10 @@ void Server::run()
   eventsServer.data.fd = this->_serverSocketFd;
   this->_events.resize(64);
   epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventsServer.data.fd, &eventsServer);
+  time_t rawtimes;
+  time(&rawtimes);
+  this->_time = ctime(&rawtimes);
+  this->_time = this->_time.erase(this->_time.length() - 1);
   while (g_isRunning)
   {
     int eventCount = epoll_wait(this->_epollFd, this->_events.data(), 64, -1);
