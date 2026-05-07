@@ -46,6 +46,23 @@ public:
   // 461
   static const std::string ERR_NEEDMOREPARAMS(const std::string &client,
                                               const std::string &command);
+
+  // 462
+  static const std::string ERR_ALREADYREGISTERED(const std::string &client);
+
+  // 431
+  static const std::string ERR_NONICKGIVEN(const std::string &nick);
+
+   // 432
+  static const std::string ERR_ERRONEUSNICKNAME (const std::string &nick, const std::string &new_nick);
+
+  // 433
+  static const std::string ERR_NICKNAMEINUSE (const std::string &nick, const std::string &new_nick);
+
+   /* PASS ----------------------------------------------------------------*/
+    // 324
+  static const std::string ERR_PASSWDMISMATCH(const std::string &client);
+
   /* MODE ----------------------------------------------------------------*/
   // 324
   static const std::string RPL_CHANNELMODEIS(const std::string &client,

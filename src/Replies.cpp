@@ -88,6 +88,47 @@ const std::string Replies::ERR_NOSUCHANNEL(const std::string &client,
   return (out);
 }
 
+// 431
+const std::string Replies::ERR_NONICKGIVEN(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 431 ";
+  out += nick;
+  out += " :No nickname given\r\n";
+
+  return (out);
+}
+
+// 432
+const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick, const std::string &newnick)
+{
+  std::string out = "";
+
+  out += ":ircserv 432 ";
+  out += nick;
+  out =+ " ";
+  out += newnick;
+  out += " :Erroneous nickname\r\n";
+
+  return (out);
+}
+
+// 433
+const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick, const std::string &newnick)
+{
+  std::string out = "";
+
+  out += ":ircserv 433 ";
+  out += nick;
+  out =+ " ";
+  out += newnick;
+  out += " :Nickname is already in use\r\n";
+
+  return (out);
+}
+
+
 // 329
 const std::string Replies::RPL_CREATIONTIME(const std::string &client,
                                             const std::string &channel,
@@ -154,6 +195,18 @@ const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &client,
   return (out);
 }
 
+// 462
+const std::string Replies::ERR_ALREADYREGISTERED(const std::string &client)
+{
+  std::string out = "";
+
+  out += ":ircserv 462 ";
+  out += client;
+  out += " :Unauthorized command (already registered)\r\n";
+
+  return (out);
+}
+
 // 482
 const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &client,
                                                  const std::string &channel)
@@ -168,6 +221,20 @@ const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &client,
 
   return (out);
 }
+/* PASS --------------------------------------------------------------*/
+
+// 464
+const std::string Replies::ERR_PASSWDMISMATCH(const std::string &client)
+{
+  std::string out = "";
+
+  out += ":ircserv 464 ";
+  out += client;
+  out += " :Password incorrect\r\n";
+
+  return (out);
+}
+
 
 /* MODE --------------------------------------------------------------*/
 // NUMERIC  REPLIES
