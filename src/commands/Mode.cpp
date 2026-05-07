@@ -3,8 +3,41 @@
 #include "Client.hpp"
 #include "ClientHandler.hpp"
 #include "CommandsHandler.hpp"
+#include <iterator>
 
 Mode::Mode() {}
+
+struct oldState
+{
+  bool topicRestrict;
+  bool inviteOnly;
+  bool hasPassword;
+  std::string password;
+  bool hasUserLimit;
+  size_t userLimit;
+  std::map<Client *, bool> clients;
+};
+
+static bool validParamsCount(const std::string &flags,
+                             std::vector<std::string>::const_iterator start,
+                             std::vector<std::string>::const_iterator end)
+{
+  size_t flagsCount = 0;
+  size_t paramCount = std::distance(start, end);
+  bool sign = false;
+  for (size_t i = 0; i < flags.size(); i++)
+  {
+    if (flags[i] == '+')
+      sign = true;
+    if (flags[i] == '-')
+      sign = false;
+    if (flags[i] == 'k' || flags[i] == 'o')
+      flagsCount += 1;
+    if (flags[i] == 'l' && sign == true)
+      flagsCount += 1;
+  }
+  return (flagsCount <= paramCount);
+}
 
 static size_t getFlagType(char c)
 {
@@ -19,14 +52,15 @@ static size_t getFlagType(char c)
   case 't':
     return ('D');
   case '+':
+    return ('P');
   case '-':
-    return ('S');
+    return ('M');
   default:
     return ('U');
   }
 }
 
-void listModes(Channel &channel, Client &client)
+static void listModes(Channel &channel, Client &client)
 {
   std::string modeString = channel.getModeString();
   client.appendBufferOut(Replies::RPL_CHANNELMODEIS(
@@ -35,17 +69,6 @@ void listModes(Channel &channel, Client &client)
   // channel.getName()));
   return;
 }
-
-struct oldState
-{
-  bool topicRestrict;
-  bool inviteOnly;
-  bool hasPassword;
-  std::string password;
-  bool hasUserLimit;
-  size_t userLimit;
-  std::map<Client *, bool> clients;
-};
 
 static std::string listModesChanges(oldState &old, Channel &channel)
 {
@@ -100,6 +123,7 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   std::vector<std::string>::const_iterator it;
   bool sign;
   size_t type;
+  size_t paramApplied;
 
   channel = chH.getChannelByName(arg[0]);
   if (!channel)
@@ -117,7 +141,17 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   if (flags[0] != '-' && flags[0] != '+')
     return (client.appendBufferOut(
         Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[0])));
-  // Compter si il y a bien autant de param que de flags en necessitant
+  if (arg.size() >= 3)
+  {
+    it = arg.begin() + 2;
+    param = *it;
+  }
+  else
+    it = arg.end();
+  if (validParamsCount(flags, it, arg.end()) == false)
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "MODE")));
+
   old.topicRestrict = channel->getTopicRestrict();
   old.inviteOnly = channel->getInviteOnly();
   old.hasUserLimit = channel->getHasUserLimit();
@@ -125,33 +159,26 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   old.password = channel->getPassword();
   old.userLimit = channel->getUserLimit();
   old.clients = channel->getClients();
-
   sign = (flags[0] == '+');
-  if (arg.size() >= 3)
-  {
-    it = arg.begin() + 2;
-    param = *it;
-  }
-  else
-  {
-    it = arg.end();
-    param = "";
-  }
+  paramApplied = 0;
   for (size_t i = 1; i < flags.size(); i++)
   {
     type = getFlagType(flags[i]);
     if (type == 'U')
       return (client.appendBufferOut(
           Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[i])));
-    if (flags[i] == '+')
+    if (type == 'P')
       sign = true;
-    else if (flags[i] == '-')
+    else if (type == 'M')
       sign = false;
     else
     {
-      // MAXIMUM 3 PARAM AVEC FLAG DONC verifier count < 3
-      if (((type == 'C' && sign == true) || type == 'B') && it != arg.end())
+      if (((type == 'C' && sign == true) || type == 'B') && it != arg.end() &&
+          paramApplied < 3)
+      {
         param = *it++;
+        paramApplied++;
+      }
       else
         param = "";
       (channel->*channel->_modeFt[flags[i]])(sign, param, &client);
