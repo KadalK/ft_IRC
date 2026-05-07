@@ -1,8 +1,10 @@
 #include "commands/PrivMsg.hpp"
 #include "Commands.hpp"
+#include <sstream>
 #include <string>
 
 #include "Client.hpp"
+#include "Replies.hpp"
 
 // PrivMsg::PrivMsg() {}
 // PrivMsg::PrivMsg(PrivMsg const &src) { (void)src; }
@@ -24,6 +26,14 @@
 //   size_t pos = rawText.find(':');
 //   parsingNickNames(rawText.substr(0, pos));
 //   p.textMessage = rawText + pos;
+
+static std::string intToString(size_t value)
+{
+  std::stringstream ss;
+  ss << value;
+
+  return (ss.str());
+}
 
 PrivMsg::PrivMsg() {}
 
@@ -52,10 +62,21 @@ std::string formatMsg(const std::string &msg, const std::string &sender,
 void PrivMsg::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
                       const std::vector<std::string> &arg)
 {
+  if (arg.empty())
+    return (client.appendBufferOut(
+        Replies::ERR_NORECIPIENT(client.getNickname(), "PRIVMSG")));
   if (arg.size() < 2)
-    return;
-
+    return (client.appendBufferOut(
+        Replies::ERR_NOTEXTTOSEND(client.getNickname())));
   std::vector<std::string> targets = extractTokens(arg[0]);
+  if (targets.size() > 4)
+  {
+    client.appendBufferOut(
+        Replies::ERR_TOOMANYTARGETS(arg[0], intToString(targets.size())));
+    return (
+        client.appendBufferOut(Replies::RPL_ISUPPORT(client.getNickname())));
+  }
+
   const std::string &msg = arg[1];
 
   for (std::vector<std::string>::iterator it = targets.begin();
@@ -64,19 +85,20 @@ void PrivMsg::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
     const std::string &target = *it;
 
     std::string formatted = formatMsg(msg, client.getNickname(), target);
-    // pour les chan
     if (target[0] == '#')
     {
 
       Channel *chan = chH.getChannelByName(target);
       if (!chan)
       {
-        client.appendBufferOut("No such channel\r\n");
+        client.appendBufferOut(
+            Replies::ERR_NOSUCHANNEL(client.getNickname(), target));
         continue;
       }
-      chan->broadcast(formatMsg(msg, client.getNickname(), *it), &client, true);
+      chan->broadcast(
+          Replies::BC_PRIVMSG(client.getFullName(), chan->getName(), msg),
+          &client, true);
     }
-    // pour les cli
     else
     {
       Client *receiver = clH.getClientByNickname(target);
@@ -88,7 +110,8 @@ void PrivMsg::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
       }
       if (!receiver->getAuth())
         continue;
-      receiver->appendBufferOut(formatMsg(msg, client.getNickname(), *it));
+      receiver->appendBufferOut(
+          Replies::BC_PRIVMSG(client.getFullName(), target, msg));
     }
   }
 }

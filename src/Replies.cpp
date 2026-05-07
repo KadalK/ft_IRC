@@ -58,6 +58,19 @@ const std::string Replies::RPL_MYINFO(const std::string &nick)
   return (out);
 }
 
+// 005
+const std::string Replies::RPL_ISUPPORT(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 005 ";
+  out += nick;
+  out += " CHANTYPES=# PREFIX=(o)@ MODES=5 TARGMAX=PRIVMSG:4,KICK:4 :Are "
+         "supported by this server\r\n";
+
+  return (out);
+}
+
 /* GLOBAL --------------------------------------------------------------*/
 // 401
 const std::string Replies::ERR_NOSUCHNICK(const std::string &client,
@@ -69,7 +82,7 @@ const std::string Replies::ERR_NOSUCHNICK(const std::string &client,
   out += client;
   out += " ";
   out += nick;
-  out += " :No such nick\r\n";
+  out += " :No such nick/channel\r\n";
 
   return (out);
 }
@@ -101,13 +114,14 @@ const std::string Replies::ERR_NONICKGIVEN(const std::string &nick)
 }
 
 // 432
-const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick, const std::string &newnick)
+const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick,
+                                                const std::string &newnick)
 {
   std::string out = "";
 
   out += ":ircserv 432 ";
   out += nick;
-  out =+ " ";
+  out = +" ";
   out += newnick;
   out += " :Erroneous nickname\r\n";
 
@@ -115,19 +129,19 @@ const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick, const s
 }
 
 // 433
-const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick, const std::string &newnick)
+const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick,
+                                             const std::string &newnick)
 {
   std::string out = "";
 
   out += ":ircserv 433 ";
   out += nick;
-  out =+ " ";
+  out = +" ";
   out += newnick;
   out += " :Nickname is already in use\r\n";
 
   return (out);
 }
-
 
 // 329
 const std::string Replies::RPL_CREATIONTIME(const std::string &client,
@@ -234,7 +248,6 @@ const std::string Replies::ERR_PASSWDMISMATCH(const std::string &client)
 
   return (out);
 }
-
 
 /* MODE --------------------------------------------------------------*/
 // NUMERIC  REPLIES
@@ -448,40 +461,55 @@ const std::string Replies::BC_TOPIC(const std::string &client,
 
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
-const std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,
-                                           const std::string &client,
+const std::string Replies::ERR_NORECIPIENT(const std::string &client,
                                            const std::string &command)
 {
-  return (":" + ircserv + " 411 " + client + " :No recipient given (" +
-          command + ")\r\n");
+  return (":ircserv 411 " + client + " :No recipient given (" + command +
+          ")\r\n");
 }
 
 // 412
-const std::string Replies::ERR_NOTEXTTOSEND(const std::string &ircserv,
-                                            const std::string &client)
+const std::string Replies::ERR_NOTEXTTOSEND(const std::string &client)
 {
-  return (":" + ircserv + " 412 " + client + " :No text to send\r\n");
+  return (":ircserv 412 " + client + " :No text to send\r\n");
 }
 
 // 404
-const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
-                                                const std::string &channel)
-{
-  return (":" + ircserv + " 404 " + channel + " :Cannot send to channel\r\n");
-}
+// const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
+//                                                 const std::string &channel)
+// {
+//   return (":" + ircserv + " 404 " + channel + " :Cannot send to
+//   channel\r\n");
+// }
 
 // 414
 //  std::string Replies::ERR_WILDTOPLEVEL(){}
 
 // 407
-const std::string Replies::ERR_TOOMANYTARGETS(const std::string &ircserv,
-                                              const std::string &target,
-                                              const std::string &abortMessage)
+const std::string Replies::ERR_TOOMANYTARGETS(const std::string &target,
+                                              const std::string &targetsCount)
 {
-  return (":" + ircserv + " 407 " + target + " :407 recipients. " +
-          abortMessage + "\r\n");
+  return (":ircserv 407 " + target + " :" + targetsCount +
+          " Message delivery aborted"
+          "\r\n");
 }
 
+// BROADCAST
+const std::string Replies::BC_PRIVMSG(const std::string &client,
+                                      const std::string &target,
+                                      const std::string &msg)
+{
+  std::string out = "";
+
+  out += client;
+  out += " PRIVMSG ";
+  out += target;
+  out += " :";
+  out += msg;
+  out += "\r\n";
+
+  return (out);
+}
 /* JOIN --------------------------------------------------------------*/
 
 const std::string Replies::RPL_JOIN(const std::string &client,
