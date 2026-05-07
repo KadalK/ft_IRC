@@ -9,7 +9,7 @@ const std::string Replies::ERR_NOSUCHNICK(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 401 ";
+  out += ":ircserv 401 ";
   out += client;
   out += " ";
   out += nick;
@@ -23,7 +23,7 @@ const std::string Replies::ERR_NOSUCHANNEL(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 403 ";
+  out += ":ircserv 403 ";
   out += client;
   out += " ";
   out += channel;
@@ -39,7 +39,7 @@ const std::string Replies::RPL_CREATIONTIME(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 329 ";
+  out += ":ircserv 329 ";
   out += client;
   out += " ";
   out += channel;
@@ -57,7 +57,7 @@ const std::string Replies::ERR_USERNOTINCHANNEL(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 441 ";
+  out += ":ircserv 441 ";
   out += client;
   out += " ";
   out += nick;
@@ -74,7 +74,7 @@ const std::string Replies::ERR_NOTONCHANNEL(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 442 ";
+  out += ":ircserv 442 ";
   out += client;
   out += " ";
   out += channel;
@@ -89,7 +89,7 @@ const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 461 ";
+  out += ":ircserv 461 ";
   out += client;
   out += " ";
   out += command;
@@ -104,7 +104,7 @@ const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 482 ";
+  out += ":ircserv 482 ";
   out += client;
   out += " ";
   out += channel;
@@ -122,7 +122,7 @@ const std::string Replies::RPL_CHANNELMODEIS(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 324 ";
+  out += ":ircserv 324 ";
   out += client;
   out += " ";
   out += channel;
@@ -137,7 +137,7 @@ const std::string Replies::ERR_USERDONTMATCH(const std::string &client)
 {
   std::string out = "";
 
-  out += ":server 502 ";
+  out += ":ircserv 502 ";
   out += client;
   out += " :Can't change mode for other users";
   out += "\r\n";
@@ -150,7 +150,7 @@ const std::string Replies::ERR_UNKNOWNMODE(const std::string &client, char c)
 {
   std::string out = "";
 
-  out += ":server 472 ";
+  out += ":ircserv 472 ";
   out += client;
   out += " ";
   out += c;
@@ -165,7 +165,7 @@ const std::string Replies::ERR_INVALIDKEY(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 525 ";
+  out += ":ircserv 525 ";
   out += client;
   out += " ";
   out += channel;
@@ -197,7 +197,7 @@ const std::string Replies::RPL_INVITELIST(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 336 ";
+  out += ":ircserv 336 ";
   out += client;
   out += " ";
   out += channel;
@@ -211,7 +211,7 @@ const std::string Replies::RPL_ENDOFINVITELIST(const std::string &client)
 {
   std::string out = "";
 
-  out += ":server 337 ";
+  out += ":ircserv 337 ";
   out += client;
   out += " :End of /INVITE list";
   out += "\r\n";
@@ -226,7 +226,7 @@ const std::string Replies::RPL_INVITING(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 341 ";
+  out += ":ircserv 341 ";
   out += client;
   out += " ";
   out += nick;
@@ -244,7 +244,7 @@ const std::string Replies::ERR_USERONCHANNEL(const std::string &client,
 {
   std::string out = "";
 
-  out += ":server 443 ";
+  out += ":ircserv 443 ";
   out += client;
   out += " ";
   out += nick;
@@ -272,44 +272,44 @@ const std::string Replies::BC_INVITE(const std::string &client,
 }
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
-std::string Replies::ERR_NORECIPIENT(const std::string &server,
+std::string Replies::ERR_NORECIPIENT(const std::string &ircserv,
                                      const std::string &client,
                                      const std::string &command)
 {
-  return (":" + server + " 411 " + client + " :No recipient given (" + command +
-          ")\r\n");
+  return (":" + ircserv + " 411 " + client + " :No recipient given (" +
+          command + ")\r\n");
 }
 
 // 412
-std::string Replies::ERR_NOTEXTTOSEND(const std::string &server,
+std::string Replies::ERR_NOTEXTTOSEND(const std::string &ircserv,
                                       const std::string &client)
 {
-  return (":" + server + " 412 " + client + " :No text to send\r\n");
+  return (":" + ircserv + " 412 " + client + " :No text to send\r\n");
 }
 
 // 404
-std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &server,
+std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
                                           const std::string &channel)
 {
-  return (":" + server + " 404 " + channel + " :Cannot send to channel\r\n");
+  return (":" + ircserv + " 404 " + channel + " :Cannot send to channel\r\n");
 }
 
 // 414
 //  std::string Replies::ERR_WILDTOPLEVEL(){}
 
 // 407
-std::string Replies::ERR_TOOMANYTARGETS(const std::string &server,
+std::string Replies::ERR_TOOMANYTARGETS(const std::string &ircserv,
                                         const std::string &target,
                                         const std::string &abortMessage)
 {
-  return (":" + server + " 407 " + target + " :407 recipients. " +
+  return (":" + ircserv + " 407 " + target + " :407 recipients. " +
           abortMessage + "\r\n");
 }
 
 // // 301
-// std::string Replies::RPL_AWAY(const std::string &server,
+// std::string Replies::RPL_AWAY(const std::string &ircserv,
 //                               const std::string &nick,
 //                               const std::string &awayMsg)
 // {
-//   return (":" + server + " 301 " + nick + " :" + awayMsg + "\r\n");
+//   return (":" + ircserv + " 301 " + nick + " :" + awayMsg + "\r\n");
 // }
