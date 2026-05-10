@@ -512,6 +512,52 @@ const std::string Replies::BC_PRIVMSG(const std::string &client,
 }
 /* JOIN --------------------------------------------------------------*/
 
+// 475
+const std::string Replies::ERR_BADCHANNELKEY(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 475 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+k)\r\n";
+
+  return (out);
+}
+
+// 473
+const std::string Replies::ERR_INVITEONLYCHAN(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 473 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+i)\r\n";
+
+  return (out);
+}
+
+// 471
+const std::string Replies::ERR_CHANNELISFULL(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 471 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+l)\r\n";
+
+  return (out);
+}
+
+
 // BROADCAST
 const std::string Replies::BC_JOIN(const std::string &client,
                                    const std::string &channel)

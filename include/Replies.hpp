@@ -146,6 +146,19 @@ public:
 
   /* JOIN --------------------------------------------------------------*/
 
+
+   // 475
+  static const std::string ERR_BADCHANNELKEY(const std::string &client,
+                                    const std::string &channel);
+
+   // 471
+  static const std::string ERR_CHANNELISFULL(const std::string &client,
+                                    const std::string &channel);
+
+   // 473
+  static const std::string ERR_INVITEONLYCHAN(const std::string &client,
+                                    const std::string &channel);
+
   static const std::string RPL_JOIN(const std::string &client,
                                     const std::string &channel);
 

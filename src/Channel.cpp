@@ -73,17 +73,17 @@ bool Channel::canJoinChannel(Client &client, std::string inPassword)
   }
   if (this->_inviteOnly == true && this->isClientInvited(client) == false)
   {
-    std::cout << this->_name << " :Cannot join channel (+i)" << std::endl;
+    client.appendBufferOut(Replies::ERR_INVITEONLYCHAN(client.getNickname(), this->_name));
     return (false);
   }
   else if (!(this->_password.empty()) && this->_password != inPassword)
   {
-    std::cout << this->_name << " :Cannot join channel (+k)" << std::endl;
+    client.appendBufferOut(Replies::ERR_BADCHANNELKEY(client.getNickname(), this->_name));
     return (false);
   }
   else if (this->isChannelFull() == true)
   {
-    std::cout << this->_name << " :Cannot join channel (+l)" << std::endl;
+    client.appendBufferOut(Replies::ERR_CHANNELISFULL(client.getNickname(), this->_name));
     return (false);
   }
   return (true);
