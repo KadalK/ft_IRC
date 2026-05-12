@@ -115,6 +115,13 @@ public:
                                    const std::string &channel,
                                    const std::string &comment);
 
+  /* TOPIC --------------------------------------------------------------*/
+  // BROADCAST
+  static const std::string BC_TOPIC(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment);
+
+
   /* PRIVMSG --------------------------------------------------------------*/
   // 411
   static const std::string ERR_NORECIPIENT(const std::string &client,
@@ -139,8 +146,25 @@ public:
 
   /* JOIN --------------------------------------------------------------*/
 
+
+   // 475
+  static const std::string ERR_BADCHANNELKEY(const std::string &client,
+                                    const std::string &channel);
+
+   // 471
+  static const std::string ERR_CHANNELISFULL(const std::string &client,
+                                    const std::string &channel);
+
+   // 473
+  static const std::string ERR_INVITEONLYCHAN(const std::string &client,
+                                    const std::string &channel);
+
   static const std::string RPL_JOIN(const std::string &client,
                                     const std::string &channel);
+
+  // BROADCAST
+  static const std::string BC_JOIN(const std::string &client,
+                                   const std::string &channel);
   // 331
   static const std::string RPL_NOTOPIC(const std::string &nick,
                                        const std::string &topic,

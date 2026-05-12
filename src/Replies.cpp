@@ -442,6 +442,23 @@ const std::string Replies::BC_KICK(const std::string &client,
   return (out);
 }
 
+/* TOPIC -----------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_TOPIC(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment)
+{
+  std::string out = "";
+
+  out += client;
+  out += " TOPIC ";
+  out += channel;
+  out += " :" + comment;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* PRIVMSG --------------------------------------------------------------*/
 // 411
 const std::string Replies::ERR_NORECIPIENT(const std::string &client,
@@ -494,6 +511,66 @@ const std::string Replies::BC_PRIVMSG(const std::string &client,
   return (out);
 }
 /* JOIN --------------------------------------------------------------*/
+
+// 475
+const std::string Replies::ERR_BADCHANNELKEY(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 475 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+k)\r\n";
+
+  return (out);
+}
+
+// 473
+const std::string Replies::ERR_INVITEONLYCHAN(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 473 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+i)\r\n";
+
+  return (out);
+}
+
+// 471
+const std::string Replies::ERR_CHANNELISFULL(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 471 ";
+  out += client;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+l)\r\n";
+
+  return (out);
+}
+
+
+// BROADCAST
+const std::string Replies::BC_JOIN(const std::string &client,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += client;
+  out += " JOIN";
+  out += " :" + channel;
+  out += "\r\n";
+
+  return (out);
+}
 
 const std::string Replies::RPL_JOIN(const std::string &client,
                                     const std::string &channel)

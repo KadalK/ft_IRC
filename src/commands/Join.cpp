@@ -28,7 +28,7 @@ void Join::execute(Client &client, ClientHandler &, ChannelHandler &chH,
 
   if (arg.empty())
     return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "JOIN")));
   channels = extractTokens(arg[0]);
   if (arg.size() > 1 && arg[1].empty() == false)
     passwords = extractTokens(arg[1]);
