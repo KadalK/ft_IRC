@@ -3,21 +3,41 @@
 #include "Client.hpp"
 #include "ClientHandler.hpp"
 #include "CommandsHandler.hpp"
+#include <iterator>
 
 Mode::Mode() {}
 
-/*
- *B = [k, o]   -> Toujours un paramètre
- *C = [+l, -l] -> Paramètre uniquement pour +
- *D = [i, t]   -> Jamais de paramètre
- */
+struct oldState
+{
+  bool topicRestrict;
+  bool inviteOnly;
+  bool hasPassword;
+  std::string password;
+  bool hasUserLimit;
+  size_t userLimit;
+  std::map<Client *, bool> clients;
+};
 
-/*
-Flags :
-- Check si + ou - en premier -> sinon erreur
-- Changer flag a chaque + ou - croiser (que faire si +t+-o ou +t++o ?)
-- Envoyer lettre + flag (ET PARAMETRE EN FONCTION DU TYPE A B C);
-*/
+static bool validParamsCount(const std::string &flags,
+                             std::vector<std::string>::const_iterator start,
+                             std::vector<std::string>::const_iterator end)
+{
+  size_t flagsCount = 0;
+  size_t paramCount = std::distance(start, end);
+  bool sign = false;
+  for (size_t i = 0; i < flags.size(); i++)
+  {
+    if (flags[i] == '+')
+      sign = true;
+    if (flags[i] == '-')
+      sign = false;
+    if (flags[i] == 'k' || flags[i] == 'o')
+      flagsCount += 1;
+    if (flags[i] == 'l' && sign == true)
+      flagsCount += 1;
+  }
+  return (flagsCount <= paramCount);
+}
 
 static size_t getFlagType(char c)
 {
@@ -32,86 +52,145 @@ static size_t getFlagType(char c)
   case 't':
     return ('D');
   case '+':
+    return ('P');
   case '-':
-    return ('S');
+    return ('M');
   default:
     return ('U');
   }
 }
 
+static void listModes(Channel &channel, Client &client)
+{
+  std::string modeString = channel.getModeString();
+  client.appendBufferOut(Replies::RPL_CHANNELMODEIS(
+      client.getNickname(), channel.getName(), modeString));
+  // client.appendBufferOut(Replies::RPL_CREATIONTIME(client.getNickname(),
+  // channel.getName()));
+  return;
+}
+
+static std::string listModesChanges(oldState &old, Channel &channel)
+{
+  std::string addedFlags = "+";
+  std::string removedFlags = "-";
+  std::string params = "";
+  std::string modeString = "";
+
+  if (old.inviteOnly != channel.getInviteOnly())
+    (channel.getInviteOnly() ? addedFlags : removedFlags) += "i";
+  if (old.topicRestrict != channel.getTopicRestrict())
+    (channel.getTopicRestrict() ? addedFlags : removedFlags) += "t";
+  if (old.hasPassword != channel.getHasPassword())
+  {
+    (channel.getHasPassword() ? addedFlags : removedFlags) += "k";
+    params +=
+        " " + (channel.getHasPassword() ? channel.getPassword() : old.password);
+  }
+  if (old.userLimit != channel.getUserLimit())
+  {
+    (channel.getHasUserLimit() ? addedFlags : removedFlags) += "l";
+    params +=
+        (channel.getHasUserLimit() ? " " + channel.getUserLimitString() : "");
+  }
+  std::map<Client *, bool>::const_iterator it;
+  std::map<Client *, bool>::iterator oIt;
+  for (it = channel.getClients().begin(), oIt = old.clients.begin();
+       oIt != old.clients.end(); it++, oIt++)
+  {
+    if (it->second != oIt->second)
+    {
+      (it->second ? addedFlags : removedFlags) += "o";
+      params += " " + it->first->getNickname();
+    }
+  }
+  if (addedFlags.size() != 1)
+    modeString += addedFlags;
+  if (removedFlags.size() != 1)
+    modeString += removedFlags;
+  if (!params.empty())
+    modeString += params;
+  return (modeString);
+}
+
 void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
                    const std::vector<std::string> &arg)
 {
+  oldState old;
   Channel *channel;
   std::string flags;
   std::string param;
   std::vector<std::string>::const_iterator it;
   bool sign;
   size_t type;
+  size_t paramApplied;
 
+  if(arg.empty())
+    return;
   channel = chH.getChannelByName(arg[0]);
   if (!channel)
-  {
-    // 403 "<client> <channel> :No such channel"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(client.getNickname(), arg[0])));
   if (channel->isClientInChannel(client) == false)
-  {
-    // 442 "<client> <channel> :You're not on that channel"
-    return;
-  }
-  if (channel->isClientOperator(client) == false)
-  {
-    // 482 "<client> <channel> :You're not channel operator"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(client.getNickname(), arg[0])));
   if (arg.size() == 1)
-  {
-    std::cout << "modes are : hehehe" << std::endl;
-    // 324 "<client> <channel> <modestring> <mode arguments>..."
-    // 329 "<client> <channel> <creationtime>"
-    return;
-  }
+    return (listModes(*channel, client));
+  if (channel->isClientOperator(client) == false)
+    return (client.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), arg[0])));
   flags = arg[1];
   if (flags[0] != '-' && flags[0] != '+')
-  {
-    // 427 "<client> <modechar> :is unknown mode char to me"
-    return;
-  }
-
-  sign = (flags[0] == '+');
+    return (client.appendBufferOut(
+        Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[0])));
   if (arg.size() >= 3)
   {
     it = arg.begin() + 2;
     param = *it;
   }
   else
-  {
     it = arg.end();
-    param = "";
-  }
+  if (validParamsCount(flags, it, arg.end()) == false)
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "MODE")));
+
+  old.topicRestrict = channel->getTopicRestrict();
+  old.inviteOnly = channel->getInviteOnly();
+  old.hasUserLimit = channel->getHasUserLimit();
+  old.hasPassword = channel->getHasPassword();
+  old.password = channel->getPassword();
+  old.userLimit = channel->getUserLimit();
+  old.clients = channel->getClients();
+  sign = (flags[0] == '+');
+  paramApplied = 0;
   for (size_t i = 1; i < flags.size(); i++)
   {
     type = getFlagType(flags[i]);
     if (type == 'U')
-    {
-      // 427 "<client> <modechar> :is unknown mode char to me"
-      std::cout << "wrong flag char : " << flags[i] << std::endl;
-      return;
-    }
-    if (flags[i] == '+')
+      return (client.appendBufferOut(
+          Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[i])));
+    if (type == 'P')
       sign = true;
-    else if (flags[i] == '-')
+    else if (type == 'M')
       sign = false;
     else
     {
-      if (((type == 'C' && sign == true) || type == 'B') && it != arg.end())
+      if (((type == 'C' && sign == true) || type == 'B') && it != arg.end() &&
+          paramApplied < 3)
+      {
         param = *it++;
+        paramApplied++;
+      }
       else
         param = "";
       (channel->*channel->_modeFt[flags[i]])(sign, param, &client);
     }
   }
+  std::string modeString = listModesChanges(old, *channel);
+  if (!modeString.empty())
+    channel->broadcast(
+        Replies::BC_MODE(client.getFullName(), channel->getName(), modeString),
+        &client, false);
 }
 
 Mode::~Mode() {}

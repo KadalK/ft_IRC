@@ -2,6 +2,7 @@
 #define CHANNEL_HPP
 
 #include "Client.hpp"
+#include "Replies.hpp"
 #include <algorithm>
 #include <iostream>
 #include <map>
@@ -13,6 +14,7 @@ private:
   std::string _name;
   std::string _topic;
   std::string _password;
+  std::string _time;
 
   bool _inviteOnly;
   bool _topicRestrict;
@@ -40,13 +42,22 @@ public:
 
   void setTopic(std::string &topic);
   void setTopicBool(bool flag);
+  void setTime();
 
   const std::string &getName() const;
   const std::string &getPassword() const;
   const std::string &getTopic() const;
   bool getInviteOnly() const;
   bool getTopicRestrict() const;
+  bool getHasPassword() const;
   bool getHasTopic() const;
+  bool getHasUserLimit() const;
+  size_t getUserCount() const;
+  size_t getUserLimit() const;
+  std::string getUserLimitString() const;
+  const std::string getModeString() const;
+  const std::map<Client *, bool> &getClients() const;
+  const std::string &getTime();
 
   bool canJoinChannel(Client &client, std::string inPassword);
 
@@ -65,9 +76,7 @@ public:
   void replyJoinChannel(Client *client);
   std::string getClientInChan();
 
-  size_t getUserCount() const;
-
-  void broadcast(const std::string &msg, Client *sender);
+  void broadcast(const std::string &msg, Client *sender, bool excluded);
   // bool	hasClient(Client* client) const;
 
   ~Channel();

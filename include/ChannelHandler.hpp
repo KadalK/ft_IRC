@@ -17,16 +17,6 @@ private:
 public:
   ChannelHandler();
 
-  // Exeptions
-  class NoChannelFound : public std::exception
-  {
-    virtual const char *what() const throw();
-  };
-  class ChannelsEmpty : public std::exception
-  {
-    virtual const char *what() const throw();
-  };
-
   // Getters
   Channel *getChannelByName(const std::string &name);
   Channel *getChannelName(Channel *channel);

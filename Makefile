@@ -15,27 +15,6 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-<<<<<<< Updated upstream
-SRCS := \
-        main.cpp \
-        Server.cpp \
-        Client.cpp \
-        Channel.cpp \
-        replies.cpp \
-        handlers/ClientHandler.cpp \
-        handlers/ChannelHandler.cpp \
-        handlers/CommandsHandler.cpp \
-        commands/Join.cpp \
-        commands/User.cpp \
-        commands/Nick.cpp \
-        commands/Pass.cpp \
-        commands/PrivMsg.cpp \
-        commands/Mode.cpp \
-        commands/Topic.cpp \
-        commands/Invite.cpp \
-        commands/Kick.cpp \
-        Commands.cpp
-=======
 SRCS		:= \
 				main.cpp \
 				Server.cpp \
@@ -48,8 +27,13 @@ SRCS		:= \
 				commands/User.cpp \
 				commands/Nick.cpp \
 				commands/Pass.cpp \
-				Commands.cpp
->>>>>>> Stashed changes
+				commands/PrivMsg.cpp \
+				commands/Mode.cpp \
+				commands/Topic.cpp \
+				commands/Invite.cpp \
+				commands/Kick.cpp \
+				Commands.cpp \
+				Replies.cpp
 
 
 #*------------------------------------------------------------------------------*
@@ -75,14 +59,11 @@ OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
 # 				include/commands/User.hpp \
 # 				include/commands/Nick.hpp \
 # 				include/commands/Pass.hpp \
-<<<<<<< Updated upstream
 # 				include/commands/PrivMsg.hpp \
 # 				include/commands/Topic.hpp \
 # 				include/Commands.hpp
+# 				include/Replies.hpp
 
-=======
-# 				include/Commands.hpp
->>>>>>> Stashed changes
 
 HEAD_D		:=	.
 
@@ -112,11 +93,7 @@ $(NAME)		:	$(OBJS)
 $(OBJS_D)%.o:	$(SRCS_D)%.cpp
 				@mkdir -p $(dir $@)
 				@echo "$(YELLOW)Compiling $<...$(NC)"
-<<<<<<< Updated upstream
 				@$(CXX) $(CXXFLAGS) -c $< -o $@
-=======
-				@$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
->>>>>>> Stashed changes
 
 
 # $(OBJS_D)	:

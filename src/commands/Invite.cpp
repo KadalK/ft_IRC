@@ -16,52 +16,39 @@ void Invite::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
          it != channelList.end(); it++)
     {
       if (it->second->isClientInvited(client) == true)
-      {
-        std::string reply =
-            ":ircserv 336 " + client.getNickname() + " " + it->first + "\r\n";
-        client.appendBufferOut(reply);
-        // 336 "<client> <channel>"
-      }
+        client.appendBufferOut(
+            Replies::RPL_INVITELIST(client.getNickname(), it->first));
     }
-    return;
+    return (client.appendBufferOut(
+        Replies::RPL_ENDOFINVITELIST(client.getNickname())));
   }
   if (arg.size() < 2)
-  {
-    // 461 "<client> <command> :Not enough parameters"
-    std::cout << "not enough params" << std::endl;
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "INVITE")));
   channel = chH.getChannelByName(arg[1]);
   if (!channel)
-  {
-    std::cout << "No such channel" << std::endl;
-    // 403 "<client> <channel> :No such channel"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(client.getNickname(), arg[1])));
+  if (channel->isClientInChannel(client) == false)
+    return (client.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(client.getNickname(), arg[1])));
   clientInvited = clH.getClientByNickname(arg[0]);
   if (!clientInvited)
-  {
-    std::cout << "No such nickname" << std::endl;
-    // 401 "<client> :No such nickname"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NOSUCHNICK(client.getNickname(), arg[0])));
   if (channel->isClientInChannel(*clientInvited) == true)
-  {
-    std::cout << "already in channel" << std::endl;
-    // 443 "<client> <nick> <channel> :is already on channel"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_USERONCHANNEL(client.getNickname(), arg[0], arg[1])));
   if (channel->getInviteOnly() == true &&
       channel->isClientOperator(client) == false)
-  {
-    std::cout << "not operator" << std::endl;
-    // 482 "<client> <channel> :You're not channel operator"
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), arg[1])));
   if (channel->inviteClient(clientInvited) == true)
   {
-    std::cout << "invited client" << std::endl;
-    // 341 "<client> <nick> <channel>"
+    client.appendBufferOut(
+        Replies::RPL_INVITING(client.getNickname(), arg[0], arg[1]));
+    clientInvited->appendBufferOut(
+        Replies::BC_INVITE(client.getFullName(), arg[0], arg[1]));
     return;
   }
   return;

@@ -3,15 +3,15 @@
 
 Kick::Kick() {}
 
-static std::string formatMsg(const Client &sender, const Client &target,
-                             const std::string &channelName,
-                             std::string &comment)
-{
-  std::string ret = ":" + sender.getNickname() + "!" + sender.getUsername() +
-                    "@" + sender.getHostname() + " KICK " + channelName + " " +
-                    target.getNickname() + " :" + comment + "\r\n";
-  return (ret);
-}
+// static std::string formatMsg(const Client &sender, const Client &target,
+//                              const std::string &channelName,
+//                              std::string &comment)
+// {
+//   std::string ret = ":" + sender.getNickname() + "!" + sender.getUsername() +
+//                     "@" + sender.getHostname() + " KICK " + channelName + " "
+//                     + target.getNickname() + " :" + comment + "\r\n";
+//   return (ret);
+// }
 
 static std::vector<std::string> extractTokens(const std::string &str)
 {
@@ -41,64 +41,53 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
   Client *clientKicked;
 
   if (arg.size() < 2)
-  {
-    // 461 "<client> <command> :Not enough parameters"
-    std::cout << "not enough params" << std::endl;
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
   channels = extractTokens(arg[0]);
   targets = extractTokens(arg[1]);
   if (channels.size() > 1 && channels.size() != targets.size())
-  {
-    // 461 "<client> <command> :Not enough parameters"
-    std::cout << "Syntax error" << std::endl;
-    return;
-  }
+    return (client.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
   if (channels.size() == 1)
   {
     channel = chH.getChannelByName(channels[0]);
     if (!channel)
-    {
-      std::cout << "No such channel" << std::endl;
-      // 403 "<client> <channel> :No such channel"
-      return;
-    }
+      return (client.appendBufferOut(
+          Replies::ERR_NOSUCHANNEL(client.getNickname(), channel->getName())));
     for (tIt = targets.begin(); tIt != targets.end(); tIt++)
     {
       if (channel->isClientInChannel(client) == false)
-      {
-        std::cout << " you are not in this channel" << std::endl;
-        // 442 "<client> <nick> <channel> :You're not on that channel"
-        continue;
-      }
+        return (client.appendBufferOut(Replies::ERR_NOTONCHANNEL(
+            client.getNickname(), channel->getName())));
       if (channel->isClientOperator(client) == false)
       {
-        std::cout << "not operator" << std::endl;
-        // 482 "<client> <channel> :You're not channel operator"
+        client.appendBufferOut(Replies::ERR_CHANNOPRIVSNEEDED(
+            client.getNickname(), channel->getName()));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
-        std::cout << "No such nickname" << std::endl;
-        // 401 "<client> :No such nickname"
+        client.appendBufferOut(
+            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
-        std::cout << " user not in channel" << std::endl;
-        // 441 "<client> <nick> <channel> :They aren't on that channel"
+        client.appendBufferOut(Replies::ERR_USERNOTINCHANNEL(
+            client.getNickname(), *tIt, channel->getName()));
         continue;
       }
       if (arg.size() >= 3)
         comment = arg[2];
       else
         comment = clientKicked->getNickname();
+      channel->broadcast(Replies::BC_KICK(client.getFullName(),
+                                          clientKicked->getNickname(),
+                                          channel->getName(), comment),
+                         &client, false);
       channel->removeClient(clientKicked);
-      std::string reply =
-          formatMsg(client, *clientKicked, channel->getName(), comment);
-      std::cout << reply << std::endl;
-      channel->broadcast(reply, &client);
+      std::cout << channel->getClientInChan() << std::endl;
     }
     return;
   }
@@ -109,45 +98,42 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
     {
       channel = chH.getChannelByName(*cIt);
       if (!channel)
-      {
-        std::cout << "No such channel" << std::endl;
-        // 403 "<client> <channel> :No such channel"
-        return;
-      }
+        return (client.appendBufferOut(
+            Replies::ERR_NOSUCHANNEL(client.getNickname(), *cIt)));
       if (channel->isClientInChannel(client) == false)
       {
-        std::cout << " you are not in this channel" << std::endl;
-        // 442 "<client> <nick> <channel> :You're not on that channel"
+        client.appendBufferOut(
+            Replies::ERR_NOTONCHANNEL(client.getNickname(), *cIt));
         continue;
       }
       if (channel->isClientOperator(client) == false)
       {
-        std::cout << "not operator" << std::endl;
-        // 482 "<client> <channel> :You're not channel operator"
+        client.appendBufferOut(
+            Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), *cIt));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
-        std::cout << "No such nickname" << std::endl;
-        // 401 "<client> :No such nickname"
+        client.appendBufferOut(
+            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
-        std::cout << " user not in channel" << std::endl;
-        // 441 "<client> <nick> <channel> :They aren't on that channel"
+        client.appendBufferOut(
+            Replies::ERR_USERNOTINCHANNEL(client.getNickname(), *tIt, *cIt));
         continue;
       }
       if (arg.size() >= 3)
         comment = arg[2];
       else
         comment = clientKicked->getNickname();
+      channel->broadcast(Replies::BC_KICK(client.getFullName(),
+                                          clientKicked->getNickname(),
+                                          channel->getName(), comment),
+                         &client, false);
       channel->removeClient(clientKicked);
-      std::string reply =
-          formatMsg(client, *clientKicked, channel->getName(), comment);
-      std::cout << reply << std::endl;
-      channel->broadcast(reply, &client);
     }
     return;
   }

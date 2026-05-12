@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Commands.hpp"
+#include "Replies.hpp"
 
 class Mode : public Commands
 {

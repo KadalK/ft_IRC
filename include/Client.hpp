@@ -4,62 +4,69 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include "Replies.hpp"
 
 class Client
 {
 private:
-	int _fd;
-	std::string _nickname;
-	std::string _username;
-	std::string _hostname;
-	std::string _bufferIn;
-	std::string _bufferOut;
+  int _fd;
+  std::string _nickname;
+  std::string _username;
+  std::string _hostname;
+  std::string _bufferIn;
+  std::string _bufferOut;
+  std::string _timeServ;
 
-	bool _isAuth;
-	bool _hasPassword;
-	bool _hasNickname;
-	bool _hasUsername;
+  bool _isAuth;
+  bool _hasPassword;
+  bool _hasNickname;
+  bool _hasUsername;
 
 public:
-	Client();
+  Client();
 
-	int getFd() const;
-	void setFd(int);
+  int getFd() const;
+  void setFd(int);
 
-	bool getUserBool() const;
-	void setUserBool(bool);
+  bool getUserBool() const;
+  void setUserBool(bool);
 
-	bool getPassBool() const;
-	void setPassBool(bool);
+  bool getPassBool() const;
+  void setPassBool(bool);
 
-	bool getNickBool() const;
-	void setNickBool(bool);
+  bool getNickBool() const;
+  void setNickBool(bool);
 
-	bool getAuth() const;
-	void setAuth(bool);
+  bool getAuth() const;
+  void setAuth(bool);
 
-	// bool getHostname() const;
-	void setHostname(std::string hostname);
+  // bool getHostname() const;
+  void setHostname(std::string hostname);
 
-	std::string getNickname() const;
-	void setNickname(std::string nickname);
+  std::string getNickname() const;
+  void setNickname(std::string nickname);
 
-	std::string getUsername() const;
-	void setUsername(std::string username);
+  std::string getUsername() const;
+  void setUsername(std::string username);
 
-	std::string getHostname() const;
+  std::string getTimeServ() const;
+  void setTimeServ (std::string time);
 
-	std::string getBuffer() const;
-	void setBuffer(std::string buffer);
+  std::string getHostname() const;
 
-	void setBufferOut(std::string buffer);
-	std::string getBufferOut() const;
+  std::string getFullName() const;
 
-	void appendBufferOut(std::string const &temp);
+  std::string getBuffer() const;
+  void setBuffer(std::string buffer);
 
-	void appendBuffer(std::string const &temp);
-	bool isRegistered();
-	~Client();
+  void setBufferOut(std::string buffer);
+  std::string getBufferOut() const;
+
+  void appendBufferOut(std::string const &temp);
+
+  void appendBuffer(std::string const &temp);
+  bool isRegistered();
+  ~Client();
 };
 
 #endif

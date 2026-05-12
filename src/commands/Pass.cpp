@@ -13,8 +13,7 @@ void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
 {
   if (arg.empty())
   {
-    std::cout << "[debug]: invalid format" << std::endl;
-    client.appendBufferOut("invalid format");
+    client.appendBufferOut(Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "PASS"));
     return;
   }
 
@@ -22,15 +21,13 @@ void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
 
   if (client.getPassBool())
   {
-    std::cout << "[debug]: already registered" << std::endl;
-    client.appendBufferOut("already registered");
+    client.appendBufferOut(Replies::ERR_ALREADYREGISTERED(client.getNickname()));
     return;
   }
 
   if (pass != this->_passServ)
   {
-    std::cout << "[debug]: invalid password" << std::endl;
-    client.appendBufferOut("invalid password");
+    client.appendBufferOut(Replies::ERR_PASSWDMISMATCH(client.getNickname()));
     return;
   }
 
