@@ -61,8 +61,6 @@ public:
 
   bool canJoinChannel(Client &client, std::string inPassword);
 
-  bool canJoinChannel(Client &client, std::string inPassword);
-
   bool isClientInvited(Client &client);
   bool isClientInChannel(Client &client);
   bool isClientOperator(Client &client);
