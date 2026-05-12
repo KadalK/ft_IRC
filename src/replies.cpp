@@ -25,6 +25,23 @@ std::string Replies::ERR_TOOMANYTARGETS(const std::string& server, const std::st
 }
 
 //301
-std::string RPL_AWAY(const std::string& server, const std::string& nick,const std::string& awayMsg){
+std::string Replies::RPL_AWAY(const std::string& server, const std::string& nick,const std::string& awayMsg){
 	return (":" + server + " 301 " + nick + " :" + awayMsg + "\r\n");
+}
+
+//461
+std::string Replies::ERR_ALREADYREGISTRED(const std::string& server, const std::string& nick){
+	return (":" + server + " 461 " + nick + " :" +  "(already registered)\r\n");
+}
+
+std::string Replies::RPL_NOTOPIC(const std::string& server, const std::string& nick, const std::string& channel){
+	return (":" + server + " 331 " + nick + " " + channel + " :No topic is set\r\n");
+}
+
+std::string Replies::RPL_TOPIC(const std::string& server, const std::string& nick, const std::string& channel, const std::string& topic){
+	return (":" + server + " 332 " + nick + " " + channel + " :" + topic + "\r\n");
+}
+
+std::string ERR_CHANOPRIVSNEEDED(const std::string& server, const std::string& nick, const std::string& channel){
+	return ":" + server + " 482 " + nick + " " + channel + " :You're not channel operator\r\n";
 }

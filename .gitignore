@@ -2,3 +2,6 @@
 .vscode/
 compile_commands.json
 .cache/
+*.o
+*.d
+*.txt

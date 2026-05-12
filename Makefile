@@ -15,25 +15,25 @@ NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
-SRCS		:= \
-				main.cpp \
-				Server.cpp \
-				Client.cpp \
-				Channel.cpp \
-				Replies.cpp
-				handlers/ClientHandler.cpp \
-				handlers/ChannelHandler.cpp \
-				handlers/CommandsHandler.cpp \
-				commands/Join.cpp \
-				commands/User.cpp \
-				commands/Nick.cpp \
-				commands/Pass.cpp \
-				commands/PrivMsg.cpp \
-				commands/Mode.cpp \
-				commands/Topic.cpp \
-				commands/Invite.cpp \
-				commands/Kick.cpp \
-				Commands.cpp
+SRCS := \
+        main.cpp \
+        Server.cpp \
+        Client.cpp \
+        Channel.cpp \
+        replies.cpp \
+        handlers/ClientHandler.cpp \
+        handlers/ChannelHandler.cpp \
+        handlers/CommandsHandler.cpp \
+        commands/Join.cpp \
+        commands/User.cpp \
+        commands/Nick.cpp \
+        commands/Pass.cpp \
+        commands/PrivMsg.cpp \
+        commands/Mode.cpp \
+        commands/Topic.cpp \
+        commands/Invite.cpp \
+        commands/Kick.cpp \
+        Commands.cpp
 
 
 #*------------------------------------------------------------------------------*

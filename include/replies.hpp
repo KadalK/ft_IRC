@@ -9,7 +9,7 @@ public:
 
 //privmsg
 //411
-	std::string ERR_NORECIPIENT(const std::string& server, const std::string& client, const std::string& command);
+std::string ERR_NORECIPIENT(const std::string& server, const std::string& client, const std::string& command);
 //412
 std::string ERR_NOTEXTTOSEND(const std::string& server, const std::string& client);
 //404
@@ -19,7 +19,20 @@ std::string ERR_CANNOTSENDTOCHAN(const std::string& server, const std::string& c
 //407
 std::string ERR_TOOMANYTARGETS(const std::string& server, const std::string& target, const std::string& abortMessage);
 //301
-std::string RPL_AWAY(const std::string& nick);
+std::string RPL_AWAY(const std::string& server, const std::string& nick,const std::string& awayMsg);
+
+//pass
+//461
+std::string ERR_ALREADYREGISTRED(const std::string& server, const std::string& nick);
+
+//topic
+//331
+std::string RPL_NOTOPIC(const std::string& server, const std::string& nick, const std::string& channel);
+//332
+std::string RPL_TOPIC(const std::string& server, const std::string& nick, const std::string& channel, const std::string& topic);
+//482
+std::string ERR_CHANOPRIVSNEEDED(const std::string& server, const std::string& nick, const std::string& channel);
+
 
 ~Replies();
 };
