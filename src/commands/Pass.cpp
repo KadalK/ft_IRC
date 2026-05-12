@@ -5,6 +5,7 @@
 //   replies
 // ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
+<<<<<<< Updated upstream
 Pass::Pass(std::string passServ) : _passServ(passServ) {}
 
 void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
@@ -40,3 +41,36 @@ void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
 }
 
 Pass::~Pass() {}
+=======
+Pass::Pass(std::string passServ): _passServ(passServ) {}
+
+void Pass::execute(Client& client, ClientHandler &, ChannelHandler &, const std::vector<std::string>& arg)
+{
+	if (arg.empty() ||  arg.size() < 2)
+	{
+		std::cout << "[debug]: invalid format" << std::endl;
+		client.appendBufferOut("Invalid format");
+		return;
+	}
+
+	const std::string& pass = arg[0];
+
+	if (client.getPassBool())
+	{
+		std::cout << "[debug]: already registered" << std::endl;
+		client.appendBufferOut("Already registered");
+		return;
+	}
+
+	if (pass != this->_passServ)
+	{
+		std::cout << "[debug]: invalid password" << std::endl;
+		client.appendBufferOut("Invalid password");
+		return;
+	}
+
+  client.setPassBool(true);
+}
+
+Pass::~Pass(){}
+>>>>>>> Stashed changes

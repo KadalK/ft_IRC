@@ -45,6 +45,7 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       inPassword = "";
     if ((*it)[0] != '#')
        std::cout << *it << " :No such channel" << std::endl;
+<<<<<<< Updated upstream
     else if ((*it)[0] == '#' && (*it)[1])
     {
       Channel *chToJoin = chH.getChannelByName(*it);
@@ -65,6 +66,29 @@ void Join::execute(Client& client, ClientHandler &, ChannelHandler &chH, const s
       }
         // Suppose to send confirmation message + all mode to client that joined.
         // + msg to all channel member to notify newcomer
+=======
+    else
+    {
+      Channel *chToJoin = chH.getChannelByName(*it);
+      if (chToJoin == NULL)
+      {
+        chH.createChannel(*it, &client);
+        client.appendBufferOut("Created channel connard\n");
+        std::cout << "Created channel " << chH.getChannelByName(*it)->getName() << std::endl;
+      }
+      else
+      {
+        if (chToJoin->canJoinChannel(client, inPassword) == true)
+        {
+          std::cout << "avant addclient " << &client << std::endl;
+          chToJoin->addClient(&client);
+          // client.appendBufferOut("Joined channel connard\n");
+          // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
+        }
+        // Suppose to send confirmation message + all mode to client that joined.
+        // + msg to all channel member to notify newcomer
+      }
+>>>>>>> Stashed changes
     }
   }
 }

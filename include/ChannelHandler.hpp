@@ -37,6 +37,13 @@ public:
   Channel *createChannel(const std::string &name);
   void deleteClient(Client *client);
 
+<<<<<<< Updated upstream
+=======
+	//Methods
+	void	deleteChannel(std::string name);
+	void  createChannel(const std::string& name, Client *client);
+
+>>>>>>> Stashed changes
   /*
   FONCTION BROADCAST : transmet le message a tous les FD necessaires
   */

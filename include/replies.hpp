@@ -25,13 +25,6 @@ std::string RPL_AWAY(const std::string& server, const std::string& nick,const st
 //461
 std::string ERR_ALREADYREGISTRED(const std::string& server, const std::string& nick);
 
-//topic
-//331
-std::string RPL_NOTOPIC(const std::string& server, const std::string& nick, const std::string& channel);
-//332
-std::string RPL_TOPIC(const std::string& server, const std::string& nick, const std::string& channel, const std::string& topic);
-//482
-std::string ERR_CHANOPRIVSNEEDED(const std::string& server, const std::string& nick, const std::string& channel);
 
 
 ~Replies();

@@ -42,11 +42,14 @@ std::string Client::getUsername() const
 	return(this->_username);
 }
 
+<<<<<<< Updated upstream
 std::string Client::getHostname() const
 {
 	return(this->_hostname);
 }
 
+=======
+>>>>>>> Stashed changes
 void Client::setHostname(std::string hostname)
 {
 	this->_hostname = hostname;
