@@ -22,7 +22,7 @@ DEPS    := $(OBJS:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -lcurl -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 	@echo "bot built successfully"
 
 # ---------------------------------------------------------------------------- #

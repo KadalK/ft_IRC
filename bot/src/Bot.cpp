@@ -1,5 +1,7 @@
 #include "../include/Bot.hpp"
 #include <stdio.h>
+#include <sstream>
+#include <iostream>
 
 Bot::Bot(){}
 
@@ -20,29 +22,43 @@ static std::string escapeJSON(const std::string& s)
 
 static std::string extractResponse(const std::string& json)
 {
-	std::string key = "\"response\":";
+	const std::string key = "\"response\":";
 	size_t pos = json.find(key);
-
 	if (pos == std::string::npos)
 		return "";
 
 	pos += key.length();
 
-	// skip spaces and quotes
-	while (pos < json.size() &&
-		  (json[pos] == ' ' || json[pos] == '\"'))
+	// skip jusqu'à la première quote ouvrante
+	while (pos < json.size() && json[pos] != '"')
 		pos++;
+	if (pos == json.size()) return "";
 
-	size_t end = pos;
+	pos++; // après l’ouverture du guillemet
+	std::string out;
+	bool escape = false;
 
-	while (end < json.size() &&
-		  json[end] != '\"' &&
-		  json[end] != '\n' &&
-		  json[end] != '}')
-		end++;
-
-	return json.substr(pos, end - pos);
+	for (; pos < json.size(); ++pos)
+	{
+		char c = json[pos];
+		if (escape) {
+			if (c == 'n') out += '\n';
+			else if (c == 't') out += '\t';
+			else if (c == 'r') out += '\r';
+			else if (c == '\\' || c == '"') out += c;
+			// on ignore les autres pour éviter erreurs
+			escape = false;
+		} else if (c == '\\') {
+			escape = true;
+		} else if (c == '"') {
+			break; // fin de la chaîne
+		} else {
+			out += c;
+		}
+	}
+	return out;
 }
+
 
 std::string parseIRCRawMsg(const std::string& rawMsg)
 {
@@ -84,19 +100,20 @@ std::string exec(const std::string& cmd)
 
 std::string Bot::talk(const std::string& rawMsg)
 {
-	std::string clean = escapeJSON(parseIRCRawMsg(rawMsg));
-
-	std::string cmd =
-		"curl -s http://localhost:11434/api/generate "
-		"-H \"Content-Type: application/json\" "
-		"-d '{"
-		"\"model\":\"monique\","
-		"\"prompt\":\"" + clean + "\","
-		"\"stream\":false"
-		"}'";
-
-	std::string raw = exec(cmd);
-	return extractResponse(raw);
+	//std::string msg = escapeJSON(parseIRCRawMsg(rawMsg));
+	std::string msg = escapeJSON(rawMsg);
+	std::ostringstream ss;
+	ss << "curl -s http://localhost:11434/api/generate "
+	   << "-H \"Content-Type: application/json\" "
+	   << "-d \"{"
+	   << "\\\"model\\\":\\\"monique\\\","
+	   << "\\\"prompt\\\":\\\"" << msg << "\\\","
+	   << "\\\"stream\\\":false"
+	   << "}\"";
+	//std::cout << ss.str() << std::endl;
+	std::string json = exec(ss.str());
+	//std::cout << json << std::endl;
+	return extractResponse(json);
 }
 
 Bot::~Bot(){}
