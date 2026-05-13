@@ -55,6 +55,7 @@ public:
   size_t getUserCount() const;
   size_t getUserLimit() const;
   std::string getUserLimitString() const;
+  std::string getUserCountString() const;
   const std::string getModeString() const;
   const std::map<Client *, bool> &getClients() const;
   const std::string &getTime();

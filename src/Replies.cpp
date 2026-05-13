@@ -443,6 +443,42 @@ const std::string Replies::BC_KICK(const std::string &client,
 }
 
 /* TOPIC -----------------------------------------------------------------*/
+// 331
+const std::string Replies::RPL_NOTOPIC(const std::string &nick,
+                                       const std::string &topic,
+                                       const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 331 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " :";
+  out += topic;
+  out += "\r\n";
+
+  return (out);
+}
+
+// 332
+const std::string Replies::RPL_TOPIC(const std::string &nick,
+                                     const std::string &topic,
+                                     const std::string &channel)
+{
+  std::string out = "";
+
+  out += ":ircserv 332 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " :";
+  out += topic;
+  out += "\r\n";
+
+  return (out);
+}
+
 // BROADCAST
 const std::string Replies::BC_TOPIC(const std::string &client,
                                    const std::string &channel,
@@ -557,7 +593,6 @@ const std::string Replies::ERR_CHANNELISFULL(const std::string &client,
   return (out);
 }
 
-
 // BROADCAST
 const std::string Replies::BC_JOIN(const std::string &client,
                                    const std::string &channel)
@@ -586,42 +621,7 @@ const std::string Replies::RPL_JOIN(const std::string &client,
   return (out);
 }
 
-// 331
-const std::string Replies::RPL_NOTOPIC(const std::string &nick,
-                                       const std::string &topic,
-                                       const std::string &channel)
-{
-  std::string out = "";
-
-  out += ":ircserv 331 ";
-  out += nick;
-  out += " ";
-  out += channel;
-  out += " :";
-  out += topic;
-  out += "\r\n";
-
-  return (out);
-}
-
-// 332
-const std::string Replies::RPL_TOPIC(const std::string &nick,
-                                     const std::string &topic,
-                                     const std::string &channel)
-{
-  std::string out = "";
-
-  out += ":ircserv 332 ";
-  out += nick;
-  out += " ";
-  out += channel;
-  out += " :";
-  out += topic;
-  out += "\r\n";
-
-  return (out);
-}
-
+/* NAMES --------------------------------------------------------------*/
 // 353
 const std::string Replies::RPL_NAMREPLY(const std::string &nick,
                                         const std::string &list,
@@ -651,6 +651,50 @@ const std::string Replies::RPL_ENDOFNAMES(const std::string &nick,
   out += " ";
   out += channel;
   out += " :End of /NAMES list\r\n";
+
+  return (out);
+}
+
+
+/* LIST --------------------------------------------------------------*/
+// 321 -- OLD RFC. May be needed for old IRC client
+// const std::string Replies::RPL_LISTSTART(const std::string &nick)
+// {
+//   std::string out = "";
+//
+//   out += ":ircserv 321 ";
+//   out += nick;
+//   out += " Channel :Users Name\r\n";
+//
+//   return (out);
+// }
+// 322
+const std::string Replies::RPL_LIST(const std::string &nick,
+                                      const std::string &channel,
+                                      const std::string &count,
+                                      const std::string &topic)
+{
+  std::string out = "";
+
+  out += ":ircserv 322 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " ";
+  out += count;
+  out += " :" + topic;
+  out += "\r\n";
+
+  return (out);
+}
+// 323
+const std::string Replies::RPL_LISTEND(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 323 ";
+  out += nick;
+  out += " :End of /LIST\r\n";
 
   return (out);
 }

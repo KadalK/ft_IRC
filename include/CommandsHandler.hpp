@@ -13,6 +13,7 @@
 #include "commands/Topic.hpp"
 #include "commands/User.hpp"
 #include "commands/Names.hpp"
+#include "commands/List.hpp"
 #include <iostream>
 #include <map>
 
@@ -30,6 +31,7 @@ class Topic;
 class Invite;
 class Kick;
 class Names;
+class List;
 
 class CommandsHandler
 {
@@ -51,6 +53,7 @@ private:
   Invite *_invite;
   Kick *_kick;
   Names *_names;
+  List *_list;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

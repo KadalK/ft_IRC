@@ -116,11 +116,18 @@ public:
                                    const std::string &comment);
 
   /* TOPIC --------------------------------------------------------------*/
+  // 331
+  static const std::string RPL_NOTOPIC(const std::string &nick,
+                                       const std::string &topic,
+                                       const std::string &channel);
+  // 332
+  static const std::string RPL_TOPIC(const std::string &nick,
+                                     const std::string &topic,
+                                     const std::string &channel);
   // BROADCAST
   static const std::string BC_TOPIC(const std::string &client,
                                    const std::string &channel,
                                    const std::string &comment);
-
 
   /* PRIVMSG --------------------------------------------------------------*/
   // 411
@@ -145,8 +152,6 @@ public:
                                       const std::string &msg);
 
   /* JOIN --------------------------------------------------------------*/
-
-
    // 475
   static const std::string ERR_BADCHANNELKEY(const std::string &client,
                                     const std::string &channel);
@@ -165,14 +170,8 @@ public:
   // BROADCAST
   static const std::string BC_JOIN(const std::string &client,
                                    const std::string &channel);
-  // 331
-  static const std::string RPL_NOTOPIC(const std::string &nick,
-                                       const std::string &topic,
-                                       const std::string &channel);
-  // 332
-  static const std::string RPL_TOPIC(const std::string &nick,
-                                     const std::string &topic,
-                                     const std::string &channel);
+
+  /* NAMES --------------------------------------------------------------*/
   // 353
   static const std::string RPL_NAMREPLY(const std::string &nick,
                                         const std::string &list,
@@ -181,5 +180,15 @@ public:
   static const std::string RPL_ENDOFNAMES(const std::string &nick,
                                           const std::string &channel);
 
+  /* LIST --------------------------------------------------------------*/
+  // 321
+  static const std::string RPL_LISTSTART(const std::string &nick);
+  // 322
+  static const std::string RPL_LIST(const std::string &nick,
+                                        const std::string &channel,
+                                        const std::string &count,
+                                        const std::string &topic);
+  // 323
+  static const std::string RPL_LISTEND(const std::string &nick);
   ~Replies();
 };

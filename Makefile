@@ -33,6 +33,7 @@ SRCS		:= \
 				commands/Invite.cpp \
 				commands/Kick.cpp \
 				commands/Names.cpp \
+				commands/List.cpp \
 				Commands.cpp \
 				Replies.cpp
 

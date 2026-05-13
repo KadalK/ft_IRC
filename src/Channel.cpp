@@ -45,6 +45,14 @@ std::string Channel::getUserLimitString() const
   return (ss.str());
 }
 
+std::string Channel::getUserCountString() const
+{
+  std::stringstream ss;
+  ss << this->_userCount;
+
+  return (ss.str());
+}
+
 const std::map<Client *, bool> &Channel::getClients() const
 {
   return (this->_clients);
