@@ -8,7 +8,7 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
       _user(new User), _pvmsg(new PrivMsg), _mode(new Mode), _topic(new Topic),
-      _invite(new Invite), _kick(new Kick)
+      _invite(new Invite), _kick(new Kick), _names(new Names)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
@@ -19,6 +19,7 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
   this->_commands["TOPIC"] = _topic;
   this->_commands["INVITE"] = _invite;
   this->_commands["KICK"] = _kick;
+  this->_commands["NAMES"] = _names;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -32,6 +33,7 @@ CommandsHandler::~CommandsHandler()
   delete _topic;
   delete _invite;
   delete _kick;
+  delete _names;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)

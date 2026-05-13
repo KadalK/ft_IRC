@@ -12,6 +12,7 @@
 #include "commands/PrivMsg.hpp"
 #include "commands/Topic.hpp"
 #include "commands/User.hpp"
+#include "commands/Names.hpp"
 #include <iostream>
 #include <map>
 
@@ -28,6 +29,7 @@ class Mode;
 class Topic;
 class Invite;
 class Kick;
+class Names;
 
 class CommandsHandler
 {
@@ -48,6 +50,7 @@ private:
   Topic *_topic;
   Invite *_invite;
   Kick *_kick;
+  Names *_names;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);
