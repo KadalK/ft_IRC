@@ -48,9 +48,9 @@ void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
     {
       std::string topic = arg[1] + "\r\n";
       channel->setTopic(topic);
+      channel->setTopicBool(true);
+      channel->broadcast(Replies::BC_TOPIC(client.getFullName(), ChanName,channel->getTopic()),&client, false);
     }
-    channel->setTopicBool(true); // pas besoin de parametre en vrai
-    channel->broadcast(Replies::BC_TOPIC(client.getFullName(), ChanName,channel->getTopic()),&client, false);
   }
 }
 
