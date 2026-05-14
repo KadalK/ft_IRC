@@ -1,23 +1,23 @@
-#ifndef NICK_HPP
-#define NICK_HPP
+#pragma once
 
-#include "ChannelHandler.hpp"
-#include "CommandsHandler.hpp"
-#include "ClientHandler.hpp"
-#include "Client.hpp"
 #include "Commands.hpp"
-#include <iostream>
+#include <vector>
 
-class Nick : public Commands {
+class Client;
+class ClientHandler;
+class ChannelHandler;
+
+class Nick : public Commands
+{
 private:
-	Nick& operator=(const Nick& other);
-	Nick(const Nick& copy);
+  Nick &operator=(const Nick &other);
+  Nick(const Nick &copy);
+
 public:
-	Nick();
+  Nick();
 
-	void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
+               const std::vector<std::string> &arg);
 
-	~Nick();
+  ~Nick();
 };
-
-#endif

@@ -1,10 +1,6 @@
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
+#pragma once
 
-#include <iostream>
-#include <stdexcept>
 #include <string>
-#include "Replies.hpp"
 
 class Client
 {
@@ -40,7 +36,6 @@ public:
   bool getAuth() const;
   void setAuth(bool);
 
-  // bool getHostname() const;
   void setHostname(std::string hostname);
 
   std::string getNickname() const;
@@ -50,7 +45,7 @@ public:
   void setUsername(std::string username);
 
   std::string getTimeServ() const;
-  void setTimeServ (std::string time);
+  void setTimeServ(std::string time);
 
   std::string getHostname() const;
 
@@ -68,5 +63,3 @@ public:
   bool isRegistered();
   ~Client();
 };
-
-#endif

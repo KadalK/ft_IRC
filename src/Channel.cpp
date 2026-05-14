@@ -1,4 +1,7 @@
 #include "Channel.hpp"
+#include "Client.hpp"
+#include "Replies.hpp"
+#include <algorithm>
 #include <cstdlib>
 #include <sstream>
 
@@ -81,17 +84,20 @@ bool Channel::canJoinChannel(Client &client, std::string inPassword)
   }
   if (this->_inviteOnly == true && this->isClientInvited(client) == false)
   {
-    client.appendBufferOut(Replies::ERR_INVITEONLYCHAN(client.getNickname(), this->_name));
+    client.appendBufferOut(
+        Replies::ERR_INVITEONLYCHAN(client.getNickname(), this->_name));
     return (false);
   }
   else if (!(this->_password.empty()) && this->_password != inPassword)
   {
-    client.appendBufferOut(Replies::ERR_BADCHANNELKEY(client.getNickname(), this->_name));
+    client.appendBufferOut(
+        Replies::ERR_BADCHANNELKEY(client.getNickname(), this->_name));
     return (false);
   }
   else if (this->isChannelFull() == true)
   {
-    client.appendBufferOut(Replies::ERR_CHANNELISFULL(client.getNickname(), this->_name));
+    client.appendBufferOut(
+        Replies::ERR_CHANNELISFULL(client.getNickname(), this->_name));
     return (false);
   }
   return (true);
@@ -200,9 +206,8 @@ void Channel::replyJoinChannel(Client *client)
 {
   std::string list = this->getClientInChan();
 
-  // client->appendBufferOut(
-  //     Replies::RPL_JOIN(client->getFullName(), this->_name));
-  this->broadcast(Replies::BC_JOIN(client->getFullName(), this->_name),client, false);
+  this->broadcast(Replies::BC_JOIN(client->getFullName(), this->_name), client,
+                  false);
   if (this->_hasTopic == false)
     client->appendBufferOut(Replies::RPL_NOTOPIC(
         client->getNickname(), this->getTopic(), this->_name));
@@ -281,7 +286,8 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
   if (flag == true)
   {
     if (this->_hasPassword == flag)
-      return (sender->appendBufferOut(Replies::ERR_KEYSET(this->_name)));
+      return (sender->appendBufferOut(
+          Replies::ERR_KEYSET(sender->getNickname(), this->_name)));
     this->_password = arg;
     this->_hasPassword = flag;
   }
@@ -290,7 +296,8 @@ void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
     if (this->_hasPassword == flag)
       return;
     if (arg != this->_password)
-      return (sender->appendBufferOut(Replies::ERR_KEYSET(this->_name)));
+      return (sender->appendBufferOut(
+          Replies::ERR_KEYSET(sender->getNickname(), this->_name)));
     this->_password.clear();
     this->_hasPassword = flag;
   }

@@ -1,12 +1,10 @@
-#ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+#pragma once
 
-#include "Client.hpp"
-#include "Replies.hpp"
-#include <algorithm>
-#include <iostream>
 #include <map>
+#include <string>
 #include <vector>
+
+class Client;
 
 class Channel
 {
@@ -76,9 +74,6 @@ public:
   std::string getClientInChan();
 
   void broadcast(const std::string &msg, Client *sender, bool excluded);
-  // bool	hasClient(Client* client) const;
 
   ~Channel();
 };
-
-#endif

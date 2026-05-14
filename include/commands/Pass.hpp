@@ -1,22 +1,25 @@
-#ifndef PASS_HPP
-#define PASS_HPP
+#pragma once
 
 #include "Commands.hpp"
-#include "ClientHandler.hpp"
+#include <vector>
 
-class Pass : public Commands {
+class Client;
+class ClientHandler;
+class ChannelHandler;
+
+class Pass : public Commands
+{
 private:
-	Pass& operator=(const Pass& other);
-	Pass(const Pass& copy);
+  Pass &operator=(const Pass &other);
+  Pass(const Pass &copy);
   Pass();
-	std::string _passServ;
+  std::string _passServ;
+
 public:
   Pass(std::string passServ);
 
-  void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
-	// static void execute(Client& client,  const std::vector<std::string>& arg,  std::string& passServ);
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
+               const std::vector<std::string> &arg);
 
-	~Pass();
+  ~Pass();
 };
-
-#endif

@@ -1,27 +1,26 @@
-#ifndef CLIENTHANDLER_HPP
-#define CLIENTHANDLER_HPP
+#pragma once
 
-#include "Client.hpp"
 #include <map>
+#include <string>
 #include <vector>
+
+class Client;
 
 class ClientHandler
 {
 private:
-	std::map<int, Client *> _registry;
+  std::map<int, Client *> _registry;
 
 public:
-	ClientHandler(/* args */);
-	~ClientHandler();
+  ClientHandler();
+  ~ClientHandler();
 
-	void addClient(int fd, std::string hostname, std::string time);
-	void removeClient(int fd);
+  void addClient(int fd, std::string hostname, std::string time);
+  void removeClient(int fd);
 
-	Client *getClientByNickname(std::string nickname);
-	std::vector<int> getAllFd();
-	std::vector<int> getFdWithData();
+  Client *getClientByNickname(std::string nickname);
+  std::vector<int> getAllFd();
+  std::vector<int> getFdWithData();
 
-	Client *getClientByFd(int fd);
+  Client *getClientByFd(int fd);
 };
-
-#endif

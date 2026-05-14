@@ -1,8 +1,14 @@
 #include "commands/Invite.hpp"
+#include "Channel.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 Invite::Invite() {}
 
-void Invite::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
+void Invite::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                      const std::vector<std::string> &arg)
 {
   Channel *channel;
@@ -15,40 +21,40 @@ void Invite::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
              channelList.begin();
          it != channelList.end(); it++)
     {
-      if (it->second->isClientInvited(client) == true)
-        client.appendBufferOut(
-            Replies::RPL_INVITELIST(client.getNickname(), it->first));
+      if (it->second->isClientInvited(sender) == true)
+        sender.appendBufferOut(
+            Replies::RPL_INVITELIST(sender.getNickname(), it->first));
     }
-    return (client.appendBufferOut(
-        Replies::RPL_ENDOFINVITELIST(client.getNickname())));
+    return (sender.appendBufferOut(
+        Replies::RPL_ENDOFINVITELIST(sender.getNickname())));
   }
   if (arg.size() < 2)
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "INVITE")));
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "INVITE")));
   channel = chH.getChannelByName(arg[1]);
   if (!channel)
-    return (client.appendBufferOut(
-        Replies::ERR_NOSUCHANNEL(client.getNickname(), arg[1])));
-  if (channel->isClientInChannel(client) == false)
-    return (client.appendBufferOut(
-        Replies::ERR_NOTONCHANNEL(client.getNickname(), arg[1])));
+    return (sender.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(sender.getNickname(), arg[1])));
+  if (channel->isClientInChannel(sender) == false)
+    return (sender.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(sender.getNickname(), arg[1])));
   clientInvited = clH.getClientByNickname(arg[0]);
   if (!clientInvited)
-    return (client.appendBufferOut(
-        Replies::ERR_NOSUCHNICK(client.getNickname(), arg[0])));
+    return (sender.appendBufferOut(
+        Replies::ERR_NOSUCHNICK(sender.getNickname(), arg[0])));
   if (channel->isClientInChannel(*clientInvited) == true)
-    return (client.appendBufferOut(
-        Replies::ERR_USERONCHANNEL(client.getNickname(), arg[0], arg[1])));
+    return (sender.appendBufferOut(
+        Replies::ERR_USERONCHANNEL(sender.getNickname(), arg[0], arg[1])));
   if (channel->getInviteOnly() == true &&
-      channel->isClientOperator(client) == false)
-    return (client.appendBufferOut(
-        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), arg[1])));
+      channel->isClientOperator(sender) == false)
+    return (sender.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(sender.getNickname(), arg[1])));
   if (channel->inviteClient(clientInvited) == true)
   {
-    client.appendBufferOut(
-        Replies::RPL_INVITING(client.getNickname(), arg[0], arg[1]));
+    sender.appendBufferOut(
+        Replies::RPL_INVITING(sender.getNickname(), arg[0], arg[1]));
     clientInvited->appendBufferOut(
-        Replies::BC_INVITE(client.getFullName(), arg[0], arg[1]));
+        Replies::BC_INVITE(sender.getFullName(), arg[0], arg[1]));
     return;
   }
   return;

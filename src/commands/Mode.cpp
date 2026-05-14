@@ -1,9 +1,10 @@
 #include "commands/Mode.hpp"
+#include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
 #include "CommandsHandler.hpp"
-#include <iterator>
+#include "Replies.hpp"
 
 Mode::Mode() {}
 
@@ -60,13 +61,11 @@ static size_t getFlagType(char c)
   }
 }
 
-static void listModes(Channel &channel, Client &client)
+static void listModes(Channel &channel, Client &sender)
 {
   std::string modeString = channel.getModeString();
-  client.appendBufferOut(Replies::RPL_CHANNELMODEIS(
-      client.getNickname(), channel.getName(), modeString));
-  // client.appendBufferOut(Replies::RPL_CREATIONTIME(client.getNickname(),
-  // channel.getName()));
+  sender.appendBufferOut(Replies::RPL_CHANNELMODEIS(
+      sender.getNickname(), channel.getName(), modeString));
   return;
 }
 
@@ -113,7 +112,7 @@ static std::string listModesChanges(oldState &old, Channel &channel)
   return (modeString);
 }
 
-void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
+void Mode::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
                    const std::vector<std::string> &arg)
 {
   oldState old;
@@ -125,24 +124,24 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   size_t type;
   size_t paramApplied;
 
-  if(arg.empty())
+  if (arg.empty())
     return;
   channel = chH.getChannelByName(arg[0]);
   if (!channel)
-    return (client.appendBufferOut(
-        Replies::ERR_NOSUCHANNEL(client.getNickname(), arg[0])));
-  if (channel->isClientInChannel(client) == false)
-    return (client.appendBufferOut(
-        Replies::ERR_NOTONCHANNEL(client.getNickname(), arg[0])));
+    return (sender.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(sender.getNickname(), arg[0])));
+  if (channel->isClientInChannel(sender) == false)
+    return (sender.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(sender.getNickname(), arg[0])));
   if (arg.size() == 1)
-    return (listModes(*channel, client));
-  if (channel->isClientOperator(client) == false)
-    return (client.appendBufferOut(
-        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), arg[0])));
+    return (listModes(*channel, sender));
+  if (channel->isClientOperator(sender) == false)
+    return (sender.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(sender.getNickname(), arg[0])));
   flags = arg[1];
   if (flags[0] != '-' && flags[0] != '+')
-    return (client.appendBufferOut(
-        Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[0])));
+    return (sender.appendBufferOut(
+        Replies::ERR_UNKNOWNMODE(sender.getNickname(), flags[0])));
   if (arg.size() >= 3)
   {
     it = arg.begin() + 2;
@@ -151,8 +150,8 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   else
     it = arg.end();
   if (validParamsCount(flags, it, arg.end()) == false)
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "MODE")));
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "MODE")));
 
   old.topicRestrict = channel->getTopicRestrict();
   old.inviteOnly = channel->getInviteOnly();
@@ -167,8 +166,8 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   {
     type = getFlagType(flags[i]);
     if (type == 'U')
-      return (client.appendBufferOut(
-          Replies::ERR_UNKNOWNMODE(client.getNickname(), flags[i])));
+      return (sender.appendBufferOut(
+          Replies::ERR_UNKNOWNMODE(sender.getNickname(), flags[i])));
     if (type == 'P')
       sign = true;
     else if (type == 'M')
@@ -183,14 +182,14 @@ void Mode::execute(Client &client, ClientHandler &, ChannelHandler &chH,
       }
       else
         param = "";
-      (channel->*channel->_modeFt[flags[i]])(sign, param, &client);
+      (channel->*channel->_modeFt[flags[i]])(sign, param, &sender);
     }
   }
   std::string modeString = listModesChanges(old, *channel);
   if (!modeString.empty())
     channel->broadcast(
-        Replies::BC_MODE(client.getFullName(), channel->getName(), modeString),
-        &client, false);
+        Replies::BC_MODE(sender.getFullName(), channel->getName(), modeString),
+        &sender, false);
 }
 
 Mode::~Mode() {}

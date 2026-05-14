@@ -1,12 +1,11 @@
 #include "commands/Nick.hpp"
-#include <iostream>
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 Nick::Nick() {}
-
-// TODO:
-//    replies
-//            ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
-//			 ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
 
 static bool validNick(const std::string &nick)
 {
@@ -21,37 +20,39 @@ static bool validNick(const std::string &nick)
   }
   return true;
 }
-//
-void Nick::execute(Client &client, ClientHandler &clH, ChannelHandler &,
+
+void Nick::execute(Client &sender, ClientHandler &clH, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
   if (arg.empty())
   {
-    client.appendBufferOut(Replies::ERR_NONICKGIVEN(client.getNickname()));
+    sender.appendBufferOut(Replies::ERR_NONICKGIVEN(sender.getNickname()));
     return;
   }
 
   const std::string &nick = arg[0];
   if (!validNick(nick))
   {
-    client.appendBufferOut(Replies::ERR_ERRONEUSNICKNAME(client.getNickname(), nick));
+    sender.appendBufferOut(
+        Replies::ERR_ERRONEUSNICKNAME(sender.getNickname(), nick));
     return;
   }
 
   Client *existing = clH.getClientByNickname(nick);
 
-  if (existing && existing != &client)
+  if (existing && existing != &sender)
   {
-    client.appendBufferOut(Replies::ERR_ERRONEUSNICKNAME(client.getNickname(), nick));
+    sender.appendBufferOut(
+        Replies::ERR_ERRONEUSNICKNAME(sender.getNickname(), nick));
     return;
   }
-  client.setNickname(nick);
-  if (client.getPassBool() && client.getUserBool())
+  sender.setNickname(nick);
+  if (sender.getPassBool() && sender.getUserBool())
   {
-    if (client.getNickBool() == false)
-      client.setAuth(true);
+    if (sender.getNickBool() == false)
+      sender.setAuth(true);
   }
-  client.setNickBool(true);
+  sender.setNickBool(true);
   return;
 }
 

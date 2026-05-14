@@ -1,7 +1,11 @@
 #pragma once
 
 #include "Commands.hpp"
-#include "Replies.hpp"
+#include <vector>
+
+class Client;
+class ClientHandler;
+class ChannelHandler;
 
 class Mode : public Commands
 {
@@ -12,9 +16,8 @@ private:
 public:
   Mode();
 
-  // void parsingMessage(std::string rawText);
-  void execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                const std::vector<std::string> &arg);
-  void errorMessage(size_t errorValue);
+
   ~Mode();
 };

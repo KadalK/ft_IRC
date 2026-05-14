@@ -1,28 +1,22 @@
-#ifndef SYSTEMEXCEPTION_HPP
-#define SYSTEMEXCEPTION_HPP
+#pragma once
 
-#include <exception>
-#include <string>
 #include <cerrno>
 #include <cstring>
+#include <exception>
+#include <string>
 
 class SystemException : public std::exception
 {
 private:
-	std::string _message;
+  std::string _message;
 
 public:
-	SystemException(const std::string &context)
-	{
-		this->_message = context + " : " + std::strerror(errno);
-	}
+  SystemException(const std::string &context)
+  {
+    this->_message = context + " : " + std::strerror(errno);
+  }
 
-	virtual ~SystemException() throw() {}
+  virtual ~SystemException() throw() {}
 
-	virtual const char *what() const throw()
-	{
-		return this->_message.c_str();
-	}
+  virtual const char *what() const throw() { return this->_message.c_str(); }
 };
-
-#endif

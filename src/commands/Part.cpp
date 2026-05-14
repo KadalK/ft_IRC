@@ -1,35 +1,14 @@
 #include "commands/Part.hpp"
 #include "Channel.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 Part::Part() {}
 
-// static std::string formatMsg(const Client &sender, const Client &target,
-//                              const std::string &channelName,
-//                              std::string &comment)
-// {
-//   std::string ret = ":" + sender.getNickname() + "!" + sender.getUsername() +
-//                     "@" + sender.getHostname() + " Part " + channelName + " "
-//                     + target.getNickname() + " :" + comment + "\r\n";
-//   return (ret);
-// }
-
-static std::vector<std::string> extractTokens(const std::string &str)
-{
-  std::vector<std::string> v;
-  size_t start = 0;
-  size_t pos;
-  while ((pos = str.find(",", start)) != std::string::npos)
-  {
-    if (!str.substr(start, pos - start).empty())
-      v.push_back(str.substr(start, pos - start));
-    start = pos + 1;
-  }
-  if (!str.substr(start).empty())
-    v.push_back(str.substr(start));
-  return (v);
-}
-
-void Part::execute(Client &client, ClientHandler &, ChannelHandler &chH,
+void Part::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
                    const std::vector<std::string> &arg)
 {
   std::string message = "";
@@ -38,30 +17,32 @@ void Part::execute(Client &client, ClientHandler &, ChannelHandler &chH,
   Channel *channel;
 
   if (arg.size() < 1)
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "PART")));
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "PART")));
   if (arg.size() >= 2)
     message = arg[1];
-  channels = extractTokens(arg[0]);
+  channels = this->extractTokens(arg[0]);
   for (it = channels.begin(); it != channels.end(); ++it)
   {
     channel = chH.getChannelByName(*it);
     if (!channel)
     {
-      client.appendBufferOut(
-            Replies::ERR_NOSUCHANNEL(client.getNickname(), *it));
+      sender.appendBufferOut(
+          Replies::ERR_NOSUCHANNEL(sender.getNickname(), *it));
       continue;
     }
-    if (channel->isClientInChannel(client) == false)
-      {
-        client.appendBufferOut(
-            Replies::ERR_NOTONCHANNEL(client.getNickname(), *it));
-        continue;
-      }
-    channel->broadcast(Replies::BC_PART(client.getFullName(),channel->getName(), message),&client, false);
-    channel->removeClient(&client);
-    if  (channel->getUserCount() == 0)
-        chH.deleteChannel(channel->getName());
+    if (channel->isClientInChannel(sender) == false)
+    {
+      sender.appendBufferOut(
+          Replies::ERR_NOTONCHANNEL(sender.getNickname(), *it));
+      continue;
+    }
+    channel->broadcast(
+        Replies::BC_PART(sender.getFullName(), channel->getName(), message),
+        &sender, false);
+    channel->removeClient(&sender);
+    if (channel->getUserCount() == 0)
+      chH.deleteChannel(channel->getName());
   }
 }
 
