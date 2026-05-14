@@ -34,7 +34,7 @@ static std::string extractResponse(const std::string& json)
 		pos++;
 	if (pos == json.size()) return "";
 
-	pos++; // après l’ouverture du guillemet
+	pos++;
 	std::string out;
 	bool escape = false;
 
@@ -46,12 +46,11 @@ static std::string extractResponse(const std::string& json)
 			else if (c == 't') out += '\t';
 			else if (c == 'r') out += '\r';
 			else if (c == '\\' || c == '"') out += c;
-			// on ignore les autres pour éviter erreurs
 			escape = false;
 		} else if (c == '\\') {
 			escape = true;
 		} else if (c == '"') {
-			break; // fin de la chaîne
+			break;
 		} else {
 			out += c;
 		}
@@ -77,13 +76,12 @@ std::string parseIRCRawMsg(const std::string& rawMsg)
 	if (pos == std::string::npos)
 		return "";
 
-	pos += 2; // skip " :"
+	pos += 2;
 
 	return rawMsg.substr(pos);
 }
 
-std::string exec(const std::string& cmd)
-{
+std::string exec(const std::string& cmd){
 	char buffer[128];
 	std::string result;
 
@@ -100,20 +98,38 @@ std::string exec(const std::string& cmd)
 
 std::string Bot::talk(const std::string& rawMsg)
 {
-	//std::string msg = escapeJSON(parseIRCRawMsg(rawMsg));
 	std::string msg = escapeJSON(rawMsg);
+
+	// stocker le message user
+	this->_memories.push_back("User: " + msg);
+
+	// persitance de lhistorique
+	std::ostringstream history;
+	for (size_t i = 0; i < this->_memories.size(); i++)
+		history << this->_memories[i] << "\n";
+
+	std::string prompt = escapeJSON(history.str() + "Assistant:");
+
 	std::ostringstream ss;
+	//format en json
 	ss << "curl -s http://localhost:11434/api/generate "
 	   << "-H \"Content-Type: application/json\" "
 	   << "-d \"{"
 	   << "\\\"model\\\":\\\"monique\\\","
-	   << "\\\"prompt\\\":\\\"" << msg << "\\\","
+	   << "\\\"prompt\\\":\\\"" << prompt << "\\\","
 	   << "\\\"stream\\\":false"
 	   << "}\"";
-	//std::cout << ss.str() << std::endl;
+
 	std::string json = exec(ss.str());
-	//std::cout << json << std::endl;
-	return extractResponse(json);
+
+	std::cout << json << std::endl;
+
+	std::string lastMsg = extractResponse(json);
+
+	// Stocke la réponse du bot
+	this->_memories.push_back("Assistant: " + lastMsg);
+
+	return lastMsg;
 }
 
 Bot::~Bot(){}

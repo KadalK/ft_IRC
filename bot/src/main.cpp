@@ -15,6 +15,5 @@ int main()
 		std::string response = bot.talk(raw);
 		std::cout << "Monique: " << response << std::endl;
 	}
-
 	return 0;
 }
