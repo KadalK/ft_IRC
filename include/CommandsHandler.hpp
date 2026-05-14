@@ -41,6 +41,8 @@ class CommandsHandler
 private:
   // Add all commands
   std::map<std::string, Commands *> _commands;
+
+  //Add all commands
   // std::vector<std::string> tokens;
   ClientHandler &_clientHandler;
   ChannelHandler &_channelHandler;
