@@ -115,6 +115,12 @@ public:
                                    const std::string &channel,
                                    const std::string &comment);
 
+    /* KICK  ----------------------------------------------------------------*/
+  // BROADCAST
+  static const std::string BC_PART(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment);
+
   /* TOPIC --------------------------------------------------------------*/
   // 331
   static const std::string RPL_NOTOPIC(const std::string &nick,

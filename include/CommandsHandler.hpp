@@ -14,6 +14,7 @@
 #include "commands/User.hpp"
 #include "commands/Names.hpp"
 #include "commands/List.hpp"
+#include "commands/Part.hpp"
 #include <iostream>
 #include <map>
 
@@ -30,6 +31,7 @@ class Mode;
 class Topic;
 class Invite;
 class Kick;
+class Part;
 class Names;
 class List;
 
@@ -54,6 +56,7 @@ private:
   Kick *_kick;
   Names *_names;
   List *_list;
+  Part *_part;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

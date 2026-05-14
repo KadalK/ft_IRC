@@ -442,6 +442,24 @@ const std::string Replies::BC_KICK(const std::string &client,
   return (out);
 }
 
+/* PART -----------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_PART(const std::string &client,
+                                   const std::string &channel,
+                                   const std::string &comment)
+{
+  std::string out = "";
+
+  out += client;
+  out += " PART ";
+  out += channel;
+  if (comment !=  "")
+    out += " :" + comment;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* TOPIC -----------------------------------------------------------------*/
 // 331
 const std::string Replies::RPL_NOTOPIC(const std::string &nick,

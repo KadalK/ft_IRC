@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/04/28 20:10:12 by tsaby            ###   ########.fr        #
+#    Updated: 2026/05/14 09:41:37 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS		:= \
 				commands/Topic.cpp \
 				commands/Invite.cpp \
 				commands/Kick.cpp \
+				commands/Part.cpp \
 				commands/Names.cpp \
 				commands/List.cpp \
 				Commands.cpp \
