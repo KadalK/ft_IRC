@@ -27,6 +27,9 @@ public:
   Channel *createChannel(const std::string &name);
   void deleteClient(Client *client);
 
+	//Methods
+	void  createChannel(const std::string& name, Client *client);
+
   /*
   FONCTION BROADCAST : transmet le message a tous les FD necessaires
   */
