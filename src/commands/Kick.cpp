@@ -98,8 +98,11 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
     {
       channel = chH.getChannelByName(*cIt);
       if (!channel)
-        return (client.appendBufferOut(
-            Replies::ERR_NOSUCHANNEL(client.getNickname(), *cIt)));
+      {
+        client.appendBufferOut(
+            Replies::ERR_NOSUCHANNEL(client.getNickname(), *cIt));
+        continue;
+      }
       if (channel->isClientInChannel(client) == false)
       {
         client.appendBufferOut(
