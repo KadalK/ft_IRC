@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/05/15 12:30:59 by tsaby            ###   ########.fr        #
+#    Updated: 2026/05/15 16:06:31 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,6 +92,13 @@ ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 ARG1 := $(word 1, $(ARGS))
 ARG2 := $(word 2, $(ARGS))
 
+ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
+ARG1 := $(word 1, $(ARGS))
+ARG2 := $(word 2, $(ARGS))
+
+#*------------------------------------------------------------------------------*
+
 all			:
 					@$(MAKE) --no-print-directory $(NAME)
 
@@ -101,7 +108,7 @@ bot			:	all
 					@cp $(BOT_DIR)/bot ./ircbot
 					@echo "Server and Bot successfully compiled!"
 
-run-bot	:	bot
+run-bot		:	bot
 					@echo "Starting Ollama engine in the background..."
 					@export PATH=$(OLLAMA_PATH):$$PATH && ollama serve > /dev/null 2>&1 &
 					@echo "Waiting 5 seconds for Ollama to initialize..."
@@ -115,13 +122,14 @@ run-bot	:	bot
 					@echo "Don't forget to type make stop-bot to kill the proccessus after using the bot"
 
 stop-bot	:
-					@echo "Shutting down Ollama and the bots..."
-					@#(SIGTERM)
-					
-					@-pkill -15 "^ircbot$$" 2>/dev/null
-					@-pkill -15 "^ircserv$$" 2>/dev/null
-					@-pkill -15 -f "ollama serve" 2>/dev/null
+					@echo "Shutting down Ollama and the bot..."
+					@-pkill -f "[o]llama serve" || true
+					@-pkill -f "[i]rcbot" || true
+					@-pkill -f "[i]rcserv" || true
 					@echo "Everything has been properly shut down."
+
+%:
+	@:
 #*------------------------------------------------------------------------------*
 
 $(NAME)		:	$(OBJS)
@@ -155,6 +163,7 @@ clean-bot	:
 fclean-bot	: 	fclean stop-bot
 					@$(MAKE) -C $(BOT_DIR) fclean
 					@rm -f ./ircbot
+					@rm -f ./ircserv
 					@rm -f bot.log
 					@rm -f serv.log
 
