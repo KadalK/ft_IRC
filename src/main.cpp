@@ -12,7 +12,7 @@ void signal_handler(int signum)
   std::cout << "\nThe server is closing..." << std::endl;
 }
 
-static bool parseArgs(char *arg1, char *arg2)
+bool parseArgs(char *arg1, char *arg2)
 {
   std::string portString = arg1;
   std::string password = arg2;

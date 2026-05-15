@@ -119,13 +119,13 @@ run-bot		:	bot
 					@./ircserv $(ARG1) $(ARG2) > serv.log 2>&1 &
 					@./ircbot $(ARG1) $(ARG2) > bot.log 2>&1 &
 					@echo "A bot.log exist in case of crash"
-					@echo "Don't forget to type make stop-bot to kill the proccessus after using the bot"
+					@echo "Don't forget to type make fclean-bot to kill the proccessus after using the bot"
 
 stop-bot	:
 					@echo "Shutting down Ollama and the bot..."
-					@-pkill -f "[o]llama serve" || true
-					@-pkill -f "[i]rcbot" || true
-					@-pkill -f "[i]rcserv" || true
+					@-pkill -f "[o]llama serve"
+					@-pkill -f "[i]rcbot"
+					@-pkill -f "[i]rcserv"
 					@echo "Everything has been properly shut down."
 
 %:
