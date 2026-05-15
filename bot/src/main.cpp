@@ -1,4 +1,4 @@
-#include "../include/Bot.hpp"
+#include "Bot.hpp"
 #include "Utils.hpp"
 #include <arpa/inet.h>
 #include <iostream>
