@@ -1,7 +1,6 @@
 #include "../include/Bot.hpp"
-#include <stdio.h>
-#include <sstream>
 #include <iostream>
+#include <stdio.h>
 
 Bot::Bot() {}
 
@@ -77,38 +76,38 @@ Bot::Bot() {}
 
 std::string parseIRCRawMsg(const std::string rawMsg)
 {
-	std::string sender;
-	std::string target;
-	std::string message;
+  std::string sender;
+  std::string target;
+  std::string message;
 
-	size_t pos;
-	if ((pos = rawMsg.find("PRIVMSG")) != std::string::npos)
-	{
-		size_t tpos = rawMsg.find("!");
-		if (tpos != std::string::npos)
-		{
-			sender = rawMsg.substr(1, tpos - 1);
-			std::cout << "[" << sender << "]" << std::endl;
-		}
-		else
-			return "";
-		size_t start = pos + 8;
-		size_t end = rawMsg.find(" :", start);
-		if (end != std::string::npos)
-		{
-			target = rawMsg.substr(start, end - start);
-			std::cout << "[" << target << "]" << std::endl;
-		}
-		else
-			return "";
-		message = rawMsg.substr(end + 2);
-		// if (message.length() > 2)
-		// 	message.erase(message.length() - 2);
-		std::cout << "[" << message << "]" << std::endl;
-		return (message);
-	}
-	else
-		return "";
+  size_t pos;
+  if ((pos = rawMsg.find("PRIVMSG")) != std::string::npos)
+  {
+    size_t tpos = rawMsg.find("!");
+    if (tpos != std::string::npos)
+    {
+      sender = rawMsg.substr(1, tpos - 1);
+      std::cout << "[" << sender << "]" << std::endl;
+    }
+    else
+      return "";
+    size_t start = pos + 8;
+    size_t end = rawMsg.find(" :", start);
+    if (end != std::string::npos)
+    {
+      target = rawMsg.substr(start, end - start);
+      std::cout << "[" << target << "]" << std::endl;
+    }
+    else
+      return "";
+    message = rawMsg.substr(end + 2);
+    // if (message.length() > 2)
+    // 	message.erase(message.length() - 2);
+    std::cout << "[" << message << "]" << std::endl;
+    return (message);
+  }
+  else
+    return "";
 }
 
 // size_t i = 0;
@@ -148,23 +147,23 @@ std::string parseIRCRawMsg(const std::string rawMsg)
 
 std::string Bot::talk(const std::string &rawMsg)
 {
-	std::string msg = parseIRCRawMsg(rawMsg);
-	std::cout << msg << std::endl;
-	// std::string msg = escapeJSON(rawMsg);
-	// std::cout << msg << std::endl;
-	// std::ostringstream ss;
-	// ss << "curl -s http://localhost:11434/api/generate "
-	//    << "-H \"Content-Type: application/json\" "
-	//    << "-d \"{"
-	//    << "\\\"model\\\":\\\"monique\\\","
-	//    << "\\\"prompt\\\":\\\"" << msg << "\\\","
-	//    << "\\\"stream\\\":false"
-	//    << "}\"";
-	// //std::cout << ss.str() << std::endl;
-	// std::string json = exec(ss.str());
-	// //std::cout << json << std::endl;
-	// extractResponse(json);
-	return ("");
+  std::string msg = parseIRCRawMsg(rawMsg);
+  std::cout << msg << std::endl;
+  // std::string msg = escapeJSON(rawMsg);
+  // std::cout << msg << std::endl;
+  // std::ostringstream ss;
+  // ss << "curl -s http://localhost:11434/api/generate "
+  //    << "-H \"Content-Type: application/json\" "
+  //    << "-d \"{"
+  //    << "\\\"model\\\":\\\"monique\\\","
+  //    << "\\\"prompt\\\":\\\"" << msg << "\\\","
+  //    << "\\\"stream\\\":false"
+  //    << "}\"";
+  // //std::cout << ss.str() << std::endl;
+  // std::string json = exec(ss.str());
+  // //std::cout << json << std::endl;
+  // extractResponse(json);
+  return ("");
 }
 
 Bot::~Bot() {}

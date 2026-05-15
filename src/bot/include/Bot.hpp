@@ -1,18 +1,17 @@
 #pragma once
-#include "../../include/Client.hpp"
+#include <string>
 #include <vector>
 
-#include <string>
-
-class Bot{
+class Bot
+{
 private:
-	Client *_client;
-	std::vector<std::string> _memories;
-	Bot(const Bot& copy);
-	Bot& operator=(const Bot& copy);
-public:
-	Bot();
+  std::vector<std::string> _memories;
+  Bot(const Bot &copy);
+  Bot &operator=(const Bot &copy);
 
-	std::string talk(const std::string& input);
-	~Bot();
+public:
+  Bot();
+
+  std::string talk(const std::string &input);
+  ~Bot();
 };

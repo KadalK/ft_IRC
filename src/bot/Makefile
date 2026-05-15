@@ -1,7 +1,7 @@
 NAME    = bot
 
 CXX     = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g3
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP
 
 SRCS_DIR = src/
 OBJS_DIR = objs/
@@ -29,7 +29,7 @@ $(NAME): $(OBJS)
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 	@mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+	$(CXX) $(CXXFLAGS)  -c $< -o $@
 
 # ---------------------------------------------------------------------------- #
 

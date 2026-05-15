@@ -59,7 +59,6 @@ Channel *ChannelHandler::createChannel(const std::string &name)
   Channel *channel = new Channel(name);
   if (!channel)
     return (NULL);
-  channel->setTime();
   this->_channelList[name] = channel;
   return (channel);
 }

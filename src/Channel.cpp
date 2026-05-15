@@ -1,6 +1,7 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Replies.hpp"
+#include "Utils.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <sstream>
@@ -15,7 +16,10 @@ Channel::Channel(const std::string &name)
   this->_modeFt['k'] = &Channel::mode_k;
   this->_modeFt['o'] = &Channel::mode_o;
   this->_modeFt['l'] = &Channel::mode_l;
-  // Avoir l'heure de creation du channel
+  time_t rawtimes = time(NULL);
+  std::stringstream ss;
+  ss << rawtimes;
+  this->_creationTime = ss.str();
 }
 
 size_t Channel::getUserCount() const { return (this->_userCount); }
@@ -38,7 +42,7 @@ bool Channel::getHasUserLimit() const { return (this->_hasUserLimit); }
 
 bool Channel::getHasPassword() const { return (this->_hasPassword); }
 
-const std::string &Channel::getTime() { return (this->_time); }
+const std::string &Channel::getTime() { return (this->_creationTime); }
 
 std::string Channel::getUserLimitString() const
 {
@@ -64,14 +68,6 @@ const std::map<Client *, bool> &Channel::getClients() const
 void Channel::setTopic(std::string &topic) { this->_topic = topic; }
 
 void Channel::setTopicBool(bool flag) { this->_hasTopic = flag; }
-
-void Channel::setTime()
-{
-  time_t rawtimes;
-  time(&rawtimes);
-  this->_time = ctime(&rawtimes);
-  this->_time = this->_time.erase(this->_time.length() - 1);
-}
 
 bool Channel::canJoinChannel(Client &client, std::string inPassword)
 
@@ -264,18 +260,6 @@ void Channel::mode_t(bool flag, const std::string &, Client *sender)
   this->_topicRestrict = flag;
 }
 
-#define invalidChars " :,\0\r\n"
-
-static bool isValidKeyFormat(const std::string &key)
-{
-  if (key.size() > 23)
-    return (false);
-  size_t pos = key.find_first_of(invalidChars);
-  if (pos != std::string::npos)
-    return (false);
-  return (true);
-}
-
 void Channel::mode_k(bool flag, const std::string &arg, Client *sender)
 {
   if (arg.empty())
@@ -323,26 +307,13 @@ void Channel::mode_o(bool flag, const std::string &arg, Client *sender)
   itReceiv->second = flag;
 }
 
-static bool isInteger(const std::string &str)
-{
-  if ((!isdigit(str[0])) && (str[0] != '-') && (str[0] != '+'))
-    return (false);
-
-  char *p;
-  strtol(str.c_str(), &p, 10);
-
-  if (*p == 0)
-    return (true);
-  return (false);
-}
-
 void Channel::mode_l(bool flag, const std::string &arg, Client *)
 {
   if (flag == true)
   {
     if (arg.empty())
       return;
-    if (!isInteger(arg))
+    if (!isIntegerSign(arg))
       return;
     this->_userLimit = atol(arg.c_str());
   }
