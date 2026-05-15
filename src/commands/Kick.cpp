@@ -1,35 +1,15 @@
 #include "commands/Kick.hpp"
 #include "Channel.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
+#include <iostream>
 
 Kick::Kick() {}
 
-// static std::string formatMsg(const Client &sender, const Client &target,
-//                              const std::string &channelName,
-//                              std::string &comment)
-// {
-//   std::string ret = ":" + sender.getNickname() + "!" + sender.getUsername() +
-//                     "@" + sender.getHostname() + " KICK " + channelName + " "
-//                     + target.getNickname() + " :" + comment + "\r\n";
-//   return (ret);
-// }
-
-static std::vector<std::string> extractTokens(const std::string &str)
-{
-  std::vector<std::string> v;
-  size_t start = 0;
-  size_t pos;
-  while ((pos = str.find(",", start)) != std::string::npos)
-  {
-    if (!str.substr(start, pos - start).empty())
-      v.push_back(str.substr(start, pos - start));
-    start = pos + 1;
-  }
-  if (!str.substr(start).empty())
-    v.push_back(str.substr(start));
-  return (v);
-}
-
-void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
+void Kick::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                    const std::vector<std::string> &arg)
 {
   std::vector<std::string> targets;
@@ -41,51 +21,51 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
   Client *clientKicked;
 
   if (arg.size() < 2)
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
-  channels = extractTokens(arg[0]);
-  targets = extractTokens(arg[1]);
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "KICK")));
+  channels = this->extractTokens(arg[0]);
+  targets = this->extractTokens(arg[1]);
   if (channels.size() > 1 && channels.size() != targets.size())
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "KICK")));
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "KICK")));
   if (channels.size() == 1)
   {
     channel = chH.getChannelByName(channels[0]);
     if (!channel)
-      return (client.appendBufferOut(
-          Replies::ERR_NOSUCHANNEL(client.getNickname(), channels[0])));
+      return (sender.appendBufferOut(
+          Replies::ERR_NOSUCHANNEL(sender.getNickname(), channels[0])));
     for (tIt = targets.begin(); tIt != targets.end(); tIt++)
     {
-      if (channel->isClientInChannel(client) == false)
-        return (client.appendBufferOut(Replies::ERR_NOTONCHANNEL(
-            client.getNickname(), channel->getName())));
-      if (channel->isClientOperator(client) == false)
+      if (channel->isClientInChannel(sender) == false)
+        return (sender.appendBufferOut(Replies::ERR_NOTONCHANNEL(
+            sender.getNickname(), channel->getName())));
+      if (channel->isClientOperator(sender) == false)
       {
-        client.appendBufferOut(Replies::ERR_CHANNOPRIVSNEEDED(
-            client.getNickname(), channel->getName()));
+        sender.appendBufferOut(Replies::ERR_CHANNOPRIVSNEEDED(
+            sender.getNickname(), channel->getName()));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
-        client.appendBufferOut(
-            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
+        sender.appendBufferOut(
+            Replies::ERR_NOSUCHNICK(sender.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
-        client.appendBufferOut(Replies::ERR_USERNOTINCHANNEL(
-            client.getNickname(), *tIt, channel->getName()));
+        sender.appendBufferOut(Replies::ERR_USERNOTINCHANNEL(
+            sender.getNickname(), *tIt, channel->getName()));
         continue;
       }
       if (arg.size() >= 3)
         comment = arg[2];
       else
         comment = clientKicked->getNickname();
-      channel->broadcast(Replies::BC_KICK(client.getFullName(),
+      channel->broadcast(Replies::BC_KICK(sender.getFullName(),
                                           clientKicked->getNickname(),
                                           channel->getName(), comment),
-                         &client, false);
+                         &sender, false);
       channel->removeClient(clientKicked);
       std::cout << channel->getClientInChan() << std::endl;
     }
@@ -99,43 +79,43 @@ void Kick::execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
       channel = chH.getChannelByName(*cIt);
       if (!channel)
       {
-        client.appendBufferOut(
-            Replies::ERR_NOSUCHANNEL(client.getNickname(), *cIt));
+        sender.appendBufferOut(
+            Replies::ERR_NOSUCHANNEL(sender.getNickname(), *cIt));
         continue;
       }
-      if (channel->isClientInChannel(client) == false)
+      if (channel->isClientInChannel(sender) == false)
       {
-        client.appendBufferOut(
-            Replies::ERR_NOTONCHANNEL(client.getNickname(), *cIt));
+        sender.appendBufferOut(
+            Replies::ERR_NOTONCHANNEL(sender.getNickname(), *cIt));
         continue;
       }
-      if (channel->isClientOperator(client) == false)
+      if (channel->isClientOperator(sender) == false)
       {
-        client.appendBufferOut(
-            Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), *cIt));
+        sender.appendBufferOut(
+            Replies::ERR_CHANNOPRIVSNEEDED(sender.getNickname(), *cIt));
         continue;
       }
       clientKicked = clH.getClientByNickname(*tIt);
       if (!clientKicked)
       {
-        client.appendBufferOut(
-            Replies::ERR_NOSUCHNICK(client.getNickname(), *tIt));
+        sender.appendBufferOut(
+            Replies::ERR_NOSUCHNICK(sender.getNickname(), *tIt));
         continue;
       }
       if (channel->isClientInChannel(*clientKicked) == false)
       {
-        client.appendBufferOut(
-            Replies::ERR_USERNOTINCHANNEL(client.getNickname(), *tIt, *cIt));
+        sender.appendBufferOut(
+            Replies::ERR_USERNOTINCHANNEL(sender.getNickname(), *tIt, *cIt));
         continue;
       }
       if (arg.size() >= 3)
         comment = arg[2];
       else
         comment = clientKicked->getNickname();
-      channel->broadcast(Replies::BC_KICK(client.getFullName(),
+      channel->broadcast(Replies::BC_KICK(sender.getFullName(),
                                           clientKicked->getNickname(),
                                           channel->getName(), comment),
-                         &client, false);
+                         &sender, false);
       channel->removeClient(clientKicked);
     }
     return;

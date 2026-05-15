@@ -1,9 +1,11 @@
 #include "commands/User.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 User::User() {}
-
-// TODO
-//  ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
 
 static bool parsingUsername(std::string str)
 {
@@ -16,28 +18,30 @@ static bool parsingUsername(std::string str)
   return (true);
 }
 
-void User::execute(Client &client, ClientHandler &, ChannelHandler &,
+void User::execute(Client &sender, ClientHandler &, ChannelHandler &,
                    const std::vector<std::string> &arg)
 {
   if (arg.empty())
   {
-    client.appendBufferOut(Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "USER"));
+    sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "USER"));
     return;
   }
-  if (client.getUserBool())
+  if (sender.getUserBool())
   {
-    client.appendBufferOut(Replies::ERR_ALREADYREGISTERED(client.getNickname()));
+    sender.appendBufferOut(
+        Replies::ERR_ALREADYREGISTERED(sender.getNickname()));
     return;
   }
   if (parsingUsername(arg[0]) == false)
   {
-    client.appendBufferOut("ERROR :Invalid characters in username\r\n");
+    sender.appendBufferOut("ERROR :Invalid characters in username\r\n");
     return;
   }
-  client.setUsername(arg[0]);
-  client.setUserBool(true);
-  if (client.getPassBool() && client.getNickBool())
-    client.setAuth(true);
+  sender.setUsername(arg[0]);
+  sender.setUserBool(true);
+  if (sender.getPassBool() && sender.getNickBool())
+    sender.setAuth(true);
   return;
 }
 

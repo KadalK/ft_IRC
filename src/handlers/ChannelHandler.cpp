@@ -1,4 +1,6 @@
 #include "ChannelHandler.hpp"
+#include "Channel.hpp"
+#include "Client.hpp"
 
 ChannelHandler::ChannelHandler() {}
 
@@ -25,9 +27,7 @@ Channel *ChannelHandler::getChannelByName(const std::string &name)
 
   it = this->_channelList.find(name);
   if (it == this->_channelList.end())
-  {
     return (NULL);
-  }
   return (it->second);
 }
 

@@ -1,18 +1,23 @@
 #pragma once
 
-#include "ChannelHandler.hpp"
-#include "CommandsHandler.hpp"
-#include "ClientHandler.hpp"
 #include "Commands.hpp"
+#include <vector>
 
-class Join : public Commands {
+class Client;
+class ClientHandler;
+class ChannelHandler;
+
+class Join : public Commands
+{
 private:
-	Join& operator=(const Join& other);
-	Join(const Join& copy);
-public:
-	Join();
+  Join &operator=(const Join &other);
+  Join(const Join &copy);
 
-	void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
+public:
+  Join();
+
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
+               const std::vector<std::string> &arg);
 
   ~Join();
 };

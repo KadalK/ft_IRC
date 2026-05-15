@@ -15,7 +15,7 @@ private:
 public:
   Kick();
 
-  void execute(Client &client, ClientHandler &clH, ChannelHandler &chH,
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                const std::vector<std::string> &arg);
 
   ~Kick();

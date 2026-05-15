@@ -1,5 +1,19 @@
 #include "CommandsHandler.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
 #include "commands/Invite.hpp"
+#include "commands/Join.hpp"
+#include "commands/Kick.hpp"
+#include "commands/List.hpp"
+#include "commands/Mode.hpp"
+#include "commands/Names.hpp"
+#include "commands/Nick.hpp"
+#include "commands/Part.hpp"
+#include "commands/Pass.hpp"
+#include "commands/PrivMsg.hpp"
+#include "commands/Topic.hpp"
+#include "commands/User.hpp"
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
@@ -8,7 +22,8 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
       _user(new User), _pvmsg(new PrivMsg), _mode(new Mode), _topic(new Topic),
-      _invite(new Invite), _kick(new Kick), _names(new Names), _list(new List), _part(new Part)
+      _invite(new Invite), _kick(new Kick), _names(new Names), _list(new List),
+      _part(new Part)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
@@ -75,7 +90,7 @@ Commands *CommandsHandler::findCommand(std::string inputCommand)
 
   i = this->_commands.find(inputCommand);
   if (i == this->_commands.end())
-    return NULL; // Commande existe pas - Throw exception
+    return NULL;
   return i->second;
 }
 

@@ -1,4 +1,5 @@
 #include "Client.hpp"
+#include "Replies.hpp"
 
 Client::Client()
     : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),

@@ -1,39 +1,41 @@
 #include "commands/Pass.hpp"
-#include <iostream>
-
-// TODO:
-//   replies
-// ERR_NEEDMOREPARAMS              ERR_ALREADYREGISTRED
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 Pass::Pass(std::string passServ) : _passServ(passServ) {}
 
-void Pass::execute(Client &client, ClientHandler &, ChannelHandler &,
-				   const std::vector<std::string> &arg)
+void Pass::execute(Client &sender, ClientHandler &, ChannelHandler &,
+                   const std::vector<std::string> &arg)
 {
-	if (arg.empty())
-	{
-		client.appendBufferOut(Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "PASS"));
-		return;
-	}
+  if (arg.empty())
+  {
+    sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "PASS"));
+    return;
+  }
 
-	const std::string &pass = arg[0];
+  const std::string &pass = arg[0];
 
-	if (client.getPassBool())
-	{
-		client.appendBufferOut(Replies::ERR_ALREADYREGISTERED(client.getNickname()));
-		return;
-	}
+  if (sender.getPassBool())
+  {
+    sender.appendBufferOut(
+        Replies::ERR_ALREADYREGISTERED(sender.getNickname()));
+    return;
+  }
 
-	if (pass != this->_passServ)
-	{
-		client.appendBufferOut(Replies::ERR_PASSWDMISMATCH(client.getNickname()));
-		return;
-	}
+  if (pass != this->_passServ)
+  {
+    sender.appendBufferOut(Replies::ERR_PASSWDMISMATCH(sender.getNickname()));
+    return;
+  }
 
-	client.setPassBool(true);
-	if (client.getUserBool() && client.getNickBool())
-		client.setAuth(true);
-	return;
+  sender.setPassBool(true);
+  if (sender.getUserBool() && sender.getNickBool())
+    sender.setAuth(true);
+  return;
 }
 
 Pass::~Pass() {}

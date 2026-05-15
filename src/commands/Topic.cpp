@@ -1,59 +1,63 @@
 #include "commands/Topic.hpp"
+#include "Channel.hpp"
+#include "ChannelHandler.hpp"
+#include "Client.hpp"
+#include "ClientHandler.hpp"
+#include "CommandsHandler.hpp"
+#include "Replies.hpp"
 
 Topic::Topic() {}
 
-void Topic::parsingMessage(std::string rawText) { (void)rawText; }
-
-void Topic::execute(Client &client, ClientHandler &, ChannelHandler &chH,
+void Topic::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
                     const std::vector<std::string> &arg)
 {
   if (arg.empty())
   {
-    return (client.appendBufferOut(
-        Replies::ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC")));
+    return (sender.appendBufferOut(
+        Replies::ERR_NEEDMOREPARAMS(sender.getNickname(), "TOPIC")));
   }
   const std::string &ChanName = arg[0];
   Channel *channel = chH.getChannelByName(ChanName);
   if (!channel)
   {
-    return (client.appendBufferOut(
-        Replies::ERR_NOSUCHANNEL(client.getNickname(), ChanName)));
+    return (sender.appendBufferOut(
+        Replies::ERR_NOSUCHANNEL(sender.getNickname(), ChanName)));
   }
-  if (channel->isClientInChannel(client) == false)
+  if (channel->isClientInChannel(sender) == false)
   {
-    return (client.appendBufferOut(
-        Replies::ERR_NOTONCHANNEL(client.getNickname(), ChanName)));
+    return (sender.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(sender.getNickname(), ChanName)));
   }
   if (arg.size() == 1)
   {
     if (channel->getHasTopic())
-      {
-        client.appendBufferOut(Replies::RPL_TOPIC(
-        client.getNickname(), channel->getTopic(), ChanName));
-      }
+    {
+      sender.appendBufferOut(Replies::RPL_TOPIC(sender.getNickname(),
+                                                channel->getTopic(), ChanName));
+    }
     else
     {
-      client.appendBufferOut(Replies::RPL_NOTOPIC(
-        client.getNickname(), channel->getTopic(), ChanName));
+      sender.appendBufferOut(Replies::RPL_NOTOPIC(
+          sender.getNickname(), channel->getTopic(), ChanName));
     }
   }
-  if (channel->getTopicRestrict() && !channel->isClientOperator(client))
+  if (channel->getTopicRestrict() && !channel->isClientOperator(sender))
   {
-    return (client.appendBufferOut(
-        Replies::ERR_CHANNOPRIVSNEEDED(client.getNickname(), ChanName)));
+    return (sender.appendBufferOut(
+        Replies::ERR_CHANNOPRIVSNEEDED(sender.getNickname(), ChanName)));
   }
   else
   {
     if (arg.size() >= 2)
     {
-      std::string topic = arg[1] + "\r\n";
+      std::string topic = arg[1];
       channel->setTopic(topic);
       channel->setTopicBool(true);
-      channel->broadcast(Replies::BC_TOPIC(client.getFullName(), ChanName,channel->getTopic()),&client, false);
+      channel->broadcast(Replies::BC_TOPIC(sender.getFullName(), ChanName,
+                                           channel->getTopic()),
+                         &sender, false);
     }
   }
 }
-
-void Topic::errorMessage(size_t errorValue) { (void)errorValue; }
 
 Topic::~Topic() {}

@@ -1,8 +1,11 @@
 #include "Server.hpp"
+#include "Client.hpp"
 #include "SystemException.hpp"
+#include <iostream>
 
 Server::Server(int port, std::string password)
-    : _port(port),_serverSocketFd(-1),_epollFd(-1), _password(password), _channelHandler(), _clientHandler(),
+    : _port(port), _serverSocketFd(-1), _epollFd(-1), _password(password),
+      _channelHandler(), _clientHandler(),
       _commandsHandler(_clientHandler, _channelHandler, _password)
 {
 }
@@ -58,7 +61,6 @@ void Server::connectNewClient()
     close(clientSocketFd);
     return;
   }
-  // Send clientAddr si besoin pour avoir ip pour whois ect
   std::string time = this->_time;
   this->_clientHandler.addClient(clientSocketFd, hostname, time);
 }
@@ -83,12 +85,13 @@ void Server::eventToServer(int fd)
   }
   else
   {
-    std::string message(temp,bytes);
+    std::string message(temp, bytes);
     client->appendBuffer(message);
     if (client->getBuffer().length() > 2048)
     {
       client->setBuffer("");
-      client->appendBufferOut(":ircserv 417 " + client->getNickname() + " :Line too long\r\n");
+      client->appendBufferOut(":ircserv 417 " + client->getNickname() +
+                              " :Line too long\r\n");
       return;
     }
     size_t pos;

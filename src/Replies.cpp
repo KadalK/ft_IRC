@@ -4,17 +4,16 @@
 
 /* WELCOME SUCCEFULL REGISTRATION
  * --------------------------------------------------------------*/
-
 // 001
-const std::string Replies::RPL_WELCOME(const std::string &client,
-                                       const std::string &nick)
+const std::string Replies::RPL_WELCOME(const std::string &nick,
+                                       const std::string &fullname)
 {
   std::string out = "";
 
   out += ":ircserv 001 ";
-  out += nick;
+  out += fullname;
   out += " :Welcome to the Internet Relay Network ";
-  out += client;
+  out += nick;
   out += "\r\n";
 
   return (out);
@@ -72,28 +71,46 @@ const std::string Replies::RPL_ISUPPORT(const std::string &nick)
 }
 
 /* GLOBAL --------------------------------------------------------------*/
+// 329
+const std::string Replies::RPL_CREATIONTIME(const std::string &nick,
+                                            const std::string &channel,
+                                            const std::string &creationTime)
+{
+  std::string out = "";
+
+  out += ":ircserv 329 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += " ";
+  out += creationTime;
+  out += "\r\n";
+
+  return (out);
+}
+
 // 401
-const std::string Replies::ERR_NOSUCHNICK(const std::string &client,
-                                          const std::string &nick)
+const std::string Replies::ERR_NOSUCHNICK(const std::string &nick,
+                                          const std::string &input)
 {
   std::string out = "";
 
   out += ":ircserv 401 ";
-  out += client;
-  out += " ";
   out += nick;
+  out += " ";
+  out += input;
   out += " :No such nick/channel\r\n";
 
   return (out);
 }
 // 403
-const std::string Replies::ERR_NOSUCHANNEL(const std::string &client,
+const std::string Replies::ERR_NOSUCHANNEL(const std::string &nick,
                                            const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 403 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += " :No such channel\r\n";
@@ -143,35 +160,17 @@ const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick,
   return (out);
 }
 
-// 329
-const std::string Replies::RPL_CREATIONTIME(const std::string &client,
-                                            const std::string &channel,
-                                            const std::string &creationTime)
-{
-  std::string out = "";
-
-  out += ":ircserv 329 ";
-  out += client;
-  out += " ";
-  out += channel;
-  out += " ";
-  out += creationTime;
-  out += "\r\n";
-
-  return (out);
-}
-
 // 441
-const std::string Replies::ERR_USERNOTINCHANNEL(const std::string &client,
-                                                const std::string &nick,
+const std::string Replies::ERR_USERNOTINCHANNEL(const std::string &nick,
+                                                const std::string &input,
                                                 const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 441 ";
-  out += client;
-  out += " ";
   out += nick;
+  out += " ";
+  out += input;
   out += " ";
   out += channel;
   out += " :They aren't on that channel\r\n";
@@ -180,13 +179,13 @@ const std::string Replies::ERR_USERNOTINCHANNEL(const std::string &client,
 }
 
 // 442
-const std::string Replies::ERR_NOTONCHANNEL(const std::string &client,
+const std::string Replies::ERR_NOTONCHANNEL(const std::string &nick,
                                             const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 442 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += " :You're not on that channel\r\n";
@@ -195,13 +194,13 @@ const std::string Replies::ERR_NOTONCHANNEL(const std::string &client,
 }
 
 // 461
-const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &client,
+const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &nick,
                                               const std::string &command)
 {
   std::string out = "";
 
   out += ":ircserv 461 ";
-  out += client;
+  out += nick;
   out += " ";
   out += command;
   out += " :Not enough parameters\r\n";
@@ -210,25 +209,25 @@ const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &client,
 }
 
 // 462
-const std::string Replies::ERR_ALREADYREGISTERED(const std::string &client)
+const std::string Replies::ERR_ALREADYREGISTERED(const std::string &nick)
 {
   std::string out = "";
 
   out += ":ircserv 462 ";
-  out += client;
+  out += nick;
   out += " :Unauthorized command (already registered)\r\n";
 
   return (out);
 }
 
 // 482
-const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &client,
+const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &nick,
                                                  const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 482 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += " :You're not channel operator\r\n";
@@ -236,30 +235,28 @@ const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &client,
   return (out);
 }
 /* PASS --------------------------------------------------------------*/
-
 // 464
-const std::string Replies::ERR_PASSWDMISMATCH(const std::string &client)
+const std::string Replies::ERR_PASSWDMISMATCH(const std::string &nick)
 {
   std::string out = "";
 
   out += ":ircserv 464 ";
-  out += client;
+  out += nick;
   out += " :Password incorrect\r\n";
 
   return (out);
 }
 
 /* MODE --------------------------------------------------------------*/
-// NUMERIC  REPLIES
 // 324
-const std::string Replies::RPL_CHANNELMODEIS(const std::string &client,
+const std::string Replies::RPL_CHANNELMODEIS(const std::string &nick,
                                              const std::string &channel,
                                              const std::string &modeString)
 {
   std::string out = "";
 
   out += ":ircserv 324 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += " ";
@@ -268,25 +265,16 @@ const std::string Replies::RPL_CHANNELMODEIS(const std::string &client,
 
   return (out);
 }
-// 502
-const std::string Replies::ERR_USERDONTMATCH(const std::string &client)
-{
-  std::string out = "";
-
-  out += ":ircserv 502 ";
-  out += client;
-  out += " :Can't change mode for other users";
-  out += "\r\n";
-
-  return (out);
-}
 
 // 467
-const std::string Replies::ERR_KEYSET(const std::string &channel)
+const std::string Replies::ERR_KEYSET(const std::string &nick,
+                                      const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 467 ";
+  out += nick;
+  out += " ";
   out += channel;
   out += " :Channel key already set";
   out += "\r\n";
@@ -295,12 +283,12 @@ const std::string Replies::ERR_KEYSET(const std::string &channel)
 }
 
 // 472
-const std::string Replies::ERR_UNKNOWNMODE(const std::string &client, char c)
+const std::string Replies::ERR_UNKNOWNMODE(const std::string &nick, char c)
 {
   std::string out = "";
 
   out += ":ircserv 472 ";
-  out += client;
+  out += nick;
   out += " ";
   out += c;
   out += "\r\n";
@@ -308,14 +296,27 @@ const std::string Replies::ERR_UNKNOWNMODE(const std::string &client, char c)
   return (out);
 }
 
+// 502
+const std::string Replies::ERR_USERDONTMATCH(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 502 ";
+  out += nick;
+  out += " :Can't change mode for other users";
+  out += "\r\n";
+
+  return (out);
+}
+
 // 525
-const std::string Replies::ERR_INVALIDKEY(const std::string &client,
+const std::string Replies::ERR_INVALIDKEY(const std::string &nick,
                                           const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 525 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += " :Key is not well formed\r\n";
@@ -324,13 +325,13 @@ const std::string Replies::ERR_INVALIDKEY(const std::string &client,
 }
 
 // BROADCAST
-const std::string Replies::BC_MODE(const std::string &client,
+const std::string Replies::BC_MODE(const std::string &sender,
                                    const std::string &channel,
                                    const std::string &modeString)
 {
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " MODE ";
   out += channel;
   out += " ";
@@ -341,13 +342,13 @@ const std::string Replies::BC_MODE(const std::string &client,
 }
 /* INVITE  --------------------------------------------------------------*/
 // 336
-const std::string Replies::RPL_INVITELIST(const std::string &client,
+const std::string Replies::RPL_INVITELIST(const std::string &nick,
                                           const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 336 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += "\r\n";
@@ -356,12 +357,12 @@ const std::string Replies::RPL_INVITELIST(const std::string &client,
 }
 
 // 337
-const std::string Replies::RPL_ENDOFINVITELIST(const std::string &client)
+const std::string Replies::RPL_ENDOFINVITELIST(const std::string &nick)
 {
   std::string out = "";
 
   out += ":ircserv 337 ";
-  out += client;
+  out += nick;
   out += " :End of /INVITE list";
   out += "\r\n";
 
@@ -369,16 +370,16 @@ const std::string Replies::RPL_ENDOFINVITELIST(const std::string &client)
 }
 
 // 341
-const std::string Replies::RPL_INVITING(const std::string &client,
-                                        const std::string &nick,
+const std::string Replies::RPL_INVITING(const std::string &nick,
+                                        const std::string &input,
                                         const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 341 ";
-  out += client;
-  out += " ";
   out += nick;
+  out += " ";
+  out += input;
   out += " ";
   out += channel;
   out += "\r\n";
@@ -387,16 +388,16 @@ const std::string Replies::RPL_INVITING(const std::string &client,
 }
 
 // 443
-const std::string Replies::ERR_USERONCHANNEL(const std::string &client,
-                                             const std::string &nick,
+const std::string Replies::ERR_USERONCHANNEL(const std::string &nick,
+                                             const std::string &input,
                                              const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 443 ";
-  out += client;
-  out += " ";
   out += nick;
+  out += " ";
+  out += input;
   out += " ";
   out += channel;
   out += " :is already on channel";
@@ -406,14 +407,14 @@ const std::string Replies::ERR_USERONCHANNEL(const std::string &client,
 }
 
 // BROADCAST
-const std::string Replies::BC_INVITE(const std::string &client,
+const std::string Replies::BC_INVITE(const std::string &sender,
                                      const std::string &channel,
                                      const std::string &nick)
 {
 
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " INVITE ";
   out += channel;
   out += " ";
@@ -424,14 +425,14 @@ const std::string Replies::BC_INVITE(const std::string &client,
 }
 /* KICK -----------------------------------------------------------------*/
 // BROADCAST
-const std::string Replies::BC_KICK(const std::string &client,
+const std::string Replies::BC_KICK(const std::string &sender,
                                    const std::string &nick,
                                    const std::string &channel,
                                    const std::string &comment)
 {
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " KICK ";
   out += channel;
   out += " ";
@@ -444,16 +445,16 @@ const std::string Replies::BC_KICK(const std::string &client,
 
 /* PART -----------------------------------------------------------------*/
 // BROADCAST
-const std::string Replies::BC_PART(const std::string &client,
+const std::string Replies::BC_PART(const std::string &sender,
                                    const std::string &channel,
                                    const std::string &comment)
 {
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " PART ";
   out += channel;
-  if (comment !=  "")
+  if (comment != "")
     out += " :" + comment;
   out += "\r\n";
 
@@ -498,13 +499,13 @@ const std::string Replies::RPL_TOPIC(const std::string &nick,
 }
 
 // BROADCAST
-const std::string Replies::BC_TOPIC(const std::string &client,
-                                   const std::string &channel,
-                                   const std::string &comment)
+const std::string Replies::BC_TOPIC(const std::string &sender,
+                                    const std::string &channel,
+                                    const std::string &comment)
 {
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " TOPIC ";
   out += channel;
   out += " :" + comment;
@@ -514,20 +515,6 @@ const std::string Replies::BC_TOPIC(const std::string &client,
 }
 
 /* PRIVMSG --------------------------------------------------------------*/
-// 411
-const std::string Replies::ERR_NORECIPIENT(const std::string &client,
-                                           const std::string &command)
-{
-  return (":ircserv 411 " + client + " :No recipient given (" + command +
-          ")\r\n");
-}
-
-// 412
-const std::string Replies::ERR_NOTEXTTOSEND(const std::string &client)
-{
-  return (":ircserv 412 " + client + " :No text to send\r\n");
-}
-
 // 404
 // const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
 //                                                 const std::string &channel)
@@ -536,26 +523,59 @@ const std::string Replies::ERR_NOTEXTTOSEND(const std::string &client)
 //   channel\r\n");
 // }
 
-// 414
-//  std::string Replies::ERR_WILDTOPLEVEL(){}
-
 // 407
 const std::string Replies::ERR_TOOMANYTARGETS(const std::string &target,
                                               const std::string &targetsCount)
 {
-  return (":ircserv 407 " + target + " :" + targetsCount +
-          " Message delivery aborted"
-          "\r\n");
+  std::string out;
+
+  out += ":ircserv 407 ";
+  out += target;
+  out += " :";
+  out += targetsCount;
+  out += " Message delivery aborted\r\n";
+
+  return (out);
 }
 
+// 411
+const std::string Replies::ERR_NORECIPIENT(const std::string &nick,
+                                           const std::string &command)
+{
+  std::string out;
+
+  out += ":ircserv 411 ";
+  out += nick;
+  out += " :No recipient given (";
+  out += command;
+  out += ")\r\n";
+
+  return (out);
+}
+
+// 412
+const std::string Replies::ERR_NOTEXTTOSEND(const std::string &nick)
+{
+  std::string out;
+
+  out += ":ircserv 412 ";
+  out += nick;
+  out += " :No text to send\r\n";
+
+  return (out);
+}
+
+// 414
+//  std::string Replies::ERR_WILDTOPLEVEL(){}
+
 // BROADCAST
-const std::string Replies::BC_PRIVMSG(const std::string &client,
+const std::string Replies::BC_PRIVMSG(const std::string &sender,
                                       const std::string &target,
                                       const std::string &msg)
 {
   std::string out = "";
 
-  out += client;
+  out += sender;
   out += " PRIVMSG ";
   out += target;
   out += " :";
@@ -565,45 +585,14 @@ const std::string Replies::BC_PRIVMSG(const std::string &client,
   return (out);
 }
 /* JOIN --------------------------------------------------------------*/
-
-// 475
-const std::string Replies::ERR_BADCHANNELKEY(const std::string &client,
-                                   const std::string &channel)
-{
-  std::string out = "";
-
-  out += ":ircserv 475 ";
-  out += client;
-  out += " ";
-  out += channel;
-  out += ":Cannot join channel (+k)\r\n";
-
-  return (out);
-}
-
-// 473
-const std::string Replies::ERR_INVITEONLYCHAN(const std::string &client,
-                                   const std::string &channel)
-{
-  std::string out = "";
-
-  out += ":ircserv 473 ";
-  out += client;
-  out += " ";
-  out += channel;
-  out += ":Cannot join channel (+i)\r\n";
-
-  return (out);
-}
-
 // 471
-const std::string Replies::ERR_CHANNELISFULL(const std::string &client,
-                                   const std::string &channel)
+const std::string Replies::ERR_CHANNELISFULL(const std::string &nick,
+                                             const std::string &channel)
 {
   std::string out = "";
 
   out += ":ircserv 471 ";
-  out += client;
+  out += nick;
   out += " ";
   out += channel;
   out += ":Cannot join channel (+l)\r\n";
@@ -611,29 +600,45 @@ const std::string Replies::ERR_CHANNELISFULL(const std::string &client,
   return (out);
 }
 
-// BROADCAST
-const std::string Replies::BC_JOIN(const std::string &client,
-                                   const std::string &channel)
+// 473
+const std::string Replies::ERR_INVITEONLYCHAN(const std::string &nick,
+                                              const std::string &channel)
 {
   std::string out = "";
 
-  out += client;
-  out += " JOIN";
-  out += " :" + channel;
-  out += "\r\n";
+  out += ":ircserv 473 ";
+  out += nick;
+  out += " ";
+  out += channel;
+  out += ":Cannot join channel (+i)\r\n";
 
   return (out);
 }
 
-const std::string Replies::RPL_JOIN(const std::string &client,
-                                    const std::string &channel)
+// 475
+const std::string Replies::ERR_BADCHANNELKEY(const std::string &nick,
+                                             const std::string &channel)
 {
-
   std::string out = "";
 
-  out += client;
-  out += " JOIN :";
+  out += ":ircserv 475 ";
+  out += nick;
+  out += " ";
   out += channel;
+  out += ":Cannot join channel (+k)\r\n";
+
+  return (out);
+}
+
+// BROADCAST
+const std::string Replies::BC_JOIN(const std::string &sender,
+                                   const std::string &channel)
+{
+  std::string out = "";
+
+  out += sender;
+  out += " JOIN";
+  out += " :" + channel;
   out += "\r\n";
 
   return (out);
@@ -673,7 +678,6 @@ const std::string Replies::RPL_ENDOFNAMES(const std::string &nick,
   return (out);
 }
 
-
 /* LIST --------------------------------------------------------------*/
 // 321 -- OLD RFC. May be needed for old IRC client
 // const std::string Replies::RPL_LISTSTART(const std::string &nick)
@@ -686,11 +690,12 @@ const std::string Replies::RPL_ENDOFNAMES(const std::string &nick,
 //
 //   return (out);
 // }
+
 // 322
 const std::string Replies::RPL_LIST(const std::string &nick,
-                                      const std::string &channel,
-                                      const std::string &count,
-                                      const std::string &topic)
+                                    const std::string &channel,
+                                    const std::string &count,
+                                    const std::string &topic)
 {
   std::string out = "";
 
@@ -705,6 +710,7 @@ const std::string Replies::RPL_LIST(const std::string &nick,
 
   return (out);
 }
+
 // 323
 const std::string Replies::RPL_LISTEND(const std::string &nick)
 {
@@ -716,11 +722,3 @@ const std::string Replies::RPL_LISTEND(const std::string &nick)
 
   return (out);
 }
-
-// // 301
-// std::string Replies::RPL_AWAY(const std::string &ircserv,
-//                               const std::string &nick,
-//                               const std::string &awayMsg)
-// {
-//   return (":" + ircserv + " 301 " + nick + " :" + awayMsg + "\r\n");
-// }

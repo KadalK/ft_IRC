@@ -1,23 +1,23 @@
-#ifndef USER_HPP
-#define USER_HPP
+#pragma once
 
-#include "ChannelHandler.hpp"
-#include "CommandsHandler.hpp"
-#include "ClientHandler.hpp"
-#include "Client.hpp"
 #include "Commands.hpp"
-#include <iostream>
+#include <vector>
 
-class User : public Commands {
+class Client;
+class ClientHandler;
+class ChannelHandler;
+
+class User : public Commands
+{
 private:
-	User& operator=(const User& other);
-	User(const User& copy);
+  User &operator=(const User &other);
+  User(const User &copy);
+
 public:
-	User();
+  User();
 
-	void execute(Client& client, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string>& arg);
+  void execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
+               const std::vector<std::string> &arg);
 
-	~User();
+  ~User();
 };
-
-#endif
