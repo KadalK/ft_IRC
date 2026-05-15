@@ -4,14 +4,15 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <sstream>
 #include "../include/Bot.hpp"
 
-int init()
+int init(int port, std::string password)
 {
 	int botsocket = socket(AF_INET, SOCK_STREAM, 0);
 	sockaddr_in botAdress;
 	botAdress.sin_family = AF_INET;
-	botAdress.sin_port = htons(6667);
+	botAdress.sin_port = htons(port);
 	botAdress.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	while (true)
@@ -24,15 +25,21 @@ int init()
 		}
 		break;
 	}
-	std::string WelcomePack = "PASS bot\r\nNICK Monique\r\nUSER bot 0 * :IA\r\n";
+	std::string WelcomePack = "PASS "+ password + "\r\nNICK Monique\r\nUSER bot 0 * :IA\r\n";
 	send(botsocket, WelcomePack.c_str(), WelcomePack.length(), 0);
 	return (botsocket);
 }
 
-int main()
+int main(int, char **argv)
 {
 	Bot bot;
-	int botfd = init();
+	std::stringstream ss(argv[1]);
+	int port;
+	ss >> port;
+	std::string password = argv[2];
+	std::string message;
+	std:: string format;
+	int botfd = init(port, password);
 	std::string readBuffer = "";
 	while (true)
 	{
@@ -45,8 +52,15 @@ int main()
 		while ((pos = readBuffer.find("\r\n")) != std::string::npos)
 		{
 			std::string line = readBuffer.substr(0, pos);
-			bot.talk(line);
+			format = bot.talk(line);
 			readBuffer.erase(0, pos + 2);
+		}
+		if (format != "")
+		{
+			message = "PRIVMSG tsaby :" + format + "\r\n";
+			send(botfd, message.c_str(), message.length(), 0);
+			format.clear();
+			message.clear();
 		}
 	}
 	// while (std::getline(std::cin, raw))

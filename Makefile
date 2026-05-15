@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/05/15 12:30:59 by tsaby            ###   ########.fr        #
+#    Updated: 2026/05/15 16:06:31 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -87,6 +87,13 @@ OLLAMA_PATH		:=	$(HOME)/sgoinfre/monique/bin
 
 #*------------------------------------------------------------------------------*
 
+ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
+ARG1 := $(word 1, $(ARGS))
+ARG2 := $(word 2, $(ARGS))
+
+#*------------------------------------------------------------------------------*
+
 all			:
 					@$(MAKE) --no-print-directory $(NAME)
 
@@ -96,7 +103,7 @@ bot			:	all
 					@cp $(BOT_DIR)/bot ./ircbot
 					@echo "Server and Bot successfully compiled!"
 
-run-bot	$(fdsdf)	:	bot
+run-bot		:	bot
 					@echo "Starting Ollama engine in the background..."
 					@export PATH=$(OLLAMA_PATH):$$PATH && ollama serve > /dev/null 2>&1 &
 					@echo "\Waiting 5 seconds for Ollama to initialize..."
@@ -104,16 +111,20 @@ run-bot	$(fdsdf)	:	bot
 					@echo "Checking/Creating the Monique model..."
 					@export PATH=$(OLLAMA_PATH):$$PATH && ollama create monique -f $(BOT_DIR)/Modelfile > /dev/null 2>&1
 					@echo "tarting the IRC bot in the background..."
-					@./ircbot > bot.log 2>&1 &
+					@./ircserv $(ARG1) $(ARG2) > serv.log 2>&1 &
+					@./ircbot $(ARG1) $(ARG2) > bot.log 2>&1 &
 					@echo "A bot.log exist in case of crash"
 					@echo "Don't forget to type make stop-bot to kill the proccessus after using the bot"
 
 stop-bot	:
 					@echo "Shutting down Ollama and the bot..."
-					@pkill -f "ircbot" || true
-					@pkill -f "ollama serve" || true
+					@-pkill -f "[o]llama serve" || true
+					@-pkill -f "[i]rcbot" || true
+					@-pkill -f "[i]rcserv" || true
 					@echo "Everything has been properly shut down."
 
+%:
+	@:
 #*------------------------------------------------------------------------------*
 
 $(NAME)		:	$(OBJS)
@@ -143,10 +154,12 @@ fclean		:	clean
 clean-bot	:
 				@$(MAKE) -C $(BOT_DIR) clean
 
-fclean-bot	: 	fclean
+fclean-bot	: 	fclean stop-bot
 					@$(MAKE) -C $(BOT_DIR) fclean
 					@rm -f ./ircbot
+					@rm -f ./ircserv
 					@rm -f bot.log
+					@rm -f serv.log
 
 re			:	fclean all
 
@@ -154,4 +167,4 @@ re-bot		:	fclean-bot run-bot
 
 -include $(OBJS:.o=.d)
 
-.PHONY: all  clean fclean re clean-bot fclean-bot re-bot
+.PHONY: all  clean fclean re clean-bot fclean-bot re-bot stop-bot
