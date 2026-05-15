@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/05/14 09:41:37 by tsaby            ###   ########.fr        #
+#    Updated: 2026/05/15 12:30:59 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -82,9 +82,37 @@ NAME		:=	ircserv
 
 #*------------------------------------------------------------------------------*
 
-all			:
-				@$(MAKE) --no-print-directory $(NAME)
+BOT_DIR			:=	src/bot
+OLLAMA_PATH		:=	$(HOME)/sgoinfre/monique/bin
 
+#*------------------------------------------------------------------------------*
+
+all			:
+					@$(MAKE) --no-print-directory $(NAME)
+
+bot			:	all
+					@echo "Compiling the IRC bot..."
+					@$(MAKE) -C $(BOT_DIR)
+					@cp $(BOT_DIR)/bot ./ircbot
+					@echo "Server and Bot successfully compiled!"
+
+run-bot	$(fdsdf)	:	bot
+					@echo "Starting Ollama engine in the background..."
+					@export PATH=$(OLLAMA_PATH):$$PATH && ollama serve > /dev/null 2>&1 &
+					@echo "\Waiting 5 seconds for Ollama to initialize..."
+					@sleep 5
+					@echo "Checking/Creating the Monique model..."
+					@export PATH=$(OLLAMA_PATH):$$PATH && ollama create monique -f $(BOT_DIR)/Modelfile > /dev/null 2>&1
+					@echo "tarting the IRC bot in the background..."
+					@./ircbot > bot.log 2>&1 &
+					@echo "A bot.log exist in case of crash"
+					@echo "Don't forget to type make stop-bot to kill the proccessus after using the bot"
+
+stop-bot	:
+					@echo "Shutting down Ollama and the bot..."
+					@pkill -f "ircbot" || true
+					@pkill -f "ollama serve" || true
+					@echo "Everything has been properly shut down."
 
 #*------------------------------------------------------------------------------*
 
@@ -105,15 +133,25 @@ $(OBJS_D)%.o:	$(SRCS_D)%.cpp
 #*------------------------------------------------------------------------------*
 
 clean		:
-				@$(RM) -r $(OBJS_D)
-				@echo "$(YELLOW)Clean complete$(NC)"
+					@$(RM) -r $(OBJS_D)
+					@echo "$(YELLOW)Clean complete$(NC)"
 
 fclean		:	clean
-				@$(RM) $(NAME)
-				@echo "$(YELLOW)Full clean complete$(NC)"
+					@$(RM) $(NAME)
+					@echo "$(YELLOW)Full clean complete$(NC)"
+
+clean-bot	:
+				@$(MAKE) -C $(BOT_DIR) clean
+
+fclean-bot	: 	fclean
+					@$(MAKE) -C $(BOT_DIR) fclean
+					@rm -f ./ircbot
+					@rm -f bot.log
 
 re			:	fclean all
 
+re-bot		:	fclean-bot run-bot
+
 -include $(OBJS:.o=.d)
 
-.PHONY: all  clean fclean re
+.PHONY: all  clean fclean re clean-bot fclean-bot re-bot
