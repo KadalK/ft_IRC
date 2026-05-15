@@ -34,10 +34,10 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.cpp
 # ---------------------------------------------------------------------------- #
 
 clean:
-	rm -rf $(OBJS_DIR)
+			rm -rf $(OBJS_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+			rm -f $(NAME)
 
 re: fclean all
 
