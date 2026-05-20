@@ -2,6 +2,7 @@
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
+#include "Replies.hpp"
 #include "commands/Invite.hpp"
 #include "commands/Join.hpp"
 #include "commands/Kick.hpp"
@@ -105,6 +106,30 @@ bool isRegisterCmd(const std::string &cmdStr)
   return (false);
 }
 
+static std::string extractNickName(std::string str)
+{
+  size_t pos = str.find('!');
+  if (pos != std::string::npos)
+    return (str.substr(0, pos));
+  return (str);
+}
+
+// envoyer -1 sis ca correspond pas au meme nickname
+//  parametre -> client, rawMessage
+static size_t processPrefix(Client &client, std::string rawMessage)
+{
+  if (rawMessage[0] != ':')
+    return (0);
+  size_t pos = rawMessage.find(' ');
+  if (pos == std::string::npos)
+    return (-1);
+  std::string prefix = extractNickName(rawMessage.substr(1, pos - 1));
+  std::cout << "prefix  [" << prefix << "]" << std::endl;
+  if (client.getNickname() != prefix)
+    return (-1);
+  return (pos + 1);
+}
+
 void CommandsHandler::processCommand(Client &client,
                                      ClientHandler &clientHandler,
                                      ChannelHandler &channelHandler,
@@ -114,13 +139,23 @@ void CommandsHandler::processCommand(Client &client,
   std::string cmdStr;
   Commands *cmd;
   size_t pos;
+  size_t start;
   if (rawMessage.size() > 512)
     rawMessage = rawMessage.substr(0, 512);
+  start = processPrefix(client, rawMessage);
+  if (start < 0)
+    return (client.appendBufferOut("Warning\nBad prefix\r\n"));
+  rawMessage = rawMessage.substr(start);
+  std::cout << "rawMessage 1 [" << rawMessage << "]" << std::endl;
   pos = rawMessage.find(' ');
-  cmd = findCommand(rawMessage.substr(0, pos));
+  cmd = findCommand(rawMessage.substr(start, pos));
   if (cmd == NULL)
-    return; // Commande existe pas - throw exception
-  cmdStr = rawMessage.substr(0, pos);
+  {
+    client.appendBufferOut(Replies::ERR_UNKNOWNCOMMAND(
+        client.getNickname(), rawMessage.substr(start, pos)));
+    return;
+  }
+  cmdStr = rawMessage.substr(start, pos);
   if (isRegisterCmd(cmdStr) == false && client.isRegistered() == false)
     return; // Client pas registered et commande necessite registered
   if (pos != std::string::npos)

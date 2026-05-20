@@ -70,6 +70,20 @@ const std::string Replies::RPL_ISUPPORT(const std::string &nick)
   return (out);
 }
 
+// 421
+const std::string Replies::ERR_UNKNOWNCOMMAND(const std::string &nick,
+                                              const std::string &command)
+{
+  std::string out = "";
+
+  out += ":ircserv 421 ";
+  out += nick;
+  out += " ";
+  out += command;
+  out += " :Unknown command\r\n";
+
+  return (out);
+}
 /* GLOBAL --------------------------------------------------------------*/
 // 329
 const std::string Replies::RPL_CREATIONTIME(const std::string &nick,
