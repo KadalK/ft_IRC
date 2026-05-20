@@ -59,7 +59,6 @@ int main(int, char **argv)
   std::string password = argv[2];
   int port;
   ss >> port;
-  std::string message;
   std::string format;
   int botfd = init(port, password);
   std::string readBuffer = "";
@@ -75,14 +74,13 @@ int main(int, char **argv)
     {
       std::string line = readBuffer.substr(0, pos);
       format = bot.talk(line);
+      std::cout << "format : [" << format << "]" << std::endl;
       readBuffer.erase(0, pos + 2);
     }
     if (format != "")
     {
-      message = "PRIVMSG tsaby :" + format + "\r\n";
-      send(botfd, message.c_str(), message.length(), 0);
+      send(botfd, format.c_str(), format.length(), 0);
       format.clear();
-      message.clear();
     }
   }
 }
