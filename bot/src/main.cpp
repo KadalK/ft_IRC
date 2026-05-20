@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include "../include/Bot.hpp"
+#include "Bot.hpp"
+
 
 int main()
 {

@@ -16,7 +16,6 @@ static std::string escapeJSON(const std::string& s)
 		else if (s[i] == '\n') out += "\\n";
 		else out += s[i];
 	}
-
 	return out;
 }
 
@@ -47,11 +46,14 @@ static std::string extractResponse(const std::string& json)
 			else if (c == 'r') out += '\r';
 			else if (c == '\\' || c == '"') out += c;
 			escape = false;
-		} else if (c == '\\') {
+		}
+		else if (c == '\\') {
 			escape = true;
-		} else if (c == '"') {
+		}
+		else if (c == '"') {
 			break;
-		} else {
+		}
+		else {
 			out += c;
 		}
 	}
