@@ -3,7 +3,6 @@
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Invite::Invite() {}
@@ -55,9 +54,7 @@ void Invite::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
         Replies::RPL_INVITING(sender.getNickname(), arg[0], arg[1]));
     clientInvited->appendBufferOut(
         Replies::BC_INVITE(sender.getFullName(), arg[0], arg[1]));
-    return;
   }
-  return;
 }
 
 Invite::~Invite() {}

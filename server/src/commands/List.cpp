@@ -2,8 +2,6 @@
 #include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 List::List() {}

@@ -1,8 +1,6 @@
 #include "commands/User.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 User::User() {}
@@ -14,7 +12,7 @@ static bool parsingUsername(std::string str)
 
   i = str.find_first_of(badChar, 0, 6);
   if (i != std::string::npos)
-    return (false); // set BuffOut bad USERNAME
+    return (false);
   return (true);
 }
 
@@ -42,7 +40,6 @@ void User::execute(Client &sender, ClientHandler &, ChannelHandler &,
   sender.setUserBool(true);
   if (sender.getPassBool() && sender.getNickBool())
     sender.setAuth(true);
-  return;
 }
 
 User::~User() {}

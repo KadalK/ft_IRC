@@ -1,5 +1,5 @@
-#include "Bot.hpp"
-#include "Utils.hpp"
+#include "../include/Bot.hpp"
+#include "../../shared/Utils.hpp"
 #include <arpa/inet.h>
 #include <iostream>
 #include <netinet/in.h>
@@ -18,8 +18,7 @@ int init(int port, std::string password)
 
   while (true)
   {
-    if (connect(botsocket, (struct sockaddr *)&botAdress, sizeof(botAdress)) <
-        0)
+    if (connect(botsocket, (struct sockaddr *)&botAdress, sizeof(botAdress)) < 0)
     {
       std::cout << "Error : connect. New try in 3s...";
       sleep(3);

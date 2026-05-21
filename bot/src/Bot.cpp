@@ -68,20 +68,15 @@ static std::string extractResponse(const std::string &json)
         out += ' ';
       else if (c == '\\' || c == '"')
         out += c;
+
       escape = false;
     }
     else if (c == '\\')
-    {
       escape = true;
-    }
     else if (c == '"')
-    {
       break;
-    }
     else
-    {
       out += c;
-    }
   }
   return out;
 }
@@ -205,8 +200,7 @@ std::string Bot::talk(const std::string &rawMsg)
     std::string reply = processUserInput(sender, message);
     return (parseBotReply(reply,sender));
   }
-    else
-      return (message);
+  return (message);
 }
 
 Bot::~Bot() {}

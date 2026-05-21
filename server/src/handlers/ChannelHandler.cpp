@@ -1,6 +1,5 @@
 #include "ChannelHandler.hpp"
 #include "Channel.hpp"
-#include "Client.hpp"
 
 ChannelHandler::ChannelHandler() {}
 

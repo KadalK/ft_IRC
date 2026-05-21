@@ -1,8 +1,6 @@
 #include "commands/Pass.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Pass::Pass(std::string passServ) : _passServ(passServ) {}
@@ -35,7 +33,6 @@ void Pass::execute(Client &sender, ClientHandler &, ChannelHandler &,
   sender.setPassBool(true);
   if (sender.getUserBool() && sender.getNickBool())
     sender.setAuth(true);
-  return;
 }
 
 Pass::~Pass() {}
