@@ -8,13 +8,14 @@ private:
   Replies();
 
 public:
-  /* WELCOME SUCCEFULL REGISTRATION
+  /* WELCOME SUCCESSFULL REGISTRATION
    * --------------------------------------------------------------*/
   // 001
   static const std::string RPL_WELCOME(const std::string &nick,
                                        const std::string &input);
   // 002
   static const std::string RPL_YOURHOST(const std::string &nick);
+
   // 003
   static const std::string RPL_CREATED(const std::string &nick,
                                        const std::string &time);
@@ -24,6 +25,9 @@ public:
   // 005
   static const std::string RPL_ISUPPORT(const std::string &nick);
 
+  // 421
+  static const std::string ERR_UNKNOWNCOMMAND(const std::string &nick,
+                                              const std::string &command);
   /* GLOBAL --------------------------------------------------------------*/
   // 401
   static const std::string ERR_NOSUCHNICK(const std::string &nick,
@@ -31,7 +35,7 @@ public:
   // 403
   static const std::string ERR_NOSUCHANNEL(const std::string &nick,
                                            const std::string &channel);
-  // 329 L HEURE DE CREATION EST PAS FAITE
+  // 329
   static const std::string RPL_CREATIONTIME(const std::string &nick,
                                             const std::string &channel,
                                             const std::string &creationTime);
