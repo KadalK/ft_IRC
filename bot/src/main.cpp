@@ -73,7 +73,6 @@ int main(int, char **argv)
     {
       std::string line = readBuffer.substr(0, pos);
       format = bot.talk(line);
-      std::cout << "format : [" << format << "]" << std::endl;
       readBuffer.erase(0, pos + 2);
     }
     if (format != "")

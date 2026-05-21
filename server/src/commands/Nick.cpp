@@ -2,7 +2,6 @@
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Nick::Nick() {}
@@ -53,7 +52,6 @@ void Nick::execute(Client &sender, ClientHandler &clH, ChannelHandler &,
       sender.setAuth(true);
   }
   sender.setNickBool(true);
-  return;
 }
 
 Nick::~Nick() {}

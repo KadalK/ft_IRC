@@ -2,8 +2,6 @@
 #include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Mode::Mode() {}
@@ -71,7 +69,6 @@ static void listModes(Channel &channel, Client &sender)
       sender.getNickname(), channel.getName(), modeString));
   sender.appendBufferOut(Replies::RPL_CREATIONTIME(
       sender.getNickname(), channel.getName(), channel.getTime()));
-  return;
 }
 
 static std::string listModesChanges(oldState &old, Channel &channel)

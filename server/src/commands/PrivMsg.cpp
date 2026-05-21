@@ -69,7 +69,7 @@ void PrivMsg::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
       if (!receiver)
       {
         sender.appendBufferOut(
-            Replies::ERR_NOSUCHNICK(sender.getFullName(), target));
+            Replies::ERR_NOSUCHNICK(sender.getNickname(), target));
         continue;
       }
       if (!receiver->getAuth())

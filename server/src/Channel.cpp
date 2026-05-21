@@ -90,7 +90,7 @@ bool Channel::canJoinChannel(Client &client, std::string inPassword)
         Replies::ERR_BADCHANNELKEY(client.getNickname(), this->_name));
     return (false);
   }
-  else if (this->isChannelFull() == true)
+  if (this->isChannelFull() == true)
   {
     client.appendBufferOut(
         Replies::ERR_CHANNELISFULL(client.getNickname(), this->_name));
