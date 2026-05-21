@@ -1,18 +1,30 @@
 #pragma once
-#include "../../include/Client.hpp"
+#include <string>
+#include <map>
+#include <deque>
 #include <vector>
 
-#include <string>
+struct ChatMessage {
 
-class Bot{
+  std::string role;
+  std::string content;
+
+};
+
+class Bot
+{
 private:
-	Client *_client;
-	std::vector<std::string> _memories;
-	Bot(const Bot& copy);
-	Bot& operator=(const Bot& copy);
-public:
-	Bot();
+  std::map<std::string, std::deque<ChatMessage> > _memory;
+  size_t _memorySizeMax;
+  Bot(const Bot &copy);
+  Bot &operator=(const Bot &copy);
 
-	std::string talk(const std::string& input);
-	~Bot();
+public:
+  Bot();
+
+  void        addMessageToMemory(const std::string& sender, const std::string& role, const std::string& content);
+  std::string buildJson(const std::string& sender);
+  std::string processUserInput(const std::string& sender, const std::string& userInput);
+  std::string talk(const std::string &input);
+  ~Bot();
 };

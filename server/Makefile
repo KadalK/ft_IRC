@@ -10,17 +10,34 @@
 #                                                                              #
 # **************************************************************************** #
 
-
 YELLOW	:= \033[0;33m
 NC		:= \033[0m
 
 #*------------------------------------------------------------------------------*
 
 SRCS		:= \
-		  	src/main.cpp \
-      	src/Bot.cpp \
-      	src/OllamaAPI.cpp \
-				../shared/Utils.cpp
+				src/main.cpp \
+				src/Server.cpp \
+				src/Client.cpp \
+				src/Channel.cpp \
+				src/handlers/ClientHandler.cpp \
+				src/handlers/ChannelHandler.cpp \
+				src/handlers/CommandsHandler.cpp \
+				src/commands/Join.cpp \
+				src/commands/User.cpp \
+				src/commands/Nick.cpp \
+				src/commands/Pass.cpp \
+				src/commands/PrivMsg.cpp \
+				src/commands/Mode.cpp \
+				src/commands/Topic.cpp \
+				src/commands/Invite.cpp \
+				src/commands/Kick.cpp \
+				src/commands/Part.cpp \
+				src/commands/Names.cpp \
+				src/commands/List.cpp \
+				src/Commands.cpp \
+				../shared/Utils.cpp \
+				src/Replies.cpp
 
 
 #*------------------------------------------------------------------------------*
@@ -35,7 +52,7 @@ CXXFLAGS	:=	-Wall -Wextra -Werror -std=c++98 -g3 -MMD -MP -Iinclude -I../shared
 
 #*------------------------------------------------------------------------------*
 
-NAME		:=	ircbot
+NAME		:=	ircserv
 
 #*------------------------------------------------------------------------------*
 
