@@ -116,7 +116,7 @@ static std::string extractNickName(std::string str)
 
 // envoyer -1 sis ca correspond pas au meme nickname
 //  parametre -> client, rawMessage
-static size_t processPrefix(Client &client, std::string rawMessage)
+static int processPrefix(Client &client, std::string rawMessage)
 {
   if (rawMessage[0] != ':')
     return (0);
@@ -139,16 +139,15 @@ void CommandsHandler::processCommand(Client &client,
   std::string cmdStr;
   Commands *cmd;
   size_t pos;
-  size_t start;
+  int start;
   if (rawMessage.size() > 512)
     rawMessage = rawMessage.substr(0, 512);
   start = processPrefix(client, rawMessage);
   if (start < 0)
     return (client.appendBufferOut("Warning\nBad prefix\r\n"));
   rawMessage = rawMessage.substr(start);
-  std::cout << "rawMessage 1 [" << rawMessage << "]" << std::endl;
   pos = rawMessage.find(' ');
-  cmd = findCommand(rawMessage.substr(start, pos));
+  cmd = findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
   {
     client.appendBufferOut(Replies::ERR_UNKNOWNCOMMAND(
