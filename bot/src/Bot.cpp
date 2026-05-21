@@ -47,33 +47,27 @@ static std::string extractResponse(const std::string &json)
   size_t pos = json.find(key);
   if (pos == std::string::npos)
     return "";
-
   pos += key.length();
-
-  // skip jusqu'à la première quote ouvrante
   while (pos < json.size() && json[pos] != '"')
     pos++;
   if (pos == json.size())
     return "";
-
-  pos++; // après l’ouverture du guillemet
+  pos++;
   std::string out;
   bool escape = false;
-
   for (; pos < json.size(); ++pos)
   {
     char c = json[pos];
     if (escape)
     {
       if (c == 'n')
-        out += '\n';
+        out += ' ';
       else if (c == 't')
-        out += '\t';
+        out += ' ';
       else if (c == 'r')
-        out += '\r';
+        out += ' ';
       else if (c == '\\' || c == '"')
         out += c;
-      // on ignore les autres pour éviter erreurs
       escape = false;
     }
     else if (c == '\\')
@@ -82,7 +76,7 @@ static std::string extractResponse(const std::string &json)
     }
     else if (c == '"')
     {
-      break; // fin de la chaîne
+      break;
     }
     else
     {
@@ -98,11 +92,6 @@ void Bot::addMessageToMemory(const std::string &sender, const std::string &role,
   ChatMessage msg;
   msg.role = role;
   msg.content = content;
-
-  std::cout << " addMessage msg.role [" << msg.role << "]" << std::endl;
-  std::cout << " addMessage msg.content [" << msg.content << "]" << std::endl;
-  std::cout << "addMessage sender [" << sender << "]" << std::endl;
-
   _memory[sender].push_back(msg);
   while (_memory[sender].size() > this->_memorySizeMax)
     _memory[sender].pop_front();
@@ -148,13 +137,35 @@ std::string Bot::processUserInput(const std::string &sender,
   std::string rawResponse = exec(cmd);
   std::cout << "rawResponse : [" << rawResponse << "]" << std::endl;
   std::string botReply = extractResponse(rawResponse);
-  std::replace(botReply.begin(), botReply.end(), '\n', ' ');
-  std::replace(botReply.begin(), botReply.end(), '\r', ' ');
   std::cout << "botReply : [" << botReply << "]" << std::endl;
-
   if (!botReply.empty())
     addMessageToMemory(sender, "assistant", botReply);
   return (botReply);
+}
+
+std::string parseBotReply(std::string &reply, std::string sender)
+{
+    std::string ircReply = "";
+    size_t  max_len = 400;
+    size_t i = 0;
+    while (i < reply.length())
+    {
+      size_t chunk_size = max_len;
+      if ( i + chunk_size < reply.length())
+      {
+        size_t last_space = reply.rfind(' ',i + chunk_size);
+        if (last_space != std::string::npos && last_space > i)
+            chunk_size = last_space - i;
+      }
+      else
+        chunk_size = reply.length() - i;
+      std::string chunk = reply.substr(i,chunk_size);
+      ircReply += "PRIVMSG " + sender + " :" + chunk + "\r\n";
+      i += chunk_size;
+      while (i < reply.length() && reply[i] == ' ')
+        i++;
+    }
+      return (ircReply);
 }
 
 std::string Bot::talk(const std::string &rawMsg)
@@ -192,12 +203,10 @@ std::string Bot::talk(const std::string &rawMsg)
   if (!message.empty())
   {
     std::string reply = processUserInput(sender, message);
-    std::string ircReply = "PRIVMSG " + sender + " :" + reply + "\r\n";
-    std::cout << "reply : [" << ircReply << "]" << std::endl;
-    return (ircReply);
+    return (parseBotReply(reply,sender));
   }
-  else
-    return (message);
+    else
+      return (message);
 }
 
 Bot::~Bot() {}
