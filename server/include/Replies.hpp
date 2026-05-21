@@ -94,6 +94,10 @@ public:
   static const std::string BC_MODE(const std::string &sender,
                                    const std::string &channel,
                                    const std::string &modeString);
+  /* NICK ----------------------------------------------------------------*/
+  // BROADCAST
+  static const std::string BC_NICK(const std::string &sender,
+                                   const std::string &newnick);
   /* INVITE --------------------------------------------------------------*/
   // 336
   static const std::string RPL_INVITELIST(const std::string &nick,
@@ -120,7 +124,7 @@ public:
                                    const std::string &channel,
                                    const std::string &comment);
 
-  /* KICK  ----------------------------------------------------------------*/
+  /* PART  ----------------------------------------------------------------*/
   // BROADCAST
   static const std::string BC_PART(const std::string &sender,
                                    const std::string &channel,

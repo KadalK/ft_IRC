@@ -1,4 +1,5 @@
 #include "commands/Nick.hpp"
+#include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
@@ -38,20 +39,42 @@ void Nick::execute(Client &sender, ClientHandler &clH, ChannelHandler &,
   }
 
   Client *existing = clH.getClientByNickname(nick);
-
   if (existing)
   {
     sender.appendBufferOut(
         Replies::ERR_NICKNAMEINUSE(sender.getNickname(), nick));
     return;
   }
-  sender.setNickname(nick);
   if (sender.getPassBool() && sender.getUserBool())
   {
     if (sender.getNickBool() == false)
       sender.setAuth(true);
   }
-  sender.setNickBool(true);
+  if (!sender.getNickBool())
+    sender.setNickBool(true);
+  else
+  {
+    // ENVOIE A TOUS LES CLIENTS DU SERVER -> MEILLEUR POUR QUERY
+    std::map<int, Client *> clients = clH.getRegistery();
+    for (std::map<int, Client *>::iterator it = clients.begin();
+         it != clients.end(); it++)
+    {
+      it->second->appendBufferOut(
+          Replies::BC_NICK(sender.getFullName(), arg[0]));
+    }
+    // ENVOIE QUE AUX GENS QUI ONT DES SERVER EN COMMUN (DOIT FAIRE UN STD::SET)
+    // for (std::map<std::string, Channel *>::const_iterator it =
+    //          chH.getChannelList().begin();
+    //      it != chH.getChannelList().end(); ++it)
+    // {
+    //   if (it->second->isClientInChannel(sender))
+    //   {
+    //     it->second->broadcast(Replies::BC_NICK(sender.getFullName(), arg[0]),
+    //                           &sender, false);
+    //   }
+    // }
+  }
+  sender.setNickname(nick);
 }
 
 Nick::~Nick() {}

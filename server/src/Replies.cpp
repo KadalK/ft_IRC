@@ -284,6 +284,21 @@ const std::string Replies::ERR_PASSWDMISMATCH(const std::string &nick)
   return (out);
 }
 
+/* NICK --------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_NICK(const std::string &sender,
+                                   const std::string &newnick)
+{
+  std::string out = "";
+
+  out += sender;
+  out += " NICK ";
+  out += newnick;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* MODE --------------------------------------------------------------*/
 // 324
 const std::string Replies::RPL_CHANNELMODEIS(const std::string &nick,
@@ -448,7 +463,6 @@ const std::string Replies::BC_INVITE(const std::string &sender,
                                      const std::string &channel,
                                      const std::string &nick)
 {
-
   std::string out = "";
 
   out += sender;

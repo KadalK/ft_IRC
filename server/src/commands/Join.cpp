@@ -40,8 +40,6 @@ void Join::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
     else if ((*it)[0] == '#' && (*it)[1])
     {
       Channel *chToJoin = chH.getChannelByName(*it);
-      std::cout << *it << std::endl;
-      std::cout << chToJoin << std::endl;
       if (chToJoin == NULL)
       {
         chToJoin = chH.createChannel(*it);
