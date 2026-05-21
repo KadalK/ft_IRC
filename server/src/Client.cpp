@@ -69,21 +69,9 @@ void Client::appendBuffer(std::string const &temp) { this->_bufferIn += temp; }
 
 bool Client::isRegistered()
 {
-  if (this->_hasPassword == false)
-  {
-    this->appendBufferOut("Missing Password\n");
+  if (this->_hasPassword == false || this->_hasNickname == false ||
+      this->_hasUsername == false)
     return false;
-  }
-  if (this->_hasNickname == false)
-  {
-    this->appendBufferOut("Missing Nickname\n");
-    return false;
-  }
-  if (this->_hasUsername == false)
-  {
-    this->appendBufferOut("Missing username\n");
-    return false;
-  }
   this->_isAuth = true;
   return true;
 }

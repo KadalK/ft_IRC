@@ -39,9 +39,15 @@ public:
   static const std::string RPL_CREATIONTIME(const std::string &nick,
                                             const std::string &channel,
                                             const std::string &creationTime);
-  // 482
-  static const std::string ERR_CHANNOPRIVSNEEDED(const std::string &nick,
-                                                 const std::string &channel);
+  // 431
+  static const std::string ERR_NONICKGIVEN(const std::string &nick);
+
+  // 432
+  static const std::string ERR_ERRONEUSNICKNAME(const std::string &nick,
+                                                const std::string &new_nick);
+  // 433
+  static const std::string ERR_NICKNAMEINUSE(const std::string &nick,
+                                             const std::string &new_nick);
   // 441
   static const std::string ERR_USERNOTINCHANNEL(const std::string &nick,
                                                 const std::string &input,
@@ -49,23 +55,21 @@ public:
   // 442
   static const std::string ERR_NOTONCHANNEL(const std::string &nick,
                                             const std::string &channel);
+  // 451
+  static const std::string ERR_NOTREGISTERED(const std::string &nick);
+
   // 461
   static const std::string ERR_NEEDMOREPARAMS(const std::string &nick,
                                               const std::string &command);
-
   // 462
   static const std::string ERR_ALREADYREGISTERED(const std::string &nick);
 
-  // 431
-  static const std::string ERR_NONICKGIVEN(const std::string &nick);
+  // 482
+  static const std::string ERR_CHANNOPRIVSNEEDED(const std::string &nick,
+                                                 const std::string &channel);
 
-  // 432
-  static const std::string ERR_ERRONEUSNICKNAME(const std::string &nick,
-                                                const std::string &new_nick);
-
-  // 433
-  static const std::string ERR_NICKNAMEINUSE(const std::string &nick,
-                                             const std::string &new_nick);
+  // FT01 BAD PREFIX
+  static const std::string ERR_BADPREFIX(const std::string &nick);
 
   /* PASS ----------------------------------------------------------------*/
   // 324
@@ -76,16 +80,13 @@ public:
   static const std::string RPL_CHANNELMODEIS(const std::string &nick,
                                              const std::string &channel,
                                              const std::string &modeString);
-  // 502
-  static const std::string ERR_USERDONTMATCH(const std::string &nick);
-
   // 467
   static const std::string ERR_KEYSET(const std::string &nick,
                                       const std::string &channel);
-
   // 472
   static const std::string ERR_UNKNOWNMODE(const std::string &nick, char c);
-
+  // 502
+  static const std::string ERR_USERDONTMATCH(const std::string &nick);
   // 525
   static const std::string ERR_INVALIDKEY(const std::string &nick,
                                           const std::string &channel);
@@ -140,43 +141,35 @@ public:
                                     const std::string &comment);
 
   /* PRIVMSG --------------------------------------------------------------*/
+  // 301
+  static const std::string RPL_AWAY(const std::string &nick);
+  // 404
+  static const std::string ERR_CANNOTSENDTOCHAN(const std::string &server,
+                                                const std::string &channel);
+  // 407
+  static const std::string ERR_TOOMANYTARGETS(const std::string &target,
+                                              const std::string &targetsCount);
   // 411
   static const std::string ERR_NORECIPIENT(const std::string &nick,
                                            const std::string &command);
   // 412
   static const std::string ERR_NOTEXTTOSEND(const std::string &nick);
-  // 404
-  static const std::string ERR_CANNOTSENDTOCHAN(const std::string &server,
-                                                const std::string &channel);
-  // 414
-  //  std::string ERR_WILDTOPLEVEL();
-  // 407
-  static const std::string ERR_TOOMANYTARGETS(const std::string &target,
-                                              const std::string &targetsCount);
-  // 301
-  static const std::string RPL_AWAY(const std::string &nick);
-
   // BROADCAST
   static const std::string BC_PRIVMSG(const std::string &sender,
                                       const std::string &target,
                                       const std::string &msg);
 
   /* JOIN --------------------------------------------------------------*/
-  // 475
-  static const std::string ERR_BADCHANNELKEY(const std::string &nick,
-                                             const std::string &channel);
 
   // 471
   static const std::string ERR_CHANNELISFULL(const std::string &nick,
                                              const std::string &channel);
-
   // 473
   static const std::string ERR_INVITEONLYCHAN(const std::string &nick,
                                               const std::string &channel);
-
-  static const std::string RPL_JOIN(const std::string &nick,
-                                    const std::string &channel);
-
+  // 475
+  static const std::string ERR_BADCHANNELKEY(const std::string &nick,
+                                             const std::string &channel);
   // BROADCAST
   static const std::string BC_JOIN(const std::string &sender,
                                    const std::string &channel);

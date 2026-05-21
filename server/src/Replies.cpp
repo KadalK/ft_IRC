@@ -207,6 +207,18 @@ const std::string Replies::ERR_NOTONCHANNEL(const std::string &nick,
   return (out);
 }
 
+// 451
+const std::string Replies::ERR_NOTREGISTERED(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 451 ";
+  out += nick;
+  out += " :You have not registered\r\n";
+
+  return (out);
+}
+
 // 461
 const std::string Replies::ERR_NEEDMOREPARAMS(const std::string &nick,
                                               const std::string &command)
@@ -248,6 +260,19 @@ const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &nick,
 
   return (out);
 }
+
+// FT01 BAD_PREFIX
+const std::string Replies::ERR_BADPREFIX(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":FT01 ";
+  out += nick;
+  out += " :Unvalid prefix\r\n";
+
+  return (out);
+}
+
 /* PASS --------------------------------------------------------------*/
 // 464
 const std::string Replies::ERR_PASSWDMISMATCH(const std::string &nick)
@@ -529,14 +554,6 @@ const std::string Replies::BC_TOPIC(const std::string &sender,
 }
 
 /* PRIVMSG --------------------------------------------------------------*/
-// 404
-// const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
-//                                                 const std::string &channel)
-// {
-//   return (":" + ircserv + " 404 " + channel + " :Cannot send to
-//   channel\r\n");
-// }
-
 // 407
 const std::string Replies::ERR_TOOMANYTARGETS(const std::string &target,
                                               const std::string &targetsCount)
@@ -578,9 +595,6 @@ const std::string Replies::ERR_NOTEXTTOSEND(const std::string &nick)
 
   return (out);
 }
-
-// 414
-//  std::string Replies::ERR_WILDTOPLEVEL(){}
 
 // BROADCAST
 const std::string Replies::BC_PRIVMSG(const std::string &sender,
