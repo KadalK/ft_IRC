@@ -1,5 +1,4 @@
 #include "Replies.hpp"
-#include <iostream>
 #include <string>
 
 /* WELCOME SUCCEFULL REGISTRATION
@@ -135,9 +134,8 @@ const std::string Replies::ERR_NOSUCHANNEL(const std::string &nick,
 // 431
 const std::string Replies::ERR_NONICKGIVEN(const std::string &nick)
 {
-  std::string out = "";
+  std::string out = ":ircserv 431 ";
 
-  out += ":ircserv 431 ";
   out += nick;
   out += " :No nickname given\r\n";
 
@@ -152,7 +150,7 @@ const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick,
 
   out += ":ircserv 432 ";
   out += nick;
-  out = +" ";
+  out += " ";
   out += newnick;
   out += " :Erroneous nickname\r\n";
 
@@ -167,7 +165,7 @@ const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick,
 
   out += ":ircserv 433 ";
   out += nick;
-  out = +" ";
+  out += " ";
   out += newnick;
   out += " :Nickname is already in use\r\n";
 

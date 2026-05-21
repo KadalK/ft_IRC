@@ -40,10 +40,10 @@ void Nick::execute(Client &sender, ClientHandler &clH, ChannelHandler &,
 
   Client *existing = clH.getClientByNickname(nick);
 
-  if (existing && existing != &sender)
+  if (existing)
   {
     sender.appendBufferOut(
-        Replies::ERR_ERRONEUSNICKNAME(sender.getNickname(), nick));
+        Replies::ERR_NICKNAMEINUSE(sender.getNickname(), nick));
     return;
   }
   sender.setNickname(nick);
