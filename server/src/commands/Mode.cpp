@@ -61,11 +61,8 @@ static size_t getFlagType(char c)
   }
 }
 
-#include <iostream>
-
 static void listModes(Channel &channel, Client &sender)
 {
-  std::cout << "getTime return : " << channel.getTime() << std::endl;
   std::string modeString = channel.getModeString();
   sender.appendBufferOut(Replies::RPL_CHANNELMODEIS(
       sender.getNickname(), channel.getName(), modeString));
