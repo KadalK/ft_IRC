@@ -118,10 +118,12 @@ void Server::eventToServer(int fd)
       client->setBuffer(client->getBuffer().erase(0, pos + 2));
       this->_commandsHandler.processCommand(*client, this->_clientHandler,
                                             this->_channelHandler, command);
-      std::cout << "received command : [" << command << "]" << std::endl
-                << "sender's fd      : [" << fd << "]" << std::endl
-                << "lenght           : [" << command.length() << "]"
-                << std::endl;
+      std::cout
+          << "received command : [" << command << "]" << std::endl
+          << "sender's fd      : [" << fd << "]" << std::endl
+          << "lenght           : [" << command.length() << "]" << std::endl
+          << "------------------------------------------------------------"
+          << std::endl;
     }
   }
 }
@@ -188,6 +190,9 @@ void Server::run()
           this->eventToServer(clientSocketFd);
         if (flags & EPOLLOUT)
           this->eventToClient(clientSocketFd);
+        Client* client = this->_clientHandler.getClientByFd(clientSocketFd);
+        if (client != NULL && client->getToDisconnect() == true)
+          this->disconnectClient(clientSocketFd);
       }
     }
     std::vector<int> vec = this->_clientHandler.getFdWithData();

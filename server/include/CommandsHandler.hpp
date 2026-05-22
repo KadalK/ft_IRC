@@ -12,6 +12,7 @@ class Nick;
 class Pass;
 class User;
 class PrivMsg;
+class Quit;
 class Mode;
 class Topic;
 class Invite;
@@ -19,6 +20,8 @@ class Kick;
 class Part;
 class Names;
 class List;
+class Who;
+class Away;
 
 class CommandsHandler
 {
@@ -34,6 +37,7 @@ private:
   Nick *_nick;
   User *_user;
   PrivMsg *_pvmsg;
+  Quit *_quit;
   Mode *_mode;
   Topic *_topic;
   Invite *_invite;
@@ -41,6 +45,8 @@ private:
   Names *_names;
   List *_list;
   Part *_part;
+  Who *_who;
+  Away *_away;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

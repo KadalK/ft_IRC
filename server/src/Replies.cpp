@@ -102,6 +102,8 @@ const std::string Replies::RPL_CREATIONTIME(const std::string &nick,
   return (out);
 }
 
+
+
 // 401
 const std::string Replies::ERR_NOSUCHNICK(const std::string &nick,
                                           const std::string &input)
@@ -392,6 +394,111 @@ const std::string Replies::BC_MODE(const std::string &sender,
 
   return (out);
 }
+
+/* WHO  --------------------------------------------------------------*/
+  // 352
+  const std::string Replies::RPL_WHOREPLY(const std::string &nick,const std::string &fullInfo)
+  {
+    std::string out = "";
+
+    out += ":ircserv 352 ";
+    out += nick;
+    out += " ";
+    out += fullInfo;
+    out += "\r\n";
+
+    return (out);
+  }
+
+  // 315
+  const std::string Replies::RPL_ENDOFWHO(const std::string &nick,const std::string &name)
+  {
+    std::string out = "";
+
+    out += ":ircserv 315 ";
+    out += nick + " ";
+    out += name;
+    out += " :End of WHO list\r\n";
+
+    return (out);
+
+  }
+
+/* AWAY  --------------------------------------------------------------*/
+// 306
+const std::string Replies::RPL_NOWAWAY(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 306 ";
+  out += nick;
+  out += " :You have been marked as being away";
+  out += "\r\n";
+
+  return (out);
+}
+
+// 305
+const std::string Replies::BC_NOWAWAY(const std::string &nick, const std::string &awayMsg)
+{
+  std::string out = "";
+
+  out += ":ircserv 306 ";
+  out += nick;
+  out += " :";
+  out += nick;
+  out += " has been marked as being away because ";
+  out += awayMsg;
+  out += "\r\n";
+
+  return (out);
+}
+
+
+// 305
+const std::string Replies::BC_UNAWAY(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 305 ";
+  out += nick;
+  out += " :";
+  out += nick;
+  out += " are no longer marked as being away";
+  out += "\r\n";
+
+  return (out);
+}
+
+// 305
+const std::string Replies::RPL_UNAWAY(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 305 ";
+  out += nick;
+  out += " :You are no longer marked as being away";
+  out += "\r\n";
+
+  return (out);
+}
+
+// 301
+const std::string Replies::RPL_AWAY(const std::string &nick, const std::string &sender,const std::string &awayMsg)
+{
+  std::string out = "";
+
+  out += ":ircserv 301 ";
+  out += sender;
+  out += " ";
+  out += nick;
+  out += " :";
+  out += awayMsg;
+  out += "\r\n";
+
+  return (out);
+}
+
 /* INVITE  --------------------------------------------------------------*/
 // 336
 const std::string Replies::RPL_INVITELIST(const std::string &nick,

@@ -5,7 +5,6 @@
 #include "ClientHandler.hpp"
 #include "CommandsHandler.hpp"
 #include "Replies.hpp"
-#include <iostream>
 
 Kick::Kick() {}
 
@@ -58,6 +57,8 @@ void Kick::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
             sender.getNickname(), *tIt, channel->getName()));
         continue;
       }
+      if (clientKicked->getNickname() == sender.getNickname())
+        return;
       if (arg.size() >= 3)
         comment = arg[2];
       else
@@ -107,6 +108,8 @@ void Kick::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
             Replies::ERR_USERNOTINCHANNEL(sender.getNickname(), *tIt, *cIt));
         continue;
       }
+      if (clientKicked->getNickname() == sender.getNickname())
+        continue;
       if (arg.size() >= 3)
         comment = arg[2];
       else

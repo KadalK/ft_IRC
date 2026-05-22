@@ -3,6 +3,7 @@
 #include "Client.hpp"
 #include "ClientHandler.hpp"
 #include "Replies.hpp"
+#include "commands/Away.hpp"
 #include "commands/Invite.hpp"
 #include "commands/Join.hpp"
 #include "commands/Kick.hpp"
@@ -13,24 +14,27 @@
 #include "commands/Part.hpp"
 #include "commands/Pass.hpp"
 #include "commands/PrivMsg.hpp"
+#include "commands/Quit.hpp"
 #include "commands/Topic.hpp"
 #include "commands/User.hpp"
-#include <iostream>
+#include "commands/Who.hpp"
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
                                  ChannelHandler &channelHandler,
                                  std::string passServ)
     : _clientHandler(clientHandler), _channelHandler(channelHandler),
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
-      _user(new User), _pvmsg(new PrivMsg), _mode(new Mode), _topic(new Topic),
-      _invite(new Invite), _kick(new Kick), _names(new Names), _list(new List),
-      _part(new Part)
+      _user(new User), _pvmsg(new PrivMsg), _quit(new Quit), _mode(new Mode),
+      _topic(new Topic), _invite(new Invite), _kick(new Kick),
+      _names(new Names), _list(new List), _part(new Part), _who(new Who),
+      _away(new Away)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
   this->_commands["NICK"] = _nick;
   this->_commands["USER"] = _user;
   this->_commands["PRIVMSG"] = _pvmsg;
+  this->_commands["QUIT"] = _quit;
   this->_commands["MODE"] = _mode;
   this->_commands["TOPIC"] = _topic;
   this->_commands["INVITE"] = _invite;
@@ -38,6 +42,8 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
   this->_commands["NAMES"] = _names;
   this->_commands["LIST"] = _list;
   this->_commands["PART"] = _part;
+  this->_commands["WHO"] = _who;
+  this->_commands["AWAY"] = _away;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -47,6 +53,7 @@ CommandsHandler::~CommandsHandler()
   delete _nick;
   delete _user;
   delete _pvmsg;
+  delete _quit;
   delete _mode;
   delete _topic;
   delete _invite;
@@ -54,6 +61,8 @@ CommandsHandler::~CommandsHandler()
   delete _names;
   delete _list;
   delete _part;
+  delete _who;
+  delete _away;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)
@@ -158,10 +167,20 @@ void CommandsHandler::processCommand(Client &client,
   if (RegisteringCmd(cmdStr, client) == false && client.isRegistered() == false)
     return (client.appendBufferOut(
         Replies::ERR_NOTREGISTERED(client.getNickname())));
+  if (client.getAwayBool() == true && cmd != this->_away && this->_who)
+  {
+    client.setAwayBool(false);
+    std::map<int, Client *> clients = clientHandler.getRegistery();
+    for (std::map<int, Client *>::iterator it = clients.begin();
+         it != clients.end(); it++)
+    {
+      if (it->second == &client)
+        client.appendBufferOut(Replies::RPL_UNAWAY(client.getNickname()));
+      else
+        it->second->appendBufferOut(Replies::BC_UNAWAY(client.getNickname()));
+    }
+  }
   if (pos != std::string::npos)
     tokens = tokenizeCommand(rawMessage.substr(pos));
-  for (std::vector<std::string>::iterator it = tokens.begin();
-       it != tokens.end(); it++)                 // debug test
-    std::cout << "[" << *it << "]" << std::endl; // debug test
   cmd->execute(client, clientHandler, channelHandler, tokens);
 }
