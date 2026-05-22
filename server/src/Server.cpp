@@ -190,6 +190,9 @@ void Server::run()
           this->eventToServer(clientSocketFd);
         if (flags & EPOLLOUT)
           this->eventToClient(clientSocketFd);
+        Client* client = this->_clientHandler.getClientByFd(clientSocketFd);
+        if (client != NULL && client->getToDisconnect() == true)
+          this->disconnectClient(clientSocketFd);
       }
     }
     std::vector<int> vec = this->_clientHandler.getFdWithData();
