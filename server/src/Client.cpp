@@ -3,13 +3,19 @@
 
 Client::Client()
     : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),
-      _isAuth(false),_isAway(false), _hasPassword(false), _hasNickname(false),
-      _hasUsername(false)
+      _isAuth(false), _isAway(false), _hasPassword(false), _hasNickname(false),
+      _hasUsername(false), _toDisconnect(false)
 {
 }
 
+bool Client::getToDisconnect() const { return (this->_toDisconnect); }
+
+void Client::setToDisconnect(bool state) { this->_toDisconnect = state; }
+
 int Client::getFd() const { return (this->_fd); }
+
 std::string Client::getBuffer() const { return (this->_bufferIn); }
+
 std::string Client::getBufferOut() const { return (this->_bufferOut); }
 
 bool Client::getAuth() const { return (this->_isAuth); }
@@ -42,12 +48,12 @@ std::string Client::getFullName() const
           this->getHostname());
 }
 
-std::string Client::getFullInfo(std::string channel,bool isOpChan)
+std::string Client::getFullInfo(std::string channel, bool isOpChan)
 {
   std::string flags = (this->getAwayBool() == true) ? "G" : "H";
   flags += (isOpChan == true) ? "@" : "";
-  return ( channel + " " + this->getUsername() + " " +
-          this->getHostname() + " ircserv " + this->getNickname() + " " + flags + " :0 *");
+  return (channel + " " + this->getUsername() + " " + this->getHostname() +
+          " ircserv " + this->getNickname() + " " + flags + " :0 *");
 }
 
 void Client::setHostname(std::string hostname) { this->_hostname = hostname; }

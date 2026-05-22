@@ -19,6 +19,7 @@ private:
   bool _hasPassword;
   bool _hasNickname;
   bool _hasUsername;
+  bool _toDisconnect;
 
 public:
   Client();
@@ -41,9 +42,10 @@ public:
   bool getAwayBool() const;
   void setAwayBool(bool);
 
-  void setAwayMsg (std::string awayMsg);
-  std::string getAwayMsg () const;
+  std::string getAwayMsg() const;
+  void setAwayMsg(std::string awayMsg);
 
+  std::string getHostname() const;
   void setHostname(std::string hostname);
 
   std::string getNickname() const;
@@ -55,19 +57,20 @@ public:
   std::string getTimeServ() const;
   void setTimeServ(std::string time);
 
-  std::string getHostname() const;
+  bool getToDisconnect() const;
+  void setToDisconnect(bool state);
 
   std::string getFullName() const;
 
-  std::string getBuffer() const;
   void setBuffer(std::string buffer);
+  std::string getBuffer() const;
 
   void setBufferOut(std::string buffer);
   std::string getBufferOut() const;
 
   void appendBufferOut(std::string const &temp);
 
-  std::string getFullInfo(std::string channel,bool isOpChan);
+  std::string getFullInfo(std::string channel, bool isOpChan);
 
   void appendBuffer(std::string const &temp);
   bool isRegistered();
