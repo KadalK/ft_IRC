@@ -49,8 +49,11 @@ static bool parseArgs(char *arg1, char *arg2)
   return (true);
 }
 
-int main(int, char **argv)
+int main(int argc, char **argv)
 {
+  if (argc != 3)
+      return -1;
+
   Bot bot;
   if (!parseArgs(argv[1], argv[2]))
     return (1);
