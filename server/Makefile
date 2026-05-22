@@ -28,6 +28,7 @@ SRCS		:= \
 				src/commands/Nick.cpp \
 				src/commands/Pass.cpp \
 				src/commands/PrivMsg.cpp \
+				src/commands/Quit.cpp \
 				src/commands/Mode.cpp \
 				src/commands/Topic.cpp \
 				src/commands/Invite.cpp \
