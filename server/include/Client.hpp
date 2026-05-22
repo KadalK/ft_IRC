@@ -60,9 +60,6 @@ public:
   std::string getTimeServ() const;
   void setTimeServ(std::string time);
 
-  bool getToDisconnect() const;
-  void setToDisconnect(bool state);
-
   std::string getFullName() const;
 
   void setBuffer(std::string buffer);
