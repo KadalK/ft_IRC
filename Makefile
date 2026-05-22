@@ -74,7 +74,7 @@ run-bot-v		:	bot
 					@echo "Waiting 10 seconds for Ollama to initialize..."
 					@sleep 10
 					@echo "Checking/Creating the Monique model..."
-					@export PATH=$(OLLAMA_PATH):$$PATH && export OLLAMA_MODELS=$(OLLAMA_MODELS_DIR) && ollama create monique -f $(BOT_DIR)/Modelfile
+					@export PATH=$(OLLAMA_PATH):$$PATH && export OLLAMA_MODELS=$(OLLAMA_MODELS_DIR) && ollama create monique -f $(BOT_DIR)/Modelfile > /dev/null 2>&1
 					@echo "Starting the IRC bot and IRC serv in the background..."
 					@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=valgrind_serv.log ./ircserv $(ARG1) $(ARG2) > serv.log 2>&1 &
 					@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=valgrind_bot.log ./ircbot $(ARG1) $(ARG2) > bot.log 2>&1 &
