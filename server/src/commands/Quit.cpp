@@ -10,6 +10,7 @@ void Quit::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                    const std::vector<std::string> &arg)
 {
 
+  sender.appendBufferOut("ERROR :Connection lost\r\n");
   std::string msg = "";
 
   if (!arg.empty())
