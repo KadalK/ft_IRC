@@ -36,14 +36,18 @@ SRCS		:= \
 				src/commands/Names.cpp \
 				src/commands/List.cpp \
 				src/Commands.cpp \
-				../shared/Utils.cpp \
 				src/Replies.cpp
 
 
+SHARED_SRCS := \
+						../shared/Utils.cpp
 #*------------------------------------------------------------------------------*
 
-OBJS_D		:=	objs/
-OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o)
+OBJS_D		:=	.objs/
+SHARED_OBJS_D := .objs/shared/
+
+OBJS		:=	$(SRCS:%.cpp=$(OBJS_D)%.o) \
+						$(SHARED_SRCS:../shared/%.cpp=$(SHARED_OBJS_D)%.o)
 
 #*------------------------------------------------------------------------------*
 
@@ -70,6 +74,10 @@ $(OBJS_D)%.o:	%.cpp
 				@echo "$(YELLOW)Compiling $<...$(NC)"
 				@$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(SHARED_OBJS_D)%.o:	../shared/%.cpp
+				@mkdir -p $(dir $@)
+				@echo "$(YELLOW)Compiling $<...$(NC)"
+				@$(CXX) $(CXXFLAGS) -c $< -o $@
 #*------------------------------------------------------------------------------*
 
 clean		:
