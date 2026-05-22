@@ -11,7 +11,7 @@ void ClientHandler::addClient(int fd, std::string hostname, std::string time)
   newClient->setHostname(hostname);
   newClient->setTimeServ(time);
   this->_registry[fd] = newClient;
-  std::cout << "The Client is connected , fd : " << fd << std::endl;
+  std::cout << "Client connected  : " << " (FD: " << fd << ")" << std::endl;
 }
 
 void ClientHandler::removeClient(int fd)

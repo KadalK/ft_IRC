@@ -53,7 +53,7 @@ run-v : all
 stop	:
 					@echo "Shutting down IRC server..."
 					@-pkill -f "[i]rcserv"
-					@-pkill -f "valgrind"
+					# @-pkill -f "valgrind"
 					@echo "Everything has been properly shut down."
 
 run-bot		:	bot

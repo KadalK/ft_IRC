@@ -160,8 +160,5 @@ void CommandsHandler::processCommand(Client &client,
         Replies::ERR_NOTREGISTERED(client.getNickname())));
   if (pos != std::string::npos)
     tokens = tokenizeCommand(rawMessage.substr(pos));
-  for (std::vector<std::string>::iterator it = tokens.begin();
-       it != tokens.end(); it++)                 // debug test
-    std::cout << "[" << *it << "]" << std::endl; // debug test
   cmd->execute(client, clientHandler, channelHandler, tokens);
 }
