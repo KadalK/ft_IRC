@@ -10,26 +10,36 @@
 Quit::Quit(){}
 
 
-void Quit::execute(Client &sender, ClientHandler &, ChannelHandler &chH, const std::vector<std::string> &arg){
+void Quit::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH, const std::vector<std::string> &arg){
 
 	std::string msg = "";
 
-	if (arg.size() > 1)
+	if (arg.size() > 2)
 	{
-		msg = arg[2];
+		msg = arg[1];
 	}
 
-	std::map<std::string, Channel *> chanList =  chH.getChannelList();
 
-	for (std::map<std::string ,Channel *>::iterator it = chanList.begin(); it != chanList.end(); ++it)
+	std::map<int, Client *> clients = clH.getRegistery();
+	std::map<std::string, Channel *> listChan = chH.getChannelList();
+
+
+	for (std::map<int, Client *>::iterator itAC = clients.begin();
+			   itAC != clients.end(); itAC++)
 	{
-		if (it->second->isClientInChannel(sender) == true)
+		for (std::map<std::string, Channel *>::iterator itACh = listChan.begin(); itACh != listChan.end(); ++itACh)
 		{
-			sender.setBufferOut(sender.getNickname() + " QUIT :" + msg);
+			if (itACh->second->isClientInChannel(sender) == true)
+			{
+				if (itACh->second->isClientInChannel(*itAC->second) == true)
+				{
+					itAC->second->appendBufferOut(sender.getNickname() + " QUIT :" + msg + "\r\n");
+				}
+			}
 		}
 	}
+	std::cout << "[DEBUG]:  " << sender.getToDisconnect() << std::endl;
+	sender.setToDisconnect(true);
 }
 
-Quit::~Quit(){
-
-}
+Quit::~Quit() {}

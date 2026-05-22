@@ -12,6 +12,7 @@ class Nick;
 class Pass;
 class User;
 class PrivMsg;
+class Quit;
 class Mode;
 class Topic;
 class Invite;
@@ -36,6 +37,7 @@ private:
   Nick *_nick;
   User *_user;
   PrivMsg *_pvmsg;
+  Quit *_quit;
   Mode *_mode;
   Topic *_topic;
   Invite *_invite;

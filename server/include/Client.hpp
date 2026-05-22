@@ -27,6 +27,9 @@ public:
   int getFd() const;
   void setFd(int);
 
+  bool getToDisconnect() const;
+  void setToDisconnect(bool);
+
   bool getUserBool() const;
   void setUserBool(bool);
 
