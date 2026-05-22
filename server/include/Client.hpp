@@ -19,12 +19,16 @@ private:
   bool _hasPassword;
   bool _hasNickname;
   bool _hasUsername;
+  bool _toDisconnect;
 
 public:
   Client();
 
   int getFd() const;
   void setFd(int);
+
+  bool getToDisconnect() const;
+  void setToDisconnect(bool);
 
   bool getUserBool() const;
   void setUserBool(bool);

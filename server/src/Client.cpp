@@ -4,8 +4,16 @@
 Client::Client()
     : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),
       _isAuth(false),_isAway(false), _hasPassword(false), _hasNickname(false),
-      _hasUsername(false)
+      _hasUsername(false), _toDisconnect(false)
 {
+}
+
+bool Client::getToDisconnect() const{
+  return(this->_toDisconnect);
+}
+
+void Client::setToDisconnect(bool state){
+  this->_toDisconnect = state;
 }
 
 int Client::getFd() const { return (this->_fd); }
