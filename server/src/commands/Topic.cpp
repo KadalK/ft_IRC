@@ -2,8 +2,6 @@
 #include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Topic::Topic() {}
@@ -46,17 +44,14 @@ void Topic::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
     return (sender.appendBufferOut(
         Replies::ERR_CHANNOPRIVSNEEDED(sender.getNickname(), ChanName)));
   }
-  else
+  if (arg.size() >= 2)
   {
-    if (arg.size() >= 2)
-    {
-      std::string topic = arg[1];
-      channel->setTopic(topic);
-      channel->setTopicBool(true);
-      channel->broadcast(Replies::BC_TOPIC(sender.getFullName(), ChanName,
-                                           channel->getTopic()),
-                         &sender, false);
-    }
+    std::string topic = arg[1];
+    channel->setTopic(topic);
+    channel->setTopicBool(true);
+    channel->broadcast(Replies::BC_TOPIC(sender.getFullName(), ChanName,
+                                         channel->getTopic()),
+                       &sender, false);
   }
 }
 

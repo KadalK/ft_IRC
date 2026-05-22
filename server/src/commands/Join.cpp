@@ -40,8 +40,6 @@ void Join::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
     else if ((*it)[0] == '#' && (*it)[1])
     {
       Channel *chToJoin = chH.getChannelByName(*it);
-      std::cout << *it << std::endl;
-      std::cout << chToJoin << std::endl;
       if (chToJoin == NULL)
       {
         chToJoin = chH.createChannel(*it);
@@ -52,12 +50,7 @@ void Join::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
       {
         chToJoin->addClient(&sender);
         chToJoin->replyJoinChannel(&sender);
-        // sender.appendBufferOut("Joined channel connard\n");
-        // std::cout << "Joined channel " << chToJoin->getName() << std::endl;
       }
-      // Suppose to send confirmation message + all mode to sender that
-      // joined.
-      // + msg to all channel member to notify newcomer
     }
   }
 }

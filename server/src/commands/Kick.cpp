@@ -67,7 +67,6 @@ void Kick::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
                                           channel->getName(), comment),
                          &sender, false);
       channel->removeClient(clientKicked);
-      std::cout << channel->getClientInChan() << std::endl;
     }
     return;
   }

@@ -1,5 +1,4 @@
 #include "Replies.hpp"
-#include <iostream>
 #include <string>
 
 /* WELCOME SUCCEFULL REGISTRATION
@@ -137,9 +136,8 @@ const std::string Replies::ERR_NOSUCHANNEL(const std::string &nick,
 // 431
 const std::string Replies::ERR_NONICKGIVEN(const std::string &nick)
 {
-  std::string out = "";
+  std::string out = ":ircserv 431 ";
 
-  out += ":ircserv 431 ";
   out += nick;
   out += " :No nickname given\r\n";
 
@@ -154,7 +152,7 @@ const std::string Replies::ERR_ERRONEUSNICKNAME(const std::string &nick,
 
   out += ":ircserv 432 ";
   out += nick;
-  out = +" ";
+  out += " ";
   out += newnick;
   out += " :Erroneous nickname\r\n";
 
@@ -169,7 +167,7 @@ const std::string Replies::ERR_NICKNAMEINUSE(const std::string &nick,
 
   out += ":ircserv 433 ";
   out += nick;
-  out = +" ";
+  out += " ";
   out += newnick;
   out += " :Nickname is already in use\r\n";
 
@@ -205,6 +203,18 @@ const std::string Replies::ERR_NOTONCHANNEL(const std::string &nick,
   out += " ";
   out += channel;
   out += " :You're not on that channel\r\n";
+
+  return (out);
+}
+
+// 451
+const std::string Replies::ERR_NOTREGISTERED(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":ircserv 451 ";
+  out += nick;
+  out += " :You have not registered\r\n";
 
   return (out);
 }
@@ -250,6 +260,19 @@ const std::string Replies::ERR_CHANNOPRIVSNEEDED(const std::string &nick,
 
   return (out);
 }
+
+// FT01 BAD_PREFIX
+const std::string Replies::ERR_BADPREFIX(const std::string &nick)
+{
+  std::string out = "";
+
+  out += ":FT01 ";
+  out += nick;
+  out += " :Unvalid prefix\r\n";
+
+  return (out);
+}
+
 /* PASS --------------------------------------------------------------*/
 // 464
 const std::string Replies::ERR_PASSWDMISMATCH(const std::string &nick)
@@ -259,6 +282,21 @@ const std::string Replies::ERR_PASSWDMISMATCH(const std::string &nick)
   out += ":ircserv 464 ";
   out += nick;
   out += " :Password incorrect\r\n";
+
+  return (out);
+}
+
+/* NICK --------------------------------------------------------------*/
+// BROADCAST
+const std::string Replies::BC_NICK(const std::string &sender,
+                                   const std::string &newnick)
+{
+  std::string out = "";
+
+  out += sender;
+  out += " NICK ";
+  out += newnick;
+  out += "\r\n";
 
   return (out);
 }
@@ -471,7 +509,6 @@ const std::string Replies::BC_INVITE(const std::string &sender,
                                      const std::string &channel,
                                      const std::string &nick)
 {
-
   std::string out = "";
 
   out += sender;
@@ -575,14 +612,6 @@ const std::string Replies::BC_TOPIC(const std::string &sender,
 }
 
 /* PRIVMSG --------------------------------------------------------------*/
-// 404
-// const std::string Replies::ERR_CANNOTSENDTOCHAN(const std::string &ircserv,
-//                                                 const std::string &channel)
-// {
-//   return (":" + ircserv + " 404 " + channel + " :Cannot send to
-//   channel\r\n");
-// }
-
 // 407
 const std::string Replies::ERR_TOOMANYTARGETS(const std::string &target,
                                               const std::string &targetsCount)
@@ -624,9 +653,6 @@ const std::string Replies::ERR_NOTEXTTOSEND(const std::string &nick)
 
   return (out);
 }
-
-// 414
-//  std::string Replies::ERR_WILDTOPLEVEL(){}
 
 // BROADCAST
 const std::string Replies::BC_PRIVMSG(const std::string &sender,

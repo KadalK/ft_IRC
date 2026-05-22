@@ -17,7 +17,6 @@ public:
   ChannelHandler();
 
   Channel *getChannelByName(const std::string &name);
-  Channel *getChannelName(Channel *channel);
   const std::map<std::string, Channel *> &getChannelList();
 
   void deleteChannel(std::string name);

@@ -1,5 +1,7 @@
 #include "Server.hpp"
+#include "Channel.hpp"
 #include "Client.hpp"
+#include "Replies.hpp"
 #include "SystemException.hpp"
 #include <iostream>
 
@@ -73,6 +75,21 @@ void Server::disconnectClient(int fd)
   close(fd);
 }
 
+static void announcePart(Client &sender, ChannelHandler &chH)
+{
+  for (std::map<std::string, Channel *>::const_iterator it =
+           chH.getChannelList().begin();
+       it != chH.getChannelList().end(); ++it)
+  {
+    if (it->second->isClientInChannel(sender))
+    {
+      it->second->broadcast(
+          Replies::BC_PART(sender.getFullName(), it->second->getName(), ""),
+          &sender, false);
+    }
+  }
+}
+
 void Server::eventToServer(int fd)
 {
   char temp[1024] = {0};
@@ -80,7 +97,7 @@ void Server::eventToServer(int fd)
   Client *client = this->_clientHandler.getClientByFd(fd);
   if (bytes <= 0)
   {
-    std::cout << "TENTATIVE DE DECONNEXION DU FD : " << fd << std::endl;
+    announcePart(*client, this->_channelHandler);
     this->disconnectClient(fd);
   }
   else
@@ -101,8 +118,10 @@ void Server::eventToServer(int fd)
       client->setBuffer(client->getBuffer().erase(0, pos + 2));
       this->_commandsHandler.processCommand(*client, this->_clientHandler,
                                             this->_channelHandler, command);
-      std::cout << "commande recu :" << command << " fd :" << fd
-                << "lenght : " << command.length() << std::endl;
+      std::cout << "received command : [" << command << "]" << std::endl
+                << "sender's fd      : [" << fd << "]" << std::endl
+                << "lenght           : [" << command.length() << "]"
+                << std::endl;
     }
   }
 }

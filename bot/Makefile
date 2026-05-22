@@ -19,7 +19,6 @@ NC		:= \033[0m
 SRCS		:= \
 		  	src/main.cpp \
       	src/Bot.cpp \
-      	src/OllamaAPI.cpp \
 				../shared/Utils.cpp
 
 

@@ -101,9 +101,14 @@ Commands *CommandsHandler::findCommand(std::string inputCommand)
   return i->second;
 }
 
-bool isRegisterCmd(const std::string &cmdStr)
+bool RegisteringCmd(const std::string &cmdStr, Client &client)
 {
   const char *cmds[] = {"PASS", "NICK", "USER"};
+  if (client.getPassBool() == false)
+  {
+    if (cmdStr != cmds[0])
+      return (false);
+  }
   for (size_t i = 0; i < 3; i++)
   {
     if (cmdStr == cmds[i])
@@ -120,9 +125,7 @@ static std::string extractNickName(std::string str)
   return (str);
 }
 
-// envoyer -1 sis ca correspond pas au meme nickname
-//  parametre -> client, rawMessage
-static size_t processPrefix(Client &client, std::string rawMessage)
+static int processPrefix(Client &client, std::string rawMessage)
 {
   if (rawMessage[0] != ':')
     return (0);
@@ -130,7 +133,6 @@ static size_t processPrefix(Client &client, std::string rawMessage)
   if (pos == std::string::npos)
     return (-1);
   std::string prefix = extractNickName(rawMessage.substr(1, pos - 1));
-  std::cout << "prefix  [" << prefix << "]" << std::endl;
   if (client.getNickname() != prefix)
     return (-1);
   return (pos + 1);
@@ -145,25 +147,23 @@ void CommandsHandler::processCommand(Client &client,
   std::string cmdStr;
   Commands *cmd;
   size_t pos;
-  size_t start;
+  int start;
   if (rawMessage.size() > 512)
     rawMessage = rawMessage.substr(0, 512);
   start = processPrefix(client, rawMessage);
   if (start < 0)
-    return (client.appendBufferOut("Warning\nBad prefix\r\n"));
+    return (
+        client.appendBufferOut(Replies::ERR_BADPREFIX(client.getNickname())));
   rawMessage = rawMessage.substr(start);
-  std::cout << "rawMessage 1 [" << rawMessage << "]" << std::endl;
   pos = rawMessage.find(' ');
-  cmd = findCommand(rawMessage.substr(start, pos));
+  cmd = findCommand(rawMessage.substr(0, pos));
   if (cmd == NULL)
-  {
-    client.appendBufferOut(Replies::ERR_UNKNOWNCOMMAND(
-        client.getNickname(), rawMessage.substr(start, pos)));
-    return;
-  }
+    return (client.appendBufferOut(Replies::ERR_UNKNOWNCOMMAND(
+        client.getNickname(), rawMessage.substr(start, pos))));
   cmdStr = rawMessage.substr(start, pos);
-  if (isRegisterCmd(cmdStr) == false && client.isRegistered() == false)
-    return; // Client pas registered et commande necessite registered
+  if (RegisteringCmd(cmdStr, client) == false && client.isRegistered() == false)
+    return (client.appendBufferOut(
+        Replies::ERR_NOTREGISTERED(client.getNickname())));
   if (pos != std::string::npos)
     tokens = tokenizeCommand(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = tokens.begin();

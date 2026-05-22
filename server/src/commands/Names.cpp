@@ -2,8 +2,6 @@
 #include "Channel.hpp"
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
-#include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Names::Names() {}
@@ -42,7 +40,6 @@ void Names::execute(Client &sender, ClientHandler &, ChannelHandler &chH,
           Replies::RPL_ENDOFNAMES(sender.getNickname(), *it));
     }
   }
-  return;
 }
 
 Names::~Names() {}

@@ -48,6 +48,11 @@ std::vector<int> ClientHandler::getAllFd()
   return vec;
 }
 
+std::map<int, Client *> ClientHandler::getRegistery()
+{
+  return (this->_registry);
+}
+
 std::vector<int> ClientHandler::getFdWithData()
 {
   std::vector<int> vec;

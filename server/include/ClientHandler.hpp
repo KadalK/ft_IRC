@@ -21,6 +21,7 @@ public:
   Client *getClientByNickname(std::string nickname);
   std::vector<int> getAllFd();
   std::vector<int> getFdWithData();
+  std::map<int, Client *> getRegistery();
 
   Client *getClientByFd(int fd);
 };
