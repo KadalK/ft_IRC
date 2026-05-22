@@ -1,5 +1,4 @@
 #include "Bot.hpp"
-#include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <stdio.h>
@@ -140,27 +139,27 @@ std::string Bot::processUserInput(const std::string &sender,
 
 std::string parseBotReply(std::string &reply, std::string sender)
 {
-    std::string ircReply = "";
-    size_t  max_len = 400;
-    size_t i = 0;
-    while (i < reply.length())
+  std::string ircReply = "";
+  size_t max_len = 400;
+  size_t i = 0;
+  while (i < reply.length())
+  {
+    size_t chunk_size = max_len;
+    if (i + chunk_size < reply.length())
     {
-      size_t chunk_size = max_len;
-      if ( i + chunk_size < reply.length())
-      {
-        size_t last_space = reply.rfind(' ',i + chunk_size);
-        if (last_space != std::string::npos && last_space > i)
-            chunk_size = last_space - i;
-      }
-      else
-        chunk_size = reply.length() - i;
-      std::string chunk = reply.substr(i,chunk_size);
-      ircReply += "PRIVMSG " + sender + " :" + chunk + "\r\n";
-      i += chunk_size;
-      while (i < reply.length() && reply[i] == ' ')
-        i++;
+      size_t last_space = reply.rfind(' ', i + chunk_size);
+      if (last_space != std::string::npos && last_space > i)
+        chunk_size = last_space - i;
     }
-      return (ircReply);
+    else
+      chunk_size = reply.length() - i;
+    std::string chunk = reply.substr(i, chunk_size);
+    ircReply += "PRIVMSG " + sender + " :" + chunk + "\r\n";
+    i += chunk_size;
+    while (i < reply.length() && reply[i] == ' ')
+      i++;
+  }
+  return (ircReply);
 }
 
 std::string Bot::talk(const std::string &rawMsg)
@@ -198,7 +197,7 @@ std::string Bot::talk(const std::string &rawMsg)
   if (!message.empty())
   {
     std::string reply = processUserInput(sender, message);
-    return (parseBotReply(reply,sender));
+    return (parseBotReply(reply, sender));
   }
   return (message);
 }
