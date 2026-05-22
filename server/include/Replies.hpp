@@ -71,6 +71,27 @@ public:
   // FT01 BAD PREFIX
   static const std::string ERR_BADPREFIX(const std::string &nick);
 
+  /* AWAY  --------------------------------------------------------------*/
+  // 306
+  static const std::string RPL_NOWAWAY(const std::string &nick);
+
+  // 306
+  static const std::string BC_NOWAWAY(const std::string &nick, const std::string &awayMsg);
+
+  // 305
+  static const std::string RPL_UNAWAY(const std::string &nick);
+
+  // 305
+  static const std::string BC_UNAWAY(const std::string &nick);
+
+  // 301
+  static const std::string RPL_AWAY(const std::string &nick, const std::string &sender, const std::string &awayMsg);
+
+  /* WHO  --------------------------------------------------------------*/
+  // 352
+  static const std::string RPL_WHOREPLY(const std::string &nick,const std::string &fullInfo);
+
+  static const std::string RPL_ENDOFWHO(const std::string &nick,const std::string &name);
   /* PASS ----------------------------------------------------------------*/
   // 324
   static const std::string ERR_PASSWDMISMATCH(const std::string &nick);

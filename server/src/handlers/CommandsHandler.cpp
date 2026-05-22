@@ -15,6 +15,8 @@
 #include "commands/PrivMsg.hpp"
 #include "commands/Topic.hpp"
 #include "commands/User.hpp"
+#include "commands/Who.hpp"
+#include "commands/Away.hpp"
 #include <iostream>
 
 CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
@@ -24,7 +26,7 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
       _join(new Join), _pass(new Pass(passServ)), _nick(new Nick),
       _user(new User), _pvmsg(new PrivMsg), _mode(new Mode), _topic(new Topic),
       _invite(new Invite), _kick(new Kick), _names(new Names), _list(new List),
-      _part(new Part)
+      _part(new Part), _who(new Who), _away(new Away)
 {
   this->_commands["JOIN"] = _join;
   this->_commands["PASS"] = _pass;
@@ -38,6 +40,8 @@ CommandsHandler::CommandsHandler(ClientHandler &clientHandler,
   this->_commands["NAMES"] = _names;
   this->_commands["LIST"] = _list;
   this->_commands["PART"] = _part;
+  this->_commands["WHO"] = _who;
+  this->_commands["AWAY"] = _away;
 }
 
 CommandsHandler::~CommandsHandler()
@@ -54,6 +58,8 @@ CommandsHandler::~CommandsHandler()
   delete _names;
   delete _list;
   delete _part;
+  delete _who;
+  delete _away;
 }
 
 static std::vector<std::string> tokenizeCommand(std::string rawCommand)
@@ -158,6 +164,20 @@ void CommandsHandler::processCommand(Client &client,
   if (RegisteringCmd(cmdStr, client) == false && client.isRegistered() == false)
     return (client.appendBufferOut(
         Replies::ERR_NOTREGISTERED(client.getNickname())));
+  if (client.getAwayBool() == true && cmd != this->_away)
+  {
+    client.setAwayBool(false);
+    std::map<int, Client *> clients = clientHandler.getRegistery();
+    for (std::map<int, Client *>::iterator it = clients.begin();
+         it != clients.end(); it++)
+    {
+      if (it->second == &client)
+        client.appendBufferOut(Replies::RPL_UNAWAY(client.getNickname()));
+      else
+        it->second->appendBufferOut( Replies::BC_UNAWAY(client.getNickname()));
+    }
+
+  }
   if (pos != std::string::npos)
     tokens = tokenizeCommand(rawMessage.substr(pos));
   cmd->execute(client, clientHandler, channelHandler, tokens);

@@ -6,7 +6,7 @@
 #    By: tsaby <tsaby@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/23 17:03:26 by tsaby             #+#    #+#              #
-#    Updated: 2026/05/15 16:06:31 by tsaby            ###   ########.fr        #
+#    Updated: 2026/05/21 17:52:08 by tsaby            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,8 @@ SRCS		:= \
 				src/commands/Part.cpp \
 				src/commands/Names.cpp \
 				src/commands/List.cpp \
+				src/commands/Away.cpp \
+				src/commands/Who.cpp \
 				src/Commands.cpp \
 				src/Replies.cpp
 
