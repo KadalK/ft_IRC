@@ -1,5 +1,4 @@
 #include "commands/Quit.hpp"
-
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
@@ -14,9 +13,9 @@ void Quit::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH, cons
 
 	std::string msg = "";
 
-	if (arg.size() > 2)
+	if (!arg.empty())
 	{
-		msg = arg[1];
+		msg = arg[0];
 	}
 
 
@@ -33,12 +32,12 @@ void Quit::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH, cons
 			{
 				if (itACh->second->isClientInChannel(*itAC->second) == true)
 				{
-					itAC->second->appendBufferOut(sender.getNickname() + " QUIT :" + msg + "\r\n");
+					itAC->second->appendBufferOut(sender.getFullName() + " QUIT :" + msg + "\r\n");
+					break;
 				}
 			}
 		}
 	}
-	std::cout << "[DEBUG]:  " << sender.getToDisconnect() << std::endl;
 	sender.setToDisconnect(true);
 }
 
