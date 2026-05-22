@@ -3,7 +3,7 @@
 
 Client::Client()
     : _fd(-1), _nickname("*"), _username("*"), _bufferIn(), _bufferOut(),
-      _isAuth(false), _hasPassword(false), _hasNickname(false),
+      _isAuth(false),_isAway(false), _hasPassword(false), _hasNickname(false),
       _hasUsername(false)
 {
 }
@@ -13,6 +13,8 @@ std::string Client::getBuffer() const { return (this->_bufferIn); }
 std::string Client::getBufferOut() const { return (this->_bufferOut); }
 
 bool Client::getAuth() const { return (this->_isAuth); }
+
+bool Client::getAwayBool() const { return (this->_isAway); }
 
 bool Client::getUserBool() const { return (this->_hasUsername); }
 
@@ -28,7 +30,11 @@ std::string Client::getHostname() const { return (this->_hostname); }
 
 std::string Client::getTimeServ() const { return (this->_timeServ); }
 
+std::string Client::getAwayMsg() const { return (this->_awayMsg); }
+
 void Client::setTimeServ(std::string time) { this->_timeServ = time; }
+
+void Client::setAwayMsg(std::string awayMsg) { this->_awayMsg = awayMsg; }
 
 std::string Client::getFullName() const
 {
@@ -52,6 +58,7 @@ void Client::setAuth(bool state)
 void Client::setNickBool(bool state) { this->_hasNickname = state; }
 void Client::setPassBool(bool state) { this->_hasPassword = state; }
 void Client::setUserBool(bool state) { this->_hasUsername = state; }
+void Client::setAwayBool(bool state) { this->_isAway = state; }
 
 void Client::setNickname(std::string nickname) { this->_nickname = nickname; }
 void Client::setUsername(std::string username) { this->_username = username; }

@@ -12,8 +12,10 @@ private:
   std::string _bufferIn;
   std::string _bufferOut;
   std::string _timeServ;
+  std::string _awayMsg;
 
   bool _isAuth;
+  bool _isAway;
   bool _hasPassword;
   bool _hasNickname;
   bool _hasUsername;
@@ -35,6 +37,12 @@ public:
 
   bool getAuth() const;
   void setAuth(bool);
+
+  bool getAwayBool() const;
+  void setAwayBool(bool);
+
+  void setAwayMsg (std::string awayMsg);
+  std::string getAwayMsg () const;
 
   void setHostname(std::string hostname);
 

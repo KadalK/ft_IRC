@@ -19,6 +19,8 @@ class Kick;
 class Part;
 class Names;
 class List;
+class Who;
+class Away;
 
 class CommandsHandler
 {
@@ -41,6 +43,8 @@ private:
   Names *_names;
   List *_list;
   Part *_part;
+  Who *_who;
+  Away *_away;
 
   CommandsHandler(const CommandsHandler &src);
   CommandsHandler &operator=(const CommandsHandler &rhs);

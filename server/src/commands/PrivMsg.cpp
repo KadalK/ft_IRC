@@ -74,6 +74,8 @@ void PrivMsg::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
       }
       if (!receiver->getAuth())
         continue;
+      if (receiver->getAwayBool() == true)
+        sender.appendBufferOut(Replies::RPL_AWAY(receiver->getNickname(), sender.getNickname(), receiver->getAwayMsg()));
       receiver->appendBufferOut(
           Replies::BC_PRIVMSG(sender.getFullName(), target, msg));
     }

@@ -67,6 +67,15 @@ public:
   static const std::string ERR_NICKNAMEINUSE(const std::string &nick,
                                              const std::string &new_nick);
 
+  /* AWAY  --------------------------------------------------------------*/
+  // 306
+  static const std::string RPL_NOWAWAY(const std::string &nick);
+
+  // 305
+  static const std::string RPL_UNAWAY(const std::string &nick);
+
+  // 301
+  static const std::string RPL_AWAY(const std::string &nick, const std::string &sender, const std::string &awayMsg);
   /* PASS ----------------------------------------------------------------*/
   // 324
   static const std::string ERR_PASSWDMISMATCH(const std::string &nick);
@@ -153,9 +162,6 @@ public:
   // 407
   static const std::string ERR_TOOMANYTARGETS(const std::string &target,
                                               const std::string &targetsCount);
-  // 301
-  static const std::string RPL_AWAY(const std::string &nick);
-
   // BROADCAST
   static const std::string BC_PRIVMSG(const std::string &sender,
                                       const std::string &target,
