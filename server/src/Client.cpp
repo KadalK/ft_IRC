@@ -42,6 +42,14 @@ std::string Client::getFullName() const
           this->getHostname());
 }
 
+std::string Client::getFullInfo(std::string channel,bool isOpChan)
+{
+  std::string flags = (this->getAwayBool() == true) ? "G" : "H";
+  flags += (isOpChan == true) ? "@" : "";
+  return ( channel + " " + this->getUsername() + " " +
+          this->getHostname() + " ircserv " + this->getNickname() + " " + flags + " :0 *");
+}
+
 void Client::setHostname(std::string hostname) { this->_hostname = hostname; }
 
 void Client::setAuth(bool state)

@@ -67,6 +67,8 @@ public:
 
   void appendBufferOut(std::string const &temp);
 
+  std::string getFullInfo(std::string channel,bool isOpChan);
+
   void appendBuffer(std::string const &temp);
   bool isRegistered();
   ~Client();

@@ -164,6 +164,20 @@ void CommandsHandler::processCommand(Client &client,
   if (RegisteringCmd(cmdStr, client) == false && client.isRegistered() == false)
     return (client.appendBufferOut(
         Replies::ERR_NOTREGISTERED(client.getNickname())));
+  if (client.getAwayBool() == true && cmd != this->_away)
+  {
+    client.setAwayBool(false);
+    std::map<int, Client *> clients = clientHandler.getRegistery();
+    for (std::map<int, Client *>::iterator it = clients.begin();
+         it != clients.end(); it++)
+    {
+      if (it->second == &client)
+        client.appendBufferOut(Replies::RPL_UNAWAY(client.getNickname()));
+      else
+        it->second->appendBufferOut( Replies::BC_UNAWAY(client.getNickname()));
+    }
+
+  }
   if (pos != std::string::npos)
     tokens = tokenizeCommand(rawMessage.substr(pos));
   for (std::vector<std::string>::iterator it = tokens.begin();
