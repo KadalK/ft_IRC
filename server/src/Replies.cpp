@@ -455,34 +455,6 @@ const std::string Replies::RPL_NOWAWAY(const std::string &nick)
 // }
 
 // 305
-const std::string Replies::BC_NOWAWAY(const std::string &sender , const std::string &awayMsg)
-{
-  std::string out = "";
-
-  out += sender;
-  out += " AWAY ";
-  out += ": has been marked as being away ";
-  out += awayMsg;
-  out += "\r\n";
-
-  return (out);
-}
-
-
-// 305
-const std::string Replies::BC_UNAWAY(const std::string &sender)
-{
-  std::string out = "";
-
-  out += sender;
-  out += " BACK ";
-  out += ": are no longer marked as being away";
-  out += "\r\n";
-
-  return (out);
-}
-
-// 305
 const std::string Replies::RPL_UNAWAY(const std::string &nick)
 {
   std::string out = "";

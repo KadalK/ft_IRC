@@ -176,8 +176,6 @@ void CommandsHandler::processCommand(Client &client,
     {
       if (it->second == &client)
         client.appendBufferOut(Replies::RPL_UNAWAY(client.getNickname()));
-      else
-        it->second->appendBufferOut(Replies::BC_UNAWAY(client.getNickname()));
     }
   }
   if (pos != std::string::npos)
