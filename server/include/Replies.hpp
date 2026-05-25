@@ -75,14 +75,8 @@ public:
   // 306
   static const std::string RPL_NOWAWAY(const std::string &nick);
 
-  // 306
-  static const std::string BC_NOWAWAY(const std::string &sender, const std::string &awayMsg);
-
   // 305
   static const std::string RPL_UNAWAY(const std::string &nick);
-
-  // 305
-  static const std::string BC_UNAWAY(const std::string &sender);
 
   // 301
   static const std::string RPL_AWAY(const std::string &nick, const std::string &sender, const std::string &awayMsg);

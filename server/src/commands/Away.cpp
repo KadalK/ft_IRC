@@ -21,8 +21,6 @@ void Away::execute(Client &sender, ClientHandler & clH, ChannelHandler &, const 
     {
       if (it->second == &sender)
         sender.appendBufferOut(Replies::RPL_UNAWAY(sender.getNickname()));
-      else
-        it->second->appendBufferOut( Replies::BC_UNAWAY(sender.getFullName()));
     }
   }
   else if (arg.size() >= 1)
@@ -35,8 +33,6 @@ void Away::execute(Client &sender, ClientHandler & clH, ChannelHandler &, const 
     {
       if (it->second == &sender)
         sender.appendBufferOut(Replies::RPL_NOWAWAY(sender.getNickname()));
-      else
-        it->second->appendBufferOut( Replies::BC_NOWAWAY(sender.getFullName(), sender.getAwayMsg()));
     }
   }
   return;
