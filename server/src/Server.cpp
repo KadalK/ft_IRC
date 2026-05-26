@@ -54,7 +54,7 @@ void Server::connectNewClient()
     return;
   }
   epoll_event clientEvent;
-  clientEvent.events = EPOLLIN;
+  clientEvent.events = EPOLLIN | EPOLLRDHUP;
   clientEvent.data.fd = clientSocketFd;
   if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, clientSocketFd, &clientEvent) <
       0)
@@ -146,7 +146,7 @@ void Server::eventToClient(int fd)
   if (client->getBufferOut().empty())
   {
     epoll_event event;
-    event.events = EPOLLIN;
+    event.events = EPOLLIN | EPOLLRDHUP;
     event.data.fd = fd;
     epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, fd, &event);
   }
@@ -157,7 +157,7 @@ void Server::setEpollOut(const std::vector<int> &vec)
   for (std::vector<int>::const_iterator it = vec.begin(); it != vec.end(); ++it)
   {
     epoll_event event;
-    event.events = EPOLLIN | EPOLLOUT;
+    event.events = EPOLLIN | EPOLLOUT | EPOLLRDHUP;
     event.data.fd = *it;
     epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, *it, &event);
   }
@@ -186,6 +186,12 @@ void Server::run()
         this->connectNewClient();
       else
       {
+        if (flags & EPOLLERR || flags & EPOLLHUP || flags & EPOLLRDHUP)
+          {
+            std::cout << "Error : on the network for this fd :[" << clientSocketFd << "]" << std::endl;
+            this->disconnectClient(clientSocketFd);
+            continue;
+          }
         if (flags & EPOLLIN)
           this->eventToServer(clientSocketFd);
         if (flags & EPOLLOUT)
