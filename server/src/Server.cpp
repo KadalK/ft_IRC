@@ -139,6 +139,7 @@ void Server::eventToClient(int fd)
   int bytesSent = send(fd, message.c_str(), message.length(), MSG_NOSIGNAL);
   if (bytesSent <= 0)
   {
+    announcePart(*client, this->_channelHandler);
     this->disconnectClient(fd);
     return;
   }
@@ -186,9 +187,11 @@ void Server::run()
         this->connectNewClient();
       else
       {
+        Client* client = this->_clientHandler.getClientByFd(clientSocketFd);
         if (flags & EPOLLERR || flags & EPOLLHUP || flags & EPOLLRDHUP)
           {
             std::cout << "Error : on the network for this fd :[" << clientSocketFd << "]" << std::endl;
+            announcePart(*client, this->_channelHandler);
             this->disconnectClient(clientSocketFd);
             continue;
           }
@@ -196,7 +199,6 @@ void Server::run()
           this->eventToServer(clientSocketFd);
         if (flags & EPOLLOUT)
           this->eventToClient(clientSocketFd);
-        Client* client = this->_clientHandler.getClientByFd(clientSocketFd);
         if (client != NULL && client->getToDisconnect() == true)
           this->disconnectClient(clientSocketFd);
       }
