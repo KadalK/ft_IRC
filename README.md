@@ -49,6 +49,34 @@ To shut down the background processes gracefully:
 make fclean-bot
 ```
 
+## Features List
+
+### Mandatory Commands
+- **PASS <password>**: Initial network password command. Must imperatively precede any other user registration commands.
+- **NICK <nickname>**: Sets or updates the nickname.
+- **USER <user> <host> <srv> <real>**: Registers the client's system identity details to complete their formal registration.
+- **JOIN <chan> [<key>]**: Joins a discussion channel. Creates the channel if it does not exist. Optional password argument if in `+k` mode.
+- **PRIVMSG <target> <text>**: Transmits a text message to a specific target (either a user nickname or a public channel prefixed with `#`).
+- **KICK <chan> <user> [<msg>]**: Kicks a user from a channel.
+- **INVITE <user> <chan>**: Officially invites a third-party user to join a channel. A crucial command to bypass restrictions on invite-only channels (`+i`).
+- **TOPIC <chan> [<topic>]**: 
+  - **Without arguments:** Displays the channel's current topic.
+  - **With arguments:** Changes or resets the topic
+- **MODE <chan> [<flags>] [<args>]**: Manages channel configuration and rights. Supported flags:
+  - `i`: Set/remove Invite-only channel restriction.
+  - `t`: Restrict TOPIC alterations to channel operators only.
+  - `k`: Set/remove the channel key (password).
+  - `o`: Give/take channel operator privilege.
+  - `l`: Set/remove the user limit to the channel.
+
+### Additional Commands
+- **AWAY [<message>]**: Marks the user as away and provides a public reason. Without arguments, it removes the away status.
+- **WHO [<mask>]**: Queries the server to selectively list user or channel information matching the given mask.
+- **PART <chan> [<msg>]**: Formally leaves one or more channels, optionally broadcasting a parting message.
+- **NAMES [<chan>]**: Lists all currently connected users visible within the channel.
+- **LIST [<chan>]**: Lists all active channels on the server along with their topics and current member count.
+- **QUIT [<message>]**: Closes the current user session by disconnecting from the server with an optional reason.
+
 ## Resources
 
 **References & Documentation:**
