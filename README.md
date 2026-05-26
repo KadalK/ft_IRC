@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by tsaby,egache,kapinarc.*
+*This project has been created as part of the 42 curriculum by egache,kapinarc,tsaby.*
 
 ## Description
 The **ft_irc** project aims to create a fully functional Internet Relay Chat (IRC) server from scratch using C++98. The goal is to deeply understand network programming, TCP/IP protocols, and non-blocking I/O multiplexing.
@@ -29,7 +29,7 @@ To start the IRC server, you must provide a listening port and a connection pass
 ```bash
 ./ircserv <port> <password>
 ```
-*Example:* `./ircserv 6667 my_password`
+*Example:* `./ircserv 6667 1234`
 
 
 Also we have implement a solution for running the executable in the background, you must provide a listening port and a connection password:
@@ -39,7 +39,7 @@ Also we have implement a solution for running the executable in the background, 
 ```bash
 make run <port> <password>
 ```
-*Example:* `make run 6667 my_password`
+*Example:* `make run 6667 1234`
 
 ```bash
 make fclean
@@ -53,12 +53,35 @@ The bot requires [Ollama](https://ollama.com/) to be installed. To run both the 
 ```bash
 make run-bot <port> <password>
 ```
-*Example:* `make run-bot 6667 my_password`
+*Example:* `make run-bot 6667 1234`
 
 To shut down the background processes gracefully:
 ```bash
 make fclean-bot
 ```
+
+### About the Bot
+The model used is Ollama3:8b
+
+For run the Ollama's server:
+```bash
+ollama serve
+```
+To create the personality of the model, we need to use a Modelfile. This determines the behavior and customizes the model for a specific use.
+In this project we implement a D&D Master.
+```bash
+ollama create <model_name> -f <Modelfile>
+```
+For run it:
+```bash
+ollama run <model_name>
+```
+At your first message, the D&D master attribute random stats and you can start your adventure !
+When you run the bonus part you can chat with him, for that you have to do:
+```bash
+/QUERY <model_name>
+```
+
 
 ## Features List
 
@@ -106,3 +129,4 @@ During the development of this project, Artificial Intelligence was utilized for
 - **Code Assistance & Refactoring:** AI tools were occasionally consulted to quickly identify syntax errors, understand C++98 specific limitations, and clarify edge cases regarding `epoll` and socket state management.
 - **Completing and understanding unclear RFC's usage**: RFC 2812 is missing some documentation. AI helped us summarized best usage for some of the commands.
 - **Readme redaction**: AI helped to structure the readme and formulate better sentences.
+- **Modelfile:** AI tools were used to correct and translate modelfile's text to improve clarity and make it easier for the model to understand.
