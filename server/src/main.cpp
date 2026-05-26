@@ -12,13 +12,12 @@ void signal_handler(int signum)
   std::cout << "\nThe server is closing..." << std::endl;
 }
 
-bool parseArgs(char *arg1, char *arg2)
+bool parseArgs(int port, std::string password)
 {
-  std::string portString = arg1;
-  std::string password = arg2;
-  if (portString.size() != 4 || !isInteger(portString))
+  if (port > 65536)
   {
-    std::cout << "Warning\nOnly 4 integers" << std::endl;
+    std::cout << "Warning\nValid port input are between 1024 and 65536"
+              << std::endl;
     return (false);
   }
   if (!isValidKeyFormat(password))
@@ -35,12 +34,12 @@ int main(int argc, char **argv)
     return (1);
   signal(SIGINT, signal_handler);
   signal(SIGQUIT, signal_handler);
-  if (!parseArgs(argv[1], argv[2]))
-    return (1);
   std::stringstream ss(argv[1]);
   std::string password = argv[2];
   int port;
   ss >> port;
+  if (!parseArgs(port, password))
+    return (1);
   Server myServer(port, password);
   try
   {
