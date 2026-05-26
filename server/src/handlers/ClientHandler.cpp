@@ -11,7 +11,7 @@ void ClientHandler::addClient(int fd, std::string hostname, std::string time)
   newClient->setHostname(hostname);
   newClient->setTimeServ(time);
   this->_registry[fd] = newClient;
-  std::cout << "Client connected  : " << " (FD: " << fd << ")" << std::endl;
+  std::cout << "Client connected  : " << " [FD: " << fd << "]" << std::endl;
 }
 
 void ClientHandler::removeClient(int fd)
@@ -19,7 +19,7 @@ void ClientHandler::removeClient(int fd)
   std::string nick = this->_registry[fd]->getNickname();
   delete this->_registry[fd];
   this->_registry.erase(fd);
-  std::cout << "Client deleted  : " << nick << " (FD: " << fd << ")"
+  std::cout << "Client deleted  : " << nick << " [FD: " << fd << "]"
             << std::endl;
 }
 
