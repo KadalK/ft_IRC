@@ -29,7 +29,7 @@ To start the IRC server, you must provide a listening port and a connection pass
 ```bash
 ./ircserv <port> <password>
 ```
-*Example:* `./ircserv 6667 my_password`
+*Example:* `./ircserv 6667 1234`
 
 Also we have implement a solution for running the executable in the backround, you must provide a listening port and a connection password:
 
@@ -48,6 +48,29 @@ To shut down the background processes gracefully:
 ```bash
 make fclean-bot
 ```
+
+### About the Bot
+The model used is Ollama3:8b
+
+For run the Ollama's server:
+```bash
+ollama serve
+```
+To create the personality of the model, we need to use a Modelfile. This determines the behavior and customizes the model for a specific use.
+In this project we implement a D&D Master.
+```bash
+ollama create <model_name> -f <Modelfile>
+```
+For run it:
+```bash
+ollama run <model_name>
+```
+At your first message, the D&D master attribute random stats and you can start your adventure !
+When you run the bonus part you can chat with him, for that you have to do:
+```bash
+/QUERY <model_name>
+```
+
 
 ## Features List
 
@@ -88,3 +111,4 @@ make fclean-bot
 During the development of this project, Artificial Intelligence was utilized for the following specific tasks:
 - **Bot Persona Configuration (Bonus):** AI (specifically the DeepSeek and Llama3 models) was used to structure the logic, rules, and system prompts inside the `Modelfile` scripts. This helped define the distinct personalities and rule-sets (like the text-based RPG Game Master) for the IRC bot.
 - **Code Assistance & Refactoring:** AI tools were occasionally consulted to quickly identify syntax errors, understand C++98 specific limitations, and clarify edge cases regarding `epoll` and socket state management.
+- **Modelfile:** AI tools were used to correct and translate modelfile's text to improve clarity and make it easier for the model to understand.
