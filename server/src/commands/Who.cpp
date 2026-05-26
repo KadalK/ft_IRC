@@ -3,7 +3,6 @@
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 Who::Who() {}

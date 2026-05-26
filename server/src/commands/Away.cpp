@@ -2,7 +2,6 @@
 #include "ChannelHandler.hpp"
 #include "Client.hpp"
 #include "ClientHandler.hpp"
-#include "CommandsHandler.hpp"
 #include "Replies.hpp"
 
 #include "iostream"
