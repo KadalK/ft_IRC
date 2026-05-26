@@ -51,13 +51,18 @@ void PrivMsg::execute(Client &sender, ClientHandler &clH, ChannelHandler &chH,
     std::string formatted = formatMsg(msg, sender.getNickname(), target);
     if (target[0] == '#')
     {
-
       Channel *chan = chH.getChannelByName(target);
       if (!chan)
       {
         sender.appendBufferOut(
             Replies::ERR_NOSUCHANNEL(sender.getNickname(), target));
-        continue;
+        continue ;
+      }
+      if (!chan->isClientInChannel(sender))
+      {
+        sender.appendBufferOut(
+        Replies::ERR_NOTONCHANNEL(sender.getNickname(), chan->getName()));
+        continue ;
       }
       chan->broadcast(
           Replies::BC_PRIVMSG(sender.getFullName(), chan->getName(), msg),
