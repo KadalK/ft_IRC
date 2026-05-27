@@ -14,7 +14,7 @@ void signal_handler(int signum)
 
 bool parseArgs(int port, std::string password)
 {
-  if (port > 65536)
+  if (port > 65536 || port < 0)
   {
     std::cout << "Warning\nValid port input are between 1024 and 65536"
               << std::endl;
